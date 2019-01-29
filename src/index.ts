@@ -19,7 +19,7 @@ export interface SwaggerParser {
 
 const CD = __dirname;
 const Config = 'json2service.json';
-const ConfigFile = path.join(CD, '..', Config);
+const ConfigFile = path.join(process.cwd(), Config);
 
 if (!fs.existsSync(ConfigFile)) {
   console.error(`[ERROR]: ${Config} not found in ${CD}`);
