@@ -8,7 +8,8 @@
       "node_modules/**/*.ts",
       "coverage/**/*.js",
       "scripts/**",
-      "src/**services**/**/**.ts"
+      "src/**services**/**/**.ts",
+      "tmp"
     ]
   },
   "rules": {

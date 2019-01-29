@@ -11,13 +11,8 @@ export interface SwaggerParser {
 }
 export default function serve(
   url: string
-): Promise<
-  | {
-      code: number;
-      result: string;
-    }
-  | {
-      code: number;
-      message: any;
-    }
->;
+): Promise<{
+  code: number;
+  message?: string;
+  result?: any;
+}>;

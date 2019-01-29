@@ -33,6 +33,7 @@ if (!fs.existsSync(ConfigFile)) {
       if ('result' in yapiTMP && yapiTMP.result && !yapiTMP.code) {
         swaggerUrl = yapiTMP.result;
       } else {
+        console.error(`[ERROR]: gen failed with: ${yapiTMP.message}`);
         process.exit();
       }
     }
