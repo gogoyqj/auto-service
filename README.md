@@ -22,7 +22,7 @@ json2service.json
 
 ```json
 {
-  "url": "https://mock.corp.kuaishou.com/api/open/plugin/export?type=json&pid=40&status=all&token=afe1036223b8545d6fff",
+  "url": "./api.json",
   "type": "yapi",
   "swaggerParser": {
     "-o": "tmp/services"
