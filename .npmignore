@@ -2,3 +2,4 @@
 ./node_modules
 src/services
 tmp
+json2service.json

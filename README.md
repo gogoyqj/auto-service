@@ -13,7 +13,7 @@ json2service.json
 
 | 参数          | 值               | 说明                                                                |
 | ------------- | ---------------- | ------------------------------------------------------------------- |
-| url           | url 或者文件地址 | swagger、yapi 文档 url 地址或者文件目录                             |
+| url           | url 或者文件地址 | swagger、yapi 文档 url 地址或者文件目录                             |
 | type          | yapi、swagger    | 标记类型，默认是 swagger                                            |
 | swaggerParser |                  | swagger-code-gen 配置                                               |
 |               | -o               | 输出 typescript 代码目录，默认是当前 src/services                   |
