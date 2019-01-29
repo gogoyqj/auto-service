@@ -1,0 +1,9 @@
+{
+  "url": "https://mock.corp.kuaishou.com/api/plugin/export?type=json&pid=40&status=all&token=afe1036223b8545d6fff",
+  "type": "yapi",
+  "swaggerParser": {
+    "-o": "src/services",
+    "-t": "plugins/typescript-tkit/",
+    "-l": "typescript-angularjs"
+  }
+}
