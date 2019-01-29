@@ -44,7 +44,9 @@ async function download(url: string) {
 export default async function serve(
   url: string
 ): Promise<{ code: number; message?: string; result?: any }> {
-  const yapiJSON = url.match(/^http/g) ? await download(url) : require(url);
+  const yapiJSON = url.match(/^http/g)
+    ? await download(url)
+    : { code: 0, result: require(path.resolve(process.cwd(), url)) };
   let swagger: {};
   try {
     if (yapiJSON.result.errcode) {
