@@ -6,6 +6,12 @@
   version "0.12.1"
   resolved "https://registry.yarnpkg.com/@types/caseless/-/caseless-0.12.1.tgz#9794c69c8385d0192acc471a540d1f8e0d16218a"
 
+"@types/commander@^2.12.2":
+  version "2.12.2"
+  resolved "https://registry.yarnpkg.com/@types/commander/-/commander-2.12.2.tgz#183041a23842d4281478fa5d23c5ca78e6fd08ae"
+  dependencies:
+    commander "*"
+
 "@types/detect-port@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@types/detect-port/-/detect-port-1.1.0.tgz#07075d264e2e5a432624b1e7ffc11379fe66be8a"
@@ -213,7 +219,7 @@ combined-stream@^1.0.6, combined-stream@~1.0.6:
   dependencies:
     delayed-stream "~1.0.0"
 
-commander@^2.12.1:
+commander@*, commander@^2.12.1, commander@^2.19.0:
   version "2.19.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.19.0.tgz#f6198aa84e5b83c46054b94ddedbfed5ee9ff12a"
 

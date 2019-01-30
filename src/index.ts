@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import * as fs from 'fs';
 import * as path from 'path';
+import * as commander from 'commander';
 import swagger2ts from './swagger2ts';
 import serve from './yapi/serve';
 
@@ -18,7 +19,13 @@ export interface SwaggerParser {
 }
 
 const CD = __dirname;
-const Config = 'json2service.json';
+
+commander
+  .version(require('../package.json').version)
+  .option('-c, --config [type]', 'config file', 'json2service.json')
+  .parse(process.argv);
+
+const Config = commander.config as string;
 const ConfigFile = path.join(process.cwd(), Config);
 
 if (!fs.existsSync(ConfigFile)) {
@@ -28,18 +35,26 @@ if (!fs.existsSync(ConfigFile)) {
   (async () => {
     const { url, type = 'swagger', swaggerParser } = config;
     let swaggerUrl = url;
+    if (!swaggerUrl.match(/^http/)) {
+      swaggerUrl = path.join(process.cwd(), url);
+      if (!fs.existsSync(swaggerUrl)) {
+        console.log(`[ERROR]: swagger ${swaggerUrl} not found`);
+        process.exit(1);
+      }
+    }
     if (type === 'yapi') {
-      const yapiTMP = await serve(url);
+      const yapiTMP = await serve(swaggerUrl);
       if ('result' in yapiTMP && yapiTMP.result && !yapiTMP.code) {
         swaggerUrl = yapiTMP.result;
       } else {
         console.error(`[ERROR]: gen failed with: ${yapiTMP.message}`);
-        process.exit();
+        process.exit(1);
       }
     }
     const res = await swagger2ts({ ...swaggerParser, '-i': swaggerUrl });
     if (res.code) {
       console.error(`[ERROR]: gen failed with: ${res.message}`);
+      process.exit(1);
     } else {
       console.log(`[INFO]: gen success with: ${url}`);
     }

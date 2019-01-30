@@ -40,5 +40,10 @@ async function parseSwagger(swaggerParser: SwaggerParser) {
     `java -jar ${generatorPath} generate ${Object.keys(config)
       .map(opt => `${opt} ${config[opt]}`)
       .join(' ')}`
-  ).then();
+  )
+    .then(() => ({ code: 0 }))
+    .catch(e => ({
+      code: 6,
+      message: `[ERROR]: gen failed from ${config['-i']} with ${e.message}`
+    }));
 }

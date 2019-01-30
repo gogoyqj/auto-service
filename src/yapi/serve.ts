@@ -1,6 +1,4 @@
 #!/usr/bin/env node
-import * as fs from 'fs';
-import * as path from 'path';
 import * as http from 'http';
 import * as request from 'request';
 import * as detectPort from 'detect-port';
@@ -44,9 +42,7 @@ async function download(url: string) {
 export default async function serve(
   url: string
 ): Promise<{ code: number; message?: string; result?: any }> {
-  const yapiJSON = url.match(/^http/g)
-    ? await download(url)
-    : { code: 0, result: require(path.resolve(process.cwd(), url)) };
+  const yapiJSON = url.match(/^http/g) ? await download(url) : { code: 0, result: require(url) };
   let swagger: {};
   try {
     if (yapiJSON.result.errcode) {
