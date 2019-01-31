@@ -13,14 +13,15 @@ const asyncExec = <T>(cmd: T) =>
   );
 
 export default async function swagger2ts(
-  swaggerParser: SwaggerParser
+  swaggerParser: SwaggerParser,
+  clear: boolean = false
 ): Promise<{ code: Number; message?: string }> {
   const java = await checkJava();
   if (java.code) {
     console.error(`[ERROR]: check java failed with ${java.message}`);
     return java;
   }
-  return await parseSwagger(swaggerParser);
+  return await parseSwagger(swaggerParser, clear);
 }
 
 async function checkJava() {
@@ -34,10 +35,12 @@ const defaultParseConfig = {
   '-o': path.join(process.cwd(), 'src', 'services')
 };
 
-async function parseSwagger(swaggerParser: SwaggerParser) {
+async function parseSwagger(swaggerParser: SwaggerParser, clear: boolean = false) {
   const config = { ...defaultParseConfig, ...swaggerParser };
   return await asyncExec(
-    `java -jar ${generatorPath} generate ${Object.keys(config)
+    `${clear ? `rm -rf ${config['-o']};` : ''}java -jar ${generatorPath} generate ${Object.keys(
+      config
+    )
       .map(opt => `${opt} ${config[opt]}`)
       .join(' ')}`
   )

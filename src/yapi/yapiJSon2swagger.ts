@@ -10,6 +10,9 @@ interface API {
   add_time: number;
   up_time: number;
   index: number;
+  proBasepath?: string;
+  proName?: string;
+  proDescription?: string;
   list: List[];
 }
 
@@ -50,24 +53,30 @@ interface STag {
 }
 
 export default function yapiJSon2swagger(list: API[]) {
+  let basePath: string = '';
+  let info = {
+    title: 'unknown',
+    version: 'last',
+    description: 'unknown'
+  };
+  let tags: STag[] = [];
+  list.forEach(t => {
+    if (t.proBasepath) {
+      basePath = t.proBasepath;
+    }
+    if (t.proName) info.title = t.proName;
+    if (t.proDescription) info.description = t.proDescription;
+    tags.push({
+      name: t.name,
+      description: t.desc
+    });
+  });
+  let reg = basePath ? new RegExp(`^${basePath}`) : undefined;
   const swaggerObj = {
     swagger: '2.0',
-    info: {
-      title: 'asset',
-      version: 'last',
-      description: 'asset'
-    },
-    basePath: '',
-    tags: (() => {
-      let tagArray: STag[] = [];
-      list.forEach(t => {
-        tagArray.push({
-          name: t.name,
-          description: t.desc
-        });
-      });
-      return tagArray;
-    })(),
+    info,
+    basePath,
+    tags,
     schemes: [
       'http' //Only http
     ],
@@ -77,10 +86,11 @@ export default function yapiJSon2swagger(list: API[]) {
         //list of category
         for (let api of aptTag.list) {
           //list of api
-          if (apisObj[api.path] == null) {
-            apisObj[api.path] = {};
+          const url = reg ? api.path.replace(reg, '') : api.path;
+          if (apisObj[url] == null) {
+            apisObj[url] = {};
           }
-          apisObj[api.path][api.method.toLowerCase()] = (() => {
+          apisObj[url][api.method.toLowerCase()] = (() => {
             let apiItem = {};
             apiItem['tags'] = [aptTag.name];
             apiItem['summary'] = api.title;
@@ -160,7 +170,7 @@ export default function yapiJSon2swagger(list: API[]) {
                         jsonParam['title'] = _.flow(
                           _.camelCase,
                           _.upperFirst
-                        )(api.path.replace(/\//g, '-') + 'Params');
+                        )(url.replace(/\//g, '-') + 'Params');
                       }
                       paramArray.push({
                         name: 'root',
@@ -230,7 +240,7 @@ export default function yapiJSon2swagger(list: API[]) {
                           schemaObj['title'] = _.flow(
                             _.camelCase,
                             _.upperFirst
-                          )(api.path.replace(/\//g, '-'));
+                          )(url.replace(/\//g, '-'));
                         }
                       }
                     }

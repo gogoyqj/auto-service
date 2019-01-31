@@ -32,4 +32,6 @@ json2service.json
 
 ```shell
   ./node_modules/.bin/sm2tsservice
+  sm2tsservice
+  sm2tsservice -c config.json # 指定配置文件
 ```

@@ -4,6 +4,9 @@ interface API {
   add_time: number;
   up_time: number;
   index: number;
+  proBasepath?: string;
+  proName?: string;
+  proDescription?: string;
   list: List[];
 }
 interface List {

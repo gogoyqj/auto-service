@@ -1,6 +1,7 @@
 import { SwaggerParser } from 'src';
 export default function swagger2ts(
-  swaggerParser: SwaggerParser
+  swaggerParser: SwaggerParser,
+  clear?: boolean
 ): Promise<{
   code: Number;
   message?: string;

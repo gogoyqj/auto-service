@@ -23,6 +23,7 @@ const CD = __dirname;
 commander
   .version(require('../package.json').version)
   .option('-c, --config [type]', 'config file', 'json2service.json')
+  .option('--clear [type]', 'rm typescript service before gen', false)
   .parse(process.argv);
 
 const Config = commander.config as string;
@@ -51,7 +52,7 @@ if (!fs.existsSync(ConfigFile)) {
         process.exit(1);
       }
     }
-    const res = await swagger2ts({ ...swaggerParser, '-i': swaggerUrl });
+    const res = await swagger2ts({ ...swaggerParser, '-i': swaggerUrl }, commander.clear);
     if (res.code) {
       console.error(`[ERROR]: gen failed with: ${res.message}`);
       process.exit(1);
