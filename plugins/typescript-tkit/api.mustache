@@ -75,21 +75,21 @@ export class {{classname}} {
 {{#queryParams.0}}
     p.query = {};
 {{#queryParams}}
-    if ('{{baseName}}' in params) p.query.{{baseName}} = params.{{paramName}};
+    if ('{{paramName}}' in params) p.query.{{paramName}} = params.{{paramName}};
     {{#required}}
-    ajax.check(params.{{baseName}}, '{{paramName}}');
+    ajax.check(params.{{paramName}}, '{{paramName}}');
     {{/required}}
 {{/queryParams}}
 {{/queryParams.0}}
 {{#pathParams}}
     {{#required}}
-    ajax.check(params.{{baseName}}, '{{paramName}}');
+    ajax.check(params.{{paramName}}, '{{paramName}}');
     {{/required}}
 {{/pathParams}}
 {{#formParams.0}}
     p.form = {};
 {{#formParams}}
-    if ('{{baseName}}' in params) p.form.{{baseName}} = params.{{paramName}};
+    if ('{{paramName}}' in params) p.form.{{paramName}} = params.{{paramName}};
     {{#required}}
     ajax.check(params.{{paramName}}, '{{paramName}}');
     {{/required}}
@@ -101,15 +101,11 @@ export class {{classname}} {
     ajax.check(data, 'body.{{paramName}}');
     {{/required}}
 {{/bodyParam}}
-    const res = ajax.ajax({
+    return ajax.ajax({
       method: '{{httpMethod}}',
       url,
       ...p
     });
-    if (process.env.NODE_ENV === 'development') {
-
-    }
-    return res;
   }
 {{/operation}}
 }
