@@ -1,4 +1,4 @@
-import { SwaggerParser } from 'src';
+import { SwaggerParser } from './cli';
 export default function swagger2ts(
   swaggerParser: SwaggerParser,
   clear?: boolean

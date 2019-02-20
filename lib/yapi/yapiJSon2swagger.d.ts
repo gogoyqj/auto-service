@@ -1,3 +1,4 @@
+import { Json2Service } from '../cli';
 interface API {
   name: string;
   desc: string;
@@ -43,7 +44,8 @@ interface STag {
   description?: string;
 }
 export default function yapiJSon2swagger(
-  list: API[]
+  list: API[],
+  yapiConfig: Json2Service['yapiConfig']
 ): {
   swagger: string;
   info: {

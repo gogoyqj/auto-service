@@ -12,28 +12,28 @@ import * as models from '../model/models';
 {{^hasOnlyBodyParams}}
 export interface Params{{nickname}} {
 {{#headerParams.0}}
-    // headerParams
-    {{#headerParams}}
-    {{paramName}}{{^required}}?{{/required}}: {{&dataType}};{{#description}} // {{&description}}{{/description}}
-    {{/headerParams}}
+  // headerParams
+  {{#headerParams}}
+  {{paramName}}{{^required}}?{{/required}}: {{&dataType}};{{#description}} // {{&description}}{{/description}}
+  {{/headerParams}}
 {{/headerParams.0}}
 {{#pathParams.0}}
-    // pathParams
-    {{#pathParams}}
-    {{paramName}}{{^required}}?{{/required}}: {{&dataType}};{{#description}} // {{&description}}{{/description}}
-    {{/pathParams}}
+  // pathParams
+  {{#pathParams}}
+  {{paramName}}{{^required}}?{{/required}}: {{&dataType}};{{#description}} // {{&description}}{{/description}}
+  {{/pathParams}}
 {{/pathParams.0}}
 {{#queryParams.0}}
-    // queryParams
-    {{#queryParams}}
-    {{paramName}}{{^required}}?{{/required}}: {{{dataType}}};{{#description}} // {{&description}}{{/description}}
-    {{/queryParams}}
+  // queryParams
+  {{#queryParams}}
+  {{paramName}}{{^required}}?{{/required}}: {{{dataType}}};{{#description}} // {{&description}}{{/description}}
+  {{/queryParams}}
 {{/queryParams.0}}
 {{#formParams.0}}
-    // formParams
-    {{#formParams}}
-    {{paramName}}{{^required}}?{{/required}}: {{&dataType}};{{#description}} // {{&description}}{{/description}}
-    {{/formParams}}
+  // formParams
+  {{#formParams}}
+  {{paramName}}{{^required}}?{{/required}}: {{&dataType}};{{#description}} // {{&description}}{{/description}}
+  {{/formParams}}
 {{/formParams.0}}
 }
 {{/hasOnlyBodyParams}}
@@ -48,65 +48,66 @@ export type ParamsBody{{nickname}} = {{&dataType}};{{#description}} // {{&descri
  */
 {{/description}}
 export class {{classname}} {
-    protected $basePath = '{{{contextPath}}}';
+  protected $basePath = '{{{contextPath}}}';
 
-    public constructor(basePath?: string) {
-        if (basePath !== undefined) {
-            this.$basePath = basePath;
-        }
+  public constructor(basePath?: string) {
+    if (basePath !== undefined) {
+      this.$basePath = basePath;
     }
+  }
 
 {{#operation}}
-    /**
-     * {{&notes}}
-     {{#summary}}
-     * @summary {{&summary}}
-     {{/summary}}
-     {{#allParams.0}}{{^hasOnlyBodyParams}}* @param params Params{{nickname}}{{/hasOnlyBodyParams}}{{/allParams.0}}
-     {{#bodyParam}}* @param body: ParamsBody{{nickname}}{{#description}}// {{&description}}{{/description}}{{/bodyParam}}
-     */
-    public {{nickname}} = (
-        {{#allParams.0}}{{^hasOnlyBodyParams}}params: Params{{nickname}},{{/hasOnlyBodyParams}}{{/allParams.0}}
-        {{#bodyParam}}data: ParamsBody{{nickname}}{{/bodyParam}}
-    ) : AjaxPromise<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}{}{{/returnType}}>  => {
-        const url = this.$basePath + '{{{path}}}'{{#pathParams.0}}
-            .replace(/\{([^}]+)\}/g, (all, param) => (param in params ? params[param] : param)){{/pathParams.0}};
-        const p: any = {};
+  /**
+   * {{&notes}}
+   {{#summary}}
+   * @summary {{&summary}}
+   {{/summary}}
+   {{#allParams.0}}{{^hasOnlyBodyParams}}* @param params Params{{nickname}}{{/hasOnlyBodyParams}}{{/allParams.0}}
+   {{#bodyParam}}* @param body: ParamsBody{{nickname}}{{#description}}// {{&description}}{{/description}}{{/bodyParam}}
+   */
+  public {{nickname}} = (
+    {{#allParams.0}}{{^hasOnlyBodyParams}}params: Params{{nickname}},{{/hasOnlyBodyParams}}{{/allParams.0}}
+    {{#bodyParam}}data: ParamsBody{{nickname}}{{/bodyParam}}
+  ) : AjaxPromise<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}{}{{/returnType}}>  => {
+    const path = '{{{path}}}';
+    const url = this.$basePath + path{{#pathParams.0}}
+      .replace(/\{([^}]+)\}/g, (all, param) => (param in params ? params[param] : param)){{/pathParams.0}};
+    const p: any = {};
 {{#queryParams.0}}
-        p.query = {};
+    p.query = {};
 {{#queryParams}}
-        if ('{{baseName}}' in params) p.query.{{baseName}} = params.{{paramName}};
-        {{#required}}
-        ajax.check(params.{{baseName}}, '{{paramName}}');
-        {{/required}}
+    if ('{{paramName}}' in params) p.query.{{paramName}} = params.{{paramName}};
+    {{#required}}
+    ajax.check(params.{{paramName}}, '{{paramName}}');
+    {{/required}}
 {{/queryParams}}
 {{/queryParams.0}}
 {{#pathParams}}
-        {{#required}}
-        ajax.check(params.{{baseName}}, '{{paramName}}');
-        {{/required}}
+    {{#required}}
+    ajax.check(params.{{paramName}}, '{{paramName}}');
+    {{/required}}
 {{/pathParams}}
 {{#formParams.0}}
-        p.form = {};
+    p.form = {};
 {{#formParams}}
-        if ('{{baseName}}' in params) p.form.{{baseName}} = params.{{paramName}};
-        {{#required}}
-        ajax.check(params.{{paramName}}, '{{paramName}}');
-        {{/required}}
+    if ('{{paramName}}' in params) p.form.{{paramName}} = params.{{paramName}};
+    {{#required}}
+    ajax.check(params.{{paramName}}, '{{paramName}}');
+    {{/required}}
 {{/formParams}}
 {{/formParams.0}}
 {{#bodyParam}}
-        p.data = data;
-        {{#required}}
-        ajax.check(data, 'body.{{paramName}}');
-        {{/required}}
+    p.data = data;
+    {{#required}}
+    ajax.check(data, 'body.{{paramName}}');
+    {{/required}}
 {{/bodyParam}}
-        return ajax.ajax({
-            method: '{{httpMethod}}',
-            url,
-            ...p
-        });
-    }
+    return ajax.ajax({
+      method: '{{httpMethod}}',
+      url,
+      ...p
+    }, path);
+  }
 {{/operation}}
 }
 {{/operations}}

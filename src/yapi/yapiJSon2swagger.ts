@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 import * as ejs from 'easy-json-schema';
 import { JSONSchema6 } from 'json-schema';
 import * as JSON5 from 'json5';
+import { Json2Service } from '../cli';
 
 interface API {
   name: string;
@@ -52,7 +53,7 @@ interface STag {
   description?: string;
 }
 
-export default function yapiJSon2swagger(list: API[]) {
+export default function yapiJSon2swagger(list: API[], yapiConfig: Json2Service['yapiConfig']) {
   let basePath: string = '';
   let info = {
     title: 'unknown',
@@ -223,8 +224,17 @@ export default function yapiJSon2swagger(list: API[]) {
                       let resBody = JSON5.parse(api.res_body);
                       if (resBody !== null) {
                         if (resBody['type']) {
-                          schemaObj = resBody; //as the parameters,
+                          schemaObj = resBody; // as the parameters,
                         } else {
+                          // required
+                          if (yapiConfig && yapiConfig.required) {
+                            resBody = JSON.parse(
+                              JSON.stringify(resBody).replace(
+                                /"([^*"]+":)/g,
+                                (all, name) => `"*${name}`
+                              )
+                            );
+                          }
                           schemaObj = ejs(resBody);
                         }
                         if (schemaObj.properties && schemaObj.properties.code) {
