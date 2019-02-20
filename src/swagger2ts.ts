@@ -1,6 +1,6 @@
 import { exec } from 'child_process';
 import { promisify } from 'es6-promisify';
-import { SwaggerParser } from 'src';
+import { SwaggerParser } from './cli';
 import * as path from 'path';
 
 const wrappedExec = <C>(url: string, cb: C) => exec(url, cb);

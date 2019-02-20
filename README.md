@@ -24,6 +24,9 @@ json2service.json
 {
   "url": "./api.json",
   "type": "yapi",
+  "yapiConfig": {
+    "required": true // 当直接使用 yapi json 定义返回数据格式的时候，生成的 typescript 文件，默认情况下，所有字段都是可选的，配置成 true，则所有字段都是不可缺省的
+  },
   "swaggerParser": {
     "-o": "tmp/services"
   }

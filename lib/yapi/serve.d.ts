@@ -1,16 +1,13 @@
 #!/usr/bin/env node
-export interface Json2Service {
-  url: string;
-  type?: 'yapi' | 'swagger';
-  swaggerParser: SwaggerParser;
-}
+import { Json2Service } from '../cli';
 export interface SwaggerParser {
   '-o'?: string;
   '-t'?: string;
   '-l'?: string;
 }
 export default function serve(
-  url: string
+  url: string,
+  yapiConfig: Json2Service['yapiConfig']
 ): Promise<{
   code: number;
   message?: string;
