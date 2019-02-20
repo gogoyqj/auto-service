@@ -10,7 +10,8 @@ export interface Json2Service {
   yapiConfig?: {
     required?: boolean;
   };
-  swaggerParser: SwaggerParser;
+  swaggerParser?: SwaggerParser;
+  validateResponse?: boolean;
 }
 
 export interface SwaggerParser {

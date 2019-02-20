@@ -1,7 +1,7 @@
 import { exec } from 'child_process';
 import { promisify } from 'es6-promisify';
 import { SwaggerParser } from './cli';
-import * as path from 'path';
+import { generatorPath } from './consts';
 
 const wrappedExec = <C>(url: string, cb: C) => exec(url, cb);
 wrappedExec[promisify.argumentNames] = ['error', 'stdout', 'stderr'];
@@ -27,20 +27,12 @@ export default async function swagger2ts(
 async function checkJava() {
   return await asyncExec('java -version');
 }
-const pluginsPath = path.join(__dirname, '..', 'plugins');
-const generatorPath = path.join(pluginsPath, 'swagger-codegen-cli.jar');
-const defaultParseConfig = {
-  '-l': 'typescript-angularjs',
-  '-t': path.join(pluginsPath, 'typescript-tkit'),
-  '-o': path.join(process.cwd(), 'src', 'services')
-};
 
-async function parseSwagger(swaggerParser: SwaggerParser, clear: boolean = false) {
-  const config = { ...defaultParseConfig, ...swaggerParser };
+async function parseSwagger(config: SwaggerParser, clear: boolean = false) {
   return await asyncExec(
-    `${clear ? `rm -rf ${config['-o']};` : ''}java -jar ${generatorPath} generate ${Object.keys(
-      config
-    )
+    `${
+      clear ? `rm -rf ${config['-o']}/api;rm -rf ${config['-o']}/model;` : ''
+    }java -jar ${generatorPath} generate ${Object.keys(config)
       .map(opt => `${opt} ${config[opt]}`)
       .join(' ')}`
   )
