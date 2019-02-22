@@ -40,7 +40,7 @@
     "prettier": "^1.16.1",
     "pretty-quick": "^1.10.0",
     "tslint": "^5.12.1",
-    "typescript": "3.2.2",
+    "typescript": "^3.3.3333",
     "validate-commit-msg": "^2.14.0"
   }
 }
