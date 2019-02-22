@@ -1,12 +1,13 @@
 {
   "name": "sm2tsservice",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "swagger or yapi mock to typescript services and models",
   "repository": "git@github.com:gogoyqj/sm2tsservice.git",
   "author": "杨乾军 <yang@yang>",
   "license": "MIT",
   "main": "lib/index.js",
   "bin": "./lib/cli.js",
+  "types": "lib/index.d.ts",
   "husky": {
     "hooks": {
       "pre-commit": "pretty-quick --staged",

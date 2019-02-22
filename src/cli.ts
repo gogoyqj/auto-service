@@ -9,6 +9,7 @@ export interface Json2Service {
   type?: 'yapi' | 'swagger';
   yapiConfig?: {
     required?: boolean;
+    bodyJsonRequired?: boolean;
   };
   swaggerParser?: SwaggerParser;
   validateResponse?: boolean;

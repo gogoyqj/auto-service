@@ -106,7 +106,7 @@ export class {{classname}} {
       method: '{{httpMethod}}',
       url,
       ...p
-    }, path);
+    }, path, this.$basePath);
   }
 {{/operation}}
 }

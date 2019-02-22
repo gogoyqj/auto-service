@@ -168,7 +168,7 @@ export default function yapiJSon2swagger(list: API[], yapiConfig: Json2Service['
                     if (jsonParam !== null) {
                       if (!jsonParam['type']) {
                         // required
-                        if (yapiConfig && yapiConfig.required) {
+                        if (yapiConfig && yapiConfig.bodyJsonRequired) {
                           jsonParam = JSON.parse(
                             JSON.stringify(jsonParam).replace(
                               /"([^*"]+":)/g,
