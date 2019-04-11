@@ -22,3 +22,5 @@ yarn-error.log*
 src/services*
 lib/services*
 tmp
+/services
+/lib

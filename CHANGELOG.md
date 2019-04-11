@@ -1,3 +1,10 @@
+## <small>1.0.5 (2019-03-26)</small>
+
+- fix: 修复同步造成的模板错误 ([588a895](https://github.com/gogoyqj/sm2tsservice/commit/588a895))
+- fix(yapi): 修复是否必选判断逻辑错误 ([59ede81](https://github.com/gogoyqj/sm2tsservice/commit/59ede81))
+- chore: 升级 typescript 到 3.3.3 ([73cab89](https://github.com/gogoyqj/sm2tsservice/commit/73cab89))
+- chore: 参数及响应 body 格式校验的准备工作 ([a25729d](https://github.com/gogoyqj/sm2tsservice/commit/a25729d))
+
 ## [1.0.3](https://github.com/gogoyqj/sm2tsservice/compare/v1.0.2...v1.0.3) (2019-02-20)
 
 ### Features

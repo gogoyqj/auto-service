@@ -1,9 +1,17 @@
 import * as path from 'path';
 import * as fs from 'fs';
+import * as request from 'request';
 
 import { Json2Service } from './cli';
 import swagger2ts from './swagger2ts';
 import serve from './yapi/serve';
+import { pluginsPath } from './consts';
+
+const defaultParseConfig = {
+  '-l': 'typescript-angularjs',
+  '-t': path.join(pluginsPath, 'typescript-tkit'),
+  '-o': path.join(process.cwd(), 'src', 'services')
+};
 
 export default async function gen(
   config: Json2Service,
@@ -27,7 +35,30 @@ export default async function gen(
       return 1;
     }
   }
-  const res = await swagger2ts({ ...swaggerParser, '-i': swaggerUrl }, options.clear);
+  const swagger2tsConfig = { ...defaultParseConfig, ...swaggerParser };
+  const servicesPath = swagger2tsConfig['-o'];
+  const swaggerPath = path.join(servicesPath, 'swagger.json');
+  if (config.validateResponse && swaggerUrl.match(/^http/)) {
+    const code: number = await new Promise(rs => {
+      request.get(swaggerUrl, (err, { body }) => {
+        if (err) {
+          console.error(`[ERROR]: download swagger json failed with: ${err}`);
+          rs(1);
+        } else {
+          if (!fs.existsSync(servicesPath)) {
+            fs.mkdirSync(servicesPath);
+          }
+          fs.writeFileSync(swaggerPath, body, { encoding: 'utf8' });
+          swaggerUrl = swaggerPath;
+          rs(0);
+        }
+      });
+    });
+    if (code) {
+      return code;
+    }
+  }
+  const res = await swagger2ts({ ...swagger2tsConfig, '-i': swaggerUrl }, options.clear);
   if (res.code) {
     console.error(`[ERROR]: gen failed with: ${res.message}`);
     return 1;
