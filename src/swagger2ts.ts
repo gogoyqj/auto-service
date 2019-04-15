@@ -36,7 +36,12 @@ async function parseSwagger(config: SwaggerParser, clear: boolean = false) {
       .map(opt => `${opt} ${config[opt]}`)
       .join(' ')}`
   )
-    .then(() => ({ code: 0 }))
+    .then(res => {
+      if (res.code) {
+        return Promise.reject(res);
+      }
+      return Promise.resolve(res);
+    })
     .catch(e => ({
       code: 6,
       message: `[ERROR]: gen failed from ${config['-i']} with ${e.message}`
