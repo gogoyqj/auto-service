@@ -39,7 +39,7 @@ json2service.json
 }
 ```
 
-参考下放代码，实现 ajax 类【如果使用的 axios，可直接复制使用】
+参考下方代码，实现 ajax 类【如果使用的 axios，且后端返回数据结构遵循 `{ code?:number;message?:string;result: any }`，可直接复制使用】
 
 ```ts
 import axios, { AxiosError } from 'axios';
