@@ -22,7 +22,8 @@
     "allowSyntheticDefaultImports": false,
     "typeRoots": ["node_modules/@types"],
     "traceResolution": false,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": ["node"]
   },
   "exclude": ["node_modules", "lib", "es", "dist", "tmp", "services"]
 }

@@ -152,6 +152,13 @@ export default new WrappedFetch();
 
 ```shell
   ./node_modules/.bin/sm2tsservice
-  sm2tsservice
-  sm2tsservice -c config.json # 指定配置文件
+  ./node_modules/.bin/sm2tsservice sm2tsservice -c config.json # 指定配置文件
+```
+
+```package.json
+  {
+    "scripts": {
+      "api": "sm2tsservice --clear"
+    }
+  }
 ```
