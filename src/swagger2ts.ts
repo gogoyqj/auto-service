@@ -2,10 +2,11 @@ import { exec } from 'child_process';
 import { promisify } from 'es6-promisify';
 import { SwaggerParser } from './cli';
 import { generatorPath } from './consts';
+import * as fs from 'fs-extra';
 
 const wrappedExec = <C>(url: string, cb: C) => exec(url, cb);
 wrappedExec[promisify.argumentNames] = ['error', 'stdout', 'stderr'];
-const asyncExec = <T>(cmd: T) =>
+const asyncExec = (cmd: string) =>
   promisify(wrappedExec)(cmd).then(
     (res: { error: string; stdout: string; stderr: string }) =>
       res.error ? { code: 1, message: res.stderr || res.error } : { code: 0, message: res.stdout },
@@ -15,7 +16,7 @@ const asyncExec = <T>(cmd: T) =>
 export default async function swagger2ts(
   swaggerParser: SwaggerParser,
   clear: boolean = false
-): Promise<{ code: Number; message?: string }> {
+): Promise<{ code: number; message?: string }> {
   const java = await checkJava();
   if (java.code) {
     console.error(`[ERROR]: check java failed with ${java.message}`);
@@ -29,13 +30,31 @@ async function checkJava() {
 }
 
 async function parseSwagger(config: SwaggerParser, clear: boolean = false) {
-  return await asyncExec(
-    `${
-      clear ? `rm -rf ${config['-o']}/api;rm -rf ${config['-o']}/model;` : ''
-    }java -jar ${generatorPath} generate ${Object.keys(config)
-      .map(opt => `${opt} ${config[opt]}`)
-      .join(' ')}`
-  )
+  return await new Promise(async (rs, rj) => {
+    if (clear) {
+      try {
+        fs.removeSync(`${config['-o']}/api`);
+        fs.removeSync(`${config['-o']}/model`);
+        rs({ code: 0 });
+      } catch (e) {
+        rj({
+          code: 500,
+          message: e.message
+        });
+      }
+    } else {
+      rs({ code: 0 });
+    }
+  })
+    .then(
+      () =>
+        asyncExec(
+          `java -jar ${generatorPath} generate ${Object.keys(config)
+            .map(opt => `${opt} ${config[opt]}`)
+            .join(' ')}`
+        ),
+      e => e
+    )
     .then(res => {
       if (res.code) {
         return Promise.reject(res);
