@@ -1,3 +1,13 @@
+## [1.0.6](https://github.com/gogoyqj/sm2tsservice/compare/v1.0.3...v1.0.6) (2019-04-15)
+
+### Bug Fixes
+
+- **yapi:** 修复是否必选判断逻辑错误 ([59ede81](https://github.com/gogoyqj/sm2tsservice/commit/59ede81))
+- 修复同步造成的模板错误 ([588a895](https://github.com/gogoyqj/sm2tsservice/commit/588a895))
+- 升级 swagger-codegen-cli,强制禁止使用方法重载,避免不可控的问题;并修复工具在执行 jar 出错时不抛出错误的 bug
+  ([5b4ef1f](https://github.com/gogoyqj/sm2tsservice/commit/5b4ef1f))
+- 模板错误 ([283a7fb](https://github.com/gogoyqj/sm2tsservice/commit/283a7fb))
+
 ## <small>1.0.5 (2019-03-26)</small>
 
 - fix: 修复同步造成的模板错误 ([588a895](https://github.com/gogoyqj/sm2tsservice/commit/588a895))
