@@ -3,13 +3,14 @@
 ## start
 
 ```shell
+  cd yourProjectName
   java -version
-  npm i
+  npm i sm2tsservice -D
 ```
 
 ## config
 
-json2service.json
+edit json2service.json
 
 | 参数             | 值               | 说明                                                                                                                                               |
 | ---------------- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -151,14 +152,17 @@ export default new WrappedFetch();
 ```
 
 ```shell
-  ./node_modules/.bin/sm2tsservice
-  ./node_modules/.bin/sm2tsservice sm2tsservice -c config.json # 指定配置文件
+  ./node_modules/.bin/sm2tsservice # 使用默认配置
+  ./node_modules/.bin/sm2tsservice -c config.json # 指定配置文件
+  ./node_modules/.bin/sm2tsservice --clear # 清空上次生成产物
 ```
 
-```package.json
-  {
-    "scripts": {
-      "api": "sm2tsservice --clear"
-    }
+或可以写入 `package.json`，通过 `npm run api` 使用
+
+```json
+{
+  "scripts": {
+    "api": "sm2tsservice --clear"
   }
+}
 ```
