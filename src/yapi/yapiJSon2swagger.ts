@@ -54,7 +54,7 @@ interface STag {
 }
 
 export default function yapiJSon2swagger(list: API[], yapiConfig: Json2Service['yapiConfig']) {
-  let basePath: string = '';
+  let basePath = '';
   let info = {
     title: 'unknown',
     version: 'last',
@@ -178,11 +178,10 @@ export default function yapiJSon2swagger(list: API[], yapiConfig: Json2Service['
                         }
                         jsonParam = ejs(jsonParam);
                       }
-                      // @ts-ignore, f**k @types/lodash
-                      const name = _.flow(
+                      const name = (_.flow(
                         _.camelCase,
                         _.upperFirst
-                      )(url.replace(/\//g, '-') + 'Body'); // 向下兼容: 请勿修改 name 生成个规则
+                      ) as any)(url.replace(/\//g, '-') + 'Body'); // 向下兼容: 请勿修改 name 生成个规则
                       if (jsonParam['title'] && jsonParam['title'].indexOf('empty object') !== -1) {
                         jsonParam['title'] = name;
                       }
@@ -259,11 +258,10 @@ export default function yapiJSon2swagger(list: API[], yapiConfig: Json2Service['
                           !schemaObj['title'] ||
                           schemaObj['title'].indexOf('empty object') !== -1
                         ) {
-                          // @ts-ignore, f**k @types/lodash
-                          schemaObj['title'] = _.flow(
+                          schemaObj['title'] = (_.flow(
                             _.camelCase,
                             _.upperFirst
-                          )(url.replace(/\//g, '-'));
+                          ) as any)(url.replace(/\//g, '-'));
                         }
                       }
                     }
