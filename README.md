@@ -44,6 +44,7 @@ edit json2service.json
 
 ```ts
 import axios, { AxiosError } from 'axios';
+import qs from 'qs';
 
 const inst = axios.create({
   timeout: 2000,
