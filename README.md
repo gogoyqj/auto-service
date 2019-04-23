@@ -62,7 +62,8 @@ function onStatusError(error: AxiosError | Error) {
         }
       : { code: 10001, message: error.message };
   if (err.code === 401 || err.code === 403) {
-    EventCenter.emit('common.user.status', err);
+    // @todo 未登录未授权
+    // EventCenter.emit('common.user.status', err);
   }
   return err;
 }
