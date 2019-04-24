@@ -15,7 +15,47 @@
     }
   },
   "scripts": {
-    "build": "tsc -d"
+    "build": "tsc -d",
+    "test": "node test.js"
+  },
+  "jest": {
+    "collectCoverageFrom": ["src/**/*.{js,jsx,ts,tsx}"],
+    "setupFiles": [],
+    "testMatch": [
+      "<rootDir>/src/**/__tests__/**/*.(j|t)s?(x)",
+      "<rootDir>/tests/**/?(*.)(spec|test).(j|t)s?(x)"
+    ],
+    "testEnvironment": "node",
+    "testURL": "http://localhost:4444",
+    "transform": {
+      "^.+\\.(js|jsx|mjs)$": "<rootDir>/node_modules/babel-jest",
+      "^.+\\.tsx?$": "ts-jest",
+      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
+      "^(?!.*\\.(js|jsx|mjs|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
+    },
+    "transformIgnorePatterns": ["[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|ts|tsx)$"],
+    "moduleNameMapper": {
+      "^src(.*)$": "<rootDir>/src/$1",
+      "^react-native$": "react-native-web"
+    },
+    "moduleFileExtensions": [
+      "web.ts",
+      "ts",
+      "web.tsx",
+      "tsx",
+      "web.js",
+      "js",
+      "web.jsx",
+      "jsx",
+      "json",
+      "node",
+      "mjs"
+    ],
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "<rootDir>/tsconfig.test.json"
+      }
+    }
   },
   "dependencies": {
     "ajv": "^6.9.1",
@@ -34,6 +74,7 @@
     "@types/detect-port": "^1.1.0",
     "@types/es6-promisify": "^6.0.0",
     "@types/fs-extra": "^5.0.5",
+    "@types/jest": "^24.0.11",
     "@types/json-schema": "^7.0.1",
     "@types/json5": "^0.0.30",
     "@types/lodash": "^4.14.120",
@@ -41,12 +82,15 @@
     "@types/request": "^2.48.1",
     "@typescript-eslint/eslint-plugin": "^1.7.0",
     "@typescript-eslint/parser": "^1.7.0",
+    "babel-jest": "^24.7.1",
     "eslint": "^5.16.0",
     "eslint-config-prettier": "^4.1.0",
     "eslint-plugin-prettier": "^3.0.1",
     "husky": "^1.3.1",
+    "jest": "^24.7.1",
     "lint-staged": "^8.1.5",
     "prettier": "^1.16.1",
+    "ts-jest": "^24.0.2",
     "typescript": "^3.4.3",
     "validate-commit-msg": "^2.14.0"
   }
