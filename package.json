@@ -15,7 +15,7 @@
     }
   },
   "scripts": {
-    "build": "tsc -d",
+    "build": "node_modules/typescript/bin/tsc --build tsconfig.prod.json",
     "test": "node test.js"
   },
   "jest": {

@@ -5,5 +5,6 @@ describe('validate/middleware', () => {
   const beforeRes = createBeforeResponseMiddle();
   it('BeforeRequest ok', () => {
     // do nothing
+    console.log(2);
   });
 });
