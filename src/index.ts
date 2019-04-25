@@ -5,19 +5,13 @@ import * as request from 'request';
 import { Json2Service } from './cli';
 import swagger2ts from './swagger2ts';
 import serve from './yapi/serve';
-import { pluginsPath } from './consts';
+import { pluginsPath, DefaultBasePath, SmTmpDir } from './consts';
 
 const defaultParseConfig = {
   '-l': 'typescript-angularjs',
   '-t': path.join(pluginsPath, 'typescript-tkit'),
   '-o': path.join(process.cwd(), 'src', 'services')
 };
-
-export const smTmpDir = path.join(__dirname, '..', 'tmp');
-if (!fs.existsSync(smTmpDir)) {
-  fs.mkdirSync(smTmpDir);
-}
-
 export default async function gen(
   config: Json2Service,
   options: { clear?: boolean }
@@ -42,7 +36,6 @@ export default async function gen(
   }
   const swagger2tsConfig = { ...defaultParseConfig, ...swaggerParser };
   const servicesPath = swagger2tsConfig['-o'];
-  const swaggerPath = path.join(smTmpDir, 'swagger.json');
   if (config.validateResponse && swaggerUrl.match(/^http/)) {
     const code: number = await new Promise(rs => {
       request.get(swaggerUrl, (err, { body }) => {
@@ -53,6 +46,8 @@ export default async function gen(
           if (!fs.existsSync(servicesPath)) {
             fs.mkdirSync(servicesPath);
           }
+          const swaggerFileName = `${(body && body.basePath) || DefaultBasePath}.json`;
+          const swaggerPath = path.join(SmTmpDir, swaggerFileName);
           fs.writeFileSync(swaggerPath, body, { encoding: 'utf8' });
           swaggerUrl = swaggerPath;
           rs(0);
