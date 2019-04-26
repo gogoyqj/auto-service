@@ -16,6 +16,7 @@ export interface PathJson {
 }
 
 export interface SwaggerJson {
+  __mtime?: any;
   paths: {
     [path: string]: {
       [method: string]: PathJson;
