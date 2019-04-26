@@ -5,7 +5,7 @@ import * as request from 'request';
 import { Json2Service } from './cli';
 import swagger2ts from './swagger2ts';
 import serve from './yapi/serve';
-import { pluginsPath, DefaultBasePath, SmTmpDir } from './consts';
+import { pluginsPath, DefaultBasePath, SmTmpDir, basePathToFileName } from './consts';
 
 const defaultParseConfig = {
   '-l': 'typescript-angularjs',
@@ -46,7 +46,9 @@ export default async function gen(
           if (!fs.existsSync(servicesPath)) {
             fs.mkdirSync(servicesPath);
           }
-          const swaggerFileName = `${(body && body.basePath) || DefaultBasePath}.json`;
+          const swaggerFileName = basePathToFileName(
+            `${(body && JSON.parse(body).basePath) || DefaultBasePath}.json`
+          );
           const swaggerPath = path.join(SmTmpDir, swaggerFileName);
           fs.writeFileSync(swaggerPath, body, { encoding: 'utf8' });
           swaggerUrl = swaggerPath;

@@ -6,9 +6,9 @@ import {
   SMAbstractNext,
   SMValidateInfo,
   SMValidator
-} from 'src/types';
+} from '../types';
 import { getReadableDataAsync, getParams } from './utils';
-import { X_SM_PATH, X_SM_BASEPATH, X_SM_PARAMS, X_SM_ERROR } from './consts';
+import { X_SM_PATH, X_SM_BASEPATH, X_SM_PARAMS, X_SM_ERROR } from '../consts';
 import { defaultValidator } from './validator';
 
 /**
@@ -37,7 +37,7 @@ export function createValidateMiddle(hooks?: SMAbstractNext) {
 }
 
 /**
- * @description http-proxy-middleware and yapi mock server
+ * @description http-proxy-middleware
  */
 export const requestMiddleware = createValidateMiddle(
   async (req: SMAbstractRequest, res: SMAbstractResponse) => {
@@ -49,18 +49,18 @@ export const requestMiddleware = createValidateMiddle(
       switch (bodyType) {
         case 'application/json':
         case 'javascript/json':
-          smConfig.data = JSON.parse(body);
+          smConfig.data = smConfig.body = JSON.parse(body);
           break;
         // @cc: file
         case 'multipart/form-data':
         case 'application/x-www-form-urlencoded':
-          smConfig.form = qs.parse(body);
+          smConfig.form = smConfig.body = qs.parse(body);
           break;
       }
       req[X_SM_PARAMS] = smConfig;
     } catch (e) {
       req[X_SM_ERROR] = req[X_SM_ERROR] || [];
-      req[X_SM_ERROR].push(`parse params failed with: ${e.message || e}`);
+      req[X_SM_ERROR].push(`提取请求参数错误: ${e.message || e}`);
     }
   }
 );
@@ -72,7 +72,10 @@ export const responseHooksFactory = (cb: SMValidator) => async (
 ) => {
   const error: string[] = req[X_SM_ERROR] || [];
   let result: SMValidateInfo = {
+    req,
+    res,
     swagger,
+    send: req[X_SM_PARAMS],
     receive: {
       status: res.statusCode || 200
     }
@@ -81,21 +84,15 @@ export const responseHooksFactory = (cb: SMValidator) => async (
     const bodyType = 'headers' in res ? res.headers['content-type'] : res.getHeader('content-type');
     if (typeof bodyType === 'string') {
       // @cc: json only
-      if (bodyType.match(/json$/g)) {
-        const responseBody = await getReadableDataAsync(res);
-        const smConfig = req[X_SM_PARAMS];
-        result = {
-          ...result,
-          send: smConfig,
-          receive: {
-            ...result.receive,
-            body: JSON.parse(responseBody)
-          }
+      if (bodyType.match(/json/g)) {
+        result.receive = {
+          ...result.receive,
+          body: JSON.parse(await getReadableDataAsync(res))
         };
       }
     }
   } catch (e) {
-    error.push(`parse response failed with: ${e.message || e}`);
+    error.push(`提取接口响应出错: ${e.message || e}`);
   }
   if (cb) {
     cb({
@@ -116,8 +113,8 @@ export const responseMiddleware = createValidateMiddle(responseHooksFactory(defa
 /**
  * @description 劫持 webpackDevServer proxy 配置，以获取参数及相应
  */
-export function proxyHandle(proxies: proxy.Config[]) {
-  return proxies.map(
+export function proxyHandle(proxies: proxy.Config[] | proxy.Config) {
+  return (Array.isArray(proxies) ? proxies : [proxies]).map(
     (proxy): proxy.Config => {
       const { onProxyReq, onProxyRes } = proxy;
       return {

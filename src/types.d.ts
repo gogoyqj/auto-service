@@ -1,17 +1,24 @@
 import { JSONSchema4, JSONSchema6 } from 'json-schema';
 import { IncomingMessage, ServerResponse } from 'http';
 
+export type SMSchema = JSONSchema4 | JSONSchema6;
+
 export interface PathJson {
+  description: string;
   parameters: {
     name: string;
     in: 'path' | 'form' | 'query' | 'body' | string;
     description: string;
     required: boolean;
     type?: string;
-    schema?: JSONSchema4 | JSONSchema6;
+    schema?: SMSchema;
+    format?: any;
   }[];
   responses: {
-    [status: number]: JSONSchema4 | JSONSchema6;
+    [status: number]: {
+      description: string;
+      schema?: SMSchema;
+    };
   };
 }
 
@@ -22,7 +29,7 @@ export interface SwaggerJson {
       [method: string]: PathJson;
     };
   };
-  definitions?: JSONSchema6;
+  definitions?: SMSchema;
   basePath: string;
 }
 
@@ -34,15 +41,18 @@ export interface SMAjaxConfig {
   query?: any;
   header?: any;
   path?: any;
+  body?: any; // put json or form in body 2
 }
 
 export interface SMValidateInfo {
   swagger: { path: string; basePath: string };
-  send?: SMAjaxConfig;
+  send: SMAjaxConfig;
   receive: {
     body?: any;
     status: number;
   };
+  req: SMAbstractRequest;
+  res: SMAbstractResponse;
 }
 
 export type SMAbstractRequest = IncomingMessage;

@@ -1,6 +1,6 @@
 import * as qs from 'qs';
-import { SMAbstractRequest, SMAjaxConfig, SMAbstractResponse, SMValidateInfo } from 'src/types';
-import { X_SM_PATH, X_SM_BASEPATH } from './consts';
+import { SMAbstractRequest, SMAjaxConfig, SMAbstractResponse, SMValidateInfo } from '../types';
+import { X_SM_PATH, X_SM_BASEPATH } from '../consts';
 
 export const pathToReg = (path: string) => {
   return new RegExp(
