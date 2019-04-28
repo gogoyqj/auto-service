@@ -15,7 +15,7 @@
     }
   },
   "scripts": {
-    "build": "node_modules/typescript/bin/tsc"
+    "build": "node_modules/typescript/bin/tsc -d"
   },
   "dependencies": {
     "ajv": "^6.9.1",
