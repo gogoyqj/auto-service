@@ -1,9 +1,10 @@
 {
-  "url": "./api.json",
+  "url": "./tmp/api.json",
   "type": "yapi",
   "swaggerParser": {
     "-t": "plugins/typescript-tkit/",
     "-l": "typescript-angularjs",
     "-o": "tmp/services"
-  }
+  },
+  "validateResponse": true
 }

@@ -15,7 +15,7 @@ async function download(url: string) {
   return new Promise<{ code: number; message?: string; result?: any }>(rs => {
     request
       .get(url, (err, { body }) => {
-        let error: string = '';
+        let error = '';
         let yapi: any;
         if (err) {
           error = `[ERROR]: download ${url} faild with ${err}`;
