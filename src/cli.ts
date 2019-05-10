@@ -36,6 +36,7 @@ const ConfigFile = path.join(CD, Config);
 if (!fs.existsSync(ConfigFile)) {
   console.error(`[ERROR]: ${Config} not found in ${CD}`);
 } else {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const config: Json2Service = require(ConfigFile);
   gen(config, { clear: commander.clear });
 }
