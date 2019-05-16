@@ -30,6 +30,7 @@ interface List {
   markdown: string;
   desc: string;
   res_body: string;
+  res_schema_body?: string; // 兼容内部定制版本
   index: number;
   api_opened: boolean;
   res_body_is_json_schema: boolean;
@@ -230,10 +231,17 @@ export default function yapiJSon2swagger(list: API[], yapiConfig: Json2Service['
                   if (api.res_body_type === 'raw') {
                     schemaObj['type'] = 'string';
                     schemaObj['format'] = 'binary';
+
                     schemaObj['default'] = api.res_body;
                   } else if (api.res_body_type === 'json') {
-                    if (api.res_body) {
-                      let resBody = JSON5.parse(api.res_body);
+                    // 兼容内部版本
+                    const body = api.res_body_is_json_schema
+                      ? 'res_schema_body' in api
+                        ? api.res_schema_body
+                        : api.res_body
+                      : api.res_body;
+                    if (body) {
+                      let resBody = JSON5.parse(body);
                       if (resBody !== null) {
                         if (resBody['type']) {
                           schemaObj = resBody; // as the parameters,
