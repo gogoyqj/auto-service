@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as Ajv from 'ajv';
 import { SwaggerJson, SMValidator, SMSchema, PathJson } from '../types';
-import { SmTmpDir, DefaultBasePath, basePathToFileName } from '../consts';
+import { SmTmpDir, DefaultBasePath, basePathToFileName } from '../init';
 import * as fs from 'fs-extra';
 
 const formatSchema = <S extends {}>(schema: S) =>

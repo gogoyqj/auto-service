@@ -36,7 +36,8 @@
 1. 注入校验标志: 编辑 `@ajax` 实现，向 headers 内注入 - 目前需人工注入，同理，可以通过移除该 `headers` 关闭校验
 
    ```js
-   import { X_SM_BASEPATH, X_SM_PATH } from 'sm2tsservice/lib/validate';
+   // 1.1.2
+   import { X_SM_BASEPATH, X_SM_PATH } from 'sm2tsservice/consts';
 
    let config = {
      ...extra,

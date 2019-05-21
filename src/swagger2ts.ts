@@ -1,7 +1,7 @@
 import { exec } from 'child_process';
 import { promisify } from 'es6-promisify';
 import { SwaggerParser } from './cli';
-import { generatorPath } from './consts';
+import { generatorPath } from './init';
 import * as fs from 'fs-extra';
 
 const wrappedExec = <C>(url: string, cb: C) => exec(url, cb);

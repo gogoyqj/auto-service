@@ -8,7 +8,7 @@ import {
   SMValidator
 } from '../types';
 import { getReadableDataAsync, getParams } from './utils';
-import { X_SM_PATH, X_SM_BASEPATH, X_SM_PARAMS, X_SM_ERROR } from '../consts';
+import { X_SM_PATH, X_SM_BASEPATH, X_SM_PARAMS, X_SM_ERROR } from '../init';
 import { defaultValidator } from './validator';
 
 /**

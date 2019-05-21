@@ -5,7 +5,7 @@ import * as request from 'request';
 import { Json2Service } from './cli';
 import swagger2ts from './swagger2ts';
 import serve from './yapi/serve';
-import { pluginsPath, DefaultBasePath, SmTmpDir, basePathToFileName } from './consts';
+import { pluginsPath, DefaultBasePath, SmTmpDir, basePathToFileName } from './init';
 
 const defaultParseConfig = {
   '-l': 'typescript-angularjs',
