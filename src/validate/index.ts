@@ -1,2 +1,2 @@
-export * from '../consts';
+export * from '../init';
 export { proxyHandle } from './middleware';
