@@ -5,7 +5,7 @@ yarn-debug.log*
 yarn-error.log*
 src/services*
 lib/services*
-/services
-/tmp
+services
+tmp
 
 json2service.json
