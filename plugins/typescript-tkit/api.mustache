@@ -52,7 +52,7 @@ export class {{classname}} {
 
   public constructor(basePath?: string) {
     if (basePath !== undefined) {
-      this.$basePath = basePath;
+      this.$basePath = basePath.replace(/\/$/g, '');
     }
   }
 
