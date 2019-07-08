@@ -48,11 +48,11 @@ export type ParamsBody{{nickname}} = {{&dataType}};{{#description}} // {{&descri
  */
 {{/description}}
 export class {{classname}} {
-  protected $basePath = '{{{contextPath}}}';
+  protected $basePath = '{{{contextPath}}}'.replace(/\/$/, '');
 
   public constructor(basePath?: string) {
     if (basePath !== undefined) {
-      this.$basePath = basePath.replace(/\/$/g, '');
+      this.$basePath = basePath.replace(/\/$/, '');
     }
   }
 
