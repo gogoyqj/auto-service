@@ -1,5 +1,7 @@
 # sm2tsservice
 
+推荐替换为 [tkit-service](https://www.npmjs.com/package/tkit-service) `npm i -D tkit-service`
+
 ## start
 
 ```shell
@@ -41,6 +43,8 @@ edit json2service.json
 ```
 
 参考下方代码，实现 ajax 类【如果使用的 axios，且后端返回数据结构遵循 `{ code?:number;message?:string;result: any }`，可直接复制使用】
+
+[推荐使用 tkit-ajax](https://www.npmjs.com/package/tkit-ajax) `npm i tkit-ajax`
 
 ```ts
 import axios, { AxiosError } from 'axios';
