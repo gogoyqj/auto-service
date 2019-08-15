@@ -1,8 +1,9 @@
 import * as path from 'path';
-import * as Ajv from 'ajv';
-import { SwaggerJson, SMValidator, SMSchema, PathJson } from '../types';
-import { SmTmpDir, DefaultBasePath, basePathToFileName } from '../init';
 import * as fs from 'fs-extra';
+import * as Ajv from 'ajv';
+import chalk from 'chalk';
+import { SwaggerJson, SMValidator, SMSchema, PathJson } from '../consts';
+import { SmTmpDir, DefaultBasePath, basePathToFileName } from '../init';
 
 const formatSchema = <S extends {}>(schema: S) =>
   JSON.parse(JSON.stringify(schema).replace(/"#\/definitions/g, '"definitions#/definitions'));
@@ -122,9 +123,9 @@ export const defaultValidator: SMValidator = async ({ code, message, result }) =
       if (parameters.length && send) {
         const error = validator(getParamSchema(parameters), send);
         if (error) {
-          console.error(`接口 ${baseInfo} 参数不符合约定: ${error}`);
+          console.log(chalk.red(`接口 ${baseInfo} 参数不符合约定: ${error}`));
         } else {
-          console.log(`接口 ${baseInfo} 参数符合约定`);
+          console.log(chalk.red(`接口 ${baseInfo} 参数符合约定`));
         }
       }
       // 校验参数
@@ -133,15 +134,15 @@ export const defaultValidator: SMValidator = async ({ code, message, result }) =
       if (schema) {
         const error = validator(formatSchema(schema), body);
         if (error) {
-          console.error(`接口 ${baseInfo} 数据返回不符合约定: ${error}`);
+          console.log(chalk.red(`接口 ${baseInfo} 数据返回不符合约定: ${error}`));
         } else {
-          console.log(`接口 ${baseInfo} 数据返回符合约定`);
+          console.log(chalk.green(`接口 ${baseInfo} 数据返回符合约定`));
         }
       } else if (body) {
         throw Error(`接口 ${baseInfo} 不应该有数据返回`);
       }
     }
   } catch (e) {
-    console.error(e.message);
+    console.log(chalk.red(e.message));
   }
 };

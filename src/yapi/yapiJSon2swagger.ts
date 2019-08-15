@@ -1,9 +1,9 @@
 import * as _ from 'lodash';
 // @ts-ignore
-import * as ejs from 'easy-json-schema';
+import * as ejs from 'easy-json-schema'; // @fix module.exports = ejs;
 import { JSONSchema6 } from 'json-schema';
 import * as JSON5 from 'json5';
-import { Json2Service } from '../cli';
+import { PathJson, SwaggerJson, Json2Service } from '../consts';
 
 interface API {
   name: string;
@@ -74,7 +74,7 @@ export default function yapiJSon2swagger(list: API[], yapiConfig: Json2Service['
     });
   });
   let reg = basePath ? new RegExp(`^${basePath}`) : undefined;
-  const swaggerObj = {
+  const swaggerObj: SwaggerJson = {
     swagger: '2.0',
     info,
     basePath,
@@ -83,7 +83,7 @@ export default function yapiJSon2swagger(list: API[], yapiConfig: Json2Service['
       'http' // Only http
     ],
     paths: (() => {
-      let apisObj = {};
+      let apisObj: SwaggerJson['paths'] = {};
       for (let aptTag of list) {
         // list of category
         for (let api of aptTag.list) {
@@ -93,7 +93,8 @@ export default function yapiJSon2swagger(list: API[], yapiConfig: Json2Service['
             apisObj[url] = {};
           }
           apisObj[url][api.method.toLowerCase()] = (() => {
-            let apiItem = {};
+            // eslint-disable-next-line @typescript-eslint/no-object-literal-type-assertion
+            let apiItem = {} as PathJson;
             apiItem['tags'] = [aptTag.name];
             apiItem['summary'] = api.title;
             apiItem['description'] = api.markdown;
@@ -221,7 +222,7 @@ export default function yapiJSon2swagger(list: API[], yapiConfig: Json2Service['
                 default:
                   break;
               }
-              return paramArray;
+              return paramArray as PathJson['parameters'];
             })();
             apiItem['responses'] = {
               '200': {
@@ -287,3 +288,5 @@ export default function yapiJSon2swagger(list: API[], yapiConfig: Json2Service['
   };
   return swaggerObj;
 }
+
+export type SwaggerLikeJson = ReturnType<typeof yapiJSon2swagger>;

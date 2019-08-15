@@ -1,7 +1,6 @@
 import * as stream from 'stream';
 import * as qs from 'qs';
-import { SMAbstractRequest, SMAbstractResponse } from 'src/types';
-import { X_SM_BASEPATH, X_SM_PATH } from 'src/consts';
+import { X_SM_BASEPATH, X_SM_PATH, SMAbstractRequest, SMAbstractResponse } from 'src/consts';
 
 export const Request: Partial<SMAbstractRequest> = {
   headers: {
