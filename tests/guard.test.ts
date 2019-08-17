@@ -4,6 +4,7 @@ import { SwaggerJson, GuardConfig } from '@src/consts';
 
 const url = '/api/v1/persons';
 const url1 = '/api/v1/interviewer/persons';
+const url2 = '/api/v1/interviewer/{user-name}';
 function getSwagger(): SwaggerJson {
   return {
     basePath: '/',
@@ -31,6 +32,18 @@ function getSwagger(): SwaggerJson {
           },
           deprecated: false
         }
+      },
+      [url2]: {
+        get: {
+          operationId: 'personsUsingGET_2',
+          parameters: [],
+          responses: {
+            '200': {
+              description: 'OK'
+            }
+          },
+          deprecated: false
+        }
       }
     }
   };
@@ -39,14 +52,16 @@ function getSwagger(): SwaggerJson {
 const optionIdMethodUrlMap: GuardConfig = {
   methodUrl2OperationIdMap: {
     'get /api/v1/persons': 'personsUsingGET',
-    'get /api/v1/interviewer/persons': 'personsUsingGET_1'
+    'get /api/v1/interviewer/persons': 'personsUsingGET_1',
+    'get /api/v1/interviewer/{user-name}': 'personsUsingGET_2'
   }
 };
 
 const optionIdMethodUrlMap2: GuardConfig = {
   methodUrl2OperationIdMap: {
     'get /api/v1/interviewer/persons': 'personsUsingGET',
-    'get /api/v1/persons': 'personsUsingGET_1'
+    'get /api/v1/persons': 'personsUsingGET_1',
+    'get /api/v1/interviewer/{user-name}': 'personsUsingGET_2'
   }
 };
 
@@ -151,6 +166,50 @@ describe('guard', () => {
     res = await operationIdGuard(swagger, { ...optionIdMethodUrlMap, mode: 'strict' });
     expect(res).toMatchSnapshot('5 partial remove ok');
     expect(swagger).toMatchSnapshot('5 partial remove ok');
+
+    swagger = getSwagger();
+    swagger.paths = {
+      [url1]: {
+        get: {
+          operationId: 'personsUsingGET',
+          parameters: [
+            {
+              name: 'bad arg',
+              in: 'query',
+              description: 'bad arg',
+              required: false
+            },
+            {
+              name: 'bad-arg',
+              in: 'form',
+              description: 'bad-arg',
+              required: false
+            },
+            {
+              name: 'bad坏arg',
+              in: 'path',
+              description: 'bad坏arg',
+              required: false
+            },
+            {
+              name: 'goodArg',
+              in: 'path',
+              description: 'good arg',
+              required: false
+            }
+          ],
+          responses: {
+            '200': {
+              description: 'Test'
+            }
+          },
+          deprecated: false
+        }
+      }
+    };
+    res = await operationIdGuard(swagger, { ...optionIdMethodUrlMap, mode: 'strict' });
+    expect(res).toMatchSnapshot('6 params check error');
+    expect(swagger).toMatchSnapshot('6 params check error');
   });
 
   it('strictModeGuard should work ok', async () => {

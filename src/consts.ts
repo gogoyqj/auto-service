@@ -91,6 +91,7 @@ export interface GuardConfig {
   methodUrl2OperationIdMap?: String2StringMap;
   mode?: SwaggerGuardMode;
   prefixReg?: RegExp;
+  badParamsReg?: RegExp;
 }
 
 export interface Json2Service {

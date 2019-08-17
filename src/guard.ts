@@ -11,6 +11,7 @@ type API = SwaggerJson['paths']['a']['get'];
 
 export const dangerousOperationIdReg = /_[0-9]{1,}$/g;
 export const defaultPrefixReg = /^(\/)?api\//g;
+export const defaultBadParamsReg = /[^a-z0-9_$]/gi;
 
 export interface HttpMethodUrl2APIMap {
   [url: string]: API;
@@ -24,7 +25,8 @@ export function operationIdGuard(swagger: SwaggerJson, config: GuardConfig = {})
   const {
     methodUrl2OperationIdMap: savedMethodUrl2OperationIdMap = {},
     mode,
-    prefixReg = defaultPrefixReg
+    prefixReg = defaultPrefixReg,
+    badParamsReg = defaultBadParamsReg
   } = config;
   const { paths } = swagger;
   // http method + url => api info 映射
@@ -49,14 +51,22 @@ export function operationIdGuard(swagger: SwaggerJson, config: GuardConfig = {})
       const apiItem = paths[url];
       Object.keys(apiItem).forEach(method => {
         const api = apiItem[method];
-        const { operationId } = api;
+        const { operationId, parameters = [] } = api;
+        // @cc: 扫描参数名字
+        parameters.forEach(({ name, in: pType, description = '' }) => {
+          if (name.match(badParamsReg)) {
+            errors.push(
+              `【错误】"${pType}" 参数 "${name}" "${description}" 不符合规范，请联系接口方修改`
+            );
+          }
+        });
         if (operationId) {
           // @cc: urlUsingMethod 作为 operationId
           api.privateOperationId =
             url
               .replace(prefixReg, '')
-              .replace(/^\//g, '')
-              .replace(/[/-]([^/])/g, (mat, u: string) => u.toUpperCase()) +
+              .replace(/(^\/|})/g, '')
+              .replace(/[/{-]{1,}([^/])/g, (mat, u: string) => u.toUpperCase()) +
             'Using' +
             method[0].toUpperCase() +
             method.substring(1);
@@ -75,6 +85,14 @@ export function operationIdGuard(swagger: SwaggerJson, config: GuardConfig = {})
       return dangers;
     }, {})
   );
+
+  if (errors.length) {
+    return {
+      errors,
+      warnings,
+      suggestions: []
+    };
+  }
 
   const validateThrowAndFix = (api: API) => {
     const { operationId = '', privateMethodUrl = '' } = api;
@@ -176,16 +194,17 @@ export function operationIdGuard(swagger: SwaggerJson, config: GuardConfig = {})
 export const InstableTagsReg = /^[a-z-0-9_$A-Z]+-controller$/g;
 // @cc: 检测是否全英文
 export const validTagsReg = /^[a-z-0-9_$]+$/gi;
+export const validDefinitionReg = /^[a-z-0-9_$«»]+$/gi;
 
 export function strictModeGuard(swagger: SwaggerJson, config: GuardConfig) {
-  const { tags = [] } = swagger;
+  const { tags = [], definitions = {} } = swagger;
   const { mode } = config;
   const info = {
     errors: Array<string>(),
     warnings: Array<string>()
   };
   if (mode === 'strict') {
-    // 是否没有写 tags
+    // @cc: tags 是否符合规范
     tags.reduce<string[]>((errors, tag) => {
       const { name = '' } = tag;
       if (name.match(InstableTagsReg)) {
@@ -201,6 +220,13 @@ export function strictModeGuard(swagger: SwaggerJson, config: GuardConfig) {
         errors.push(
           `【错误】 tags "${JSON.stringify(tag, null, 2)}" 命名包含非英文字符，请联系接口方修改`
         );
+      }
+      return errors;
+    }, info.errors);
+    // @cc: definitions 是否符合规范
+    Object.keys(definitions).reduce((errors, dto) => {
+      if (!dto.match(validDefinitionReg)) {
+        errors.push(`【错误】 definitions name "${dto}" 命名包含非英文字符，请联系接口方修改`);
       }
       return errors;
     }, info.errors);

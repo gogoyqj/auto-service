@@ -5,6 +5,7 @@ Object {
   "errors": Array [
     "【错误】方法 \\"personsUsingGET\\" & \\"get /api/v1/interviewer/persons\\" 存在不可控风险，需锁定映射关系",
     "【错误】方法 \\"personsUsingGET_1\\" & \\"get /api/v1/persons\\" 存在不可控风险，需锁定映射关系",
+    "【错误】方法 \\"personsUsingGET_2\\" & \\"get /api/v1/interviewer/{user-name}\\" 存在不可控风险，需锁定映射关系",
   ],
   "suggestions": Array [
     "锁定映射建议，添加到 service 配置",
@@ -12,6 +13,7 @@ Object {
       "guardConfig": Object {
         "methodUrl2OperationIdMap": Object {
           "get /api/v1/interviewer/persons": "personsUsingGET",
+          "get /api/v1/interviewer/{user-name}": "personsUsingGET_2",
           "get /api/v1/persons": "personsUsingGET_1",
         },
       },
@@ -32,6 +34,20 @@ Object {
         "parameters": Array [],
         "privateMethodUrl": "get /api/v1/interviewer/persons",
         "privateOperationId": "v1InterviewerPersonsUsingGet",
+        "responses": Object {
+          "200": Object {
+            "description": "OK",
+          },
+        },
+      },
+    },
+    "/api/v1/interviewer/{user-name}": Object {
+      "get": Object {
+        "deprecated": false,
+        "operationId": "personsUsingGET_2",
+        "parameters": Array [],
+        "privateMethodUrl": "get /api/v1/interviewer/{user-name}",
+        "privateOperationId": "v1InterviewerUserNameUsingGet",
         "responses": Object {
           "200": Object {
             "description": "OK",
@@ -65,6 +81,7 @@ Object {
     Object {
       "personsUsingGET": "v1PersonsUsingGet",
       "personsUsingGET_1": "v1InterviewerPersonsUsingGet",
+      "personsUsingGET_2": "v1InterviewerUserNameUsingGet",
     },
   ],
   "warnings": Array [
@@ -84,6 +101,20 @@ Object {
         "operationId": "v1InterviewerPersonsUsingGet",
         "parameters": Array [],
         "privateOperationId": "v1InterviewerPersonsUsingGet",
+        "responses": Object {
+          "200": Object {
+            "description": "OK",
+          },
+        },
+      },
+    },
+    "/api/v1/interviewer/{user-name}": Object {
+      "get": Object {
+        "deprecated": false,
+        "operationId": "v1InterviewerUserNameUsingGet",
+        "parameters": Array [],
+        "privateMethodUrl": "get /api/v1/interviewer/{user-name}",
+        "privateOperationId": "v1InterviewerUserNameUsingGet",
         "responses": Object {
           "200": Object {
             "description": "OK",
@@ -113,6 +144,7 @@ Object {
   "errors": Array [
     "【错误】方法 \\"personsUsingGET\\" 对应的 \\"get /api/v1/persons\\" 似乎已被移除或者发生了变化，请更新",
     "【错误】方法 \\"personsUsingGET_1\\" 对应的 \\"get /api/v1/interviewer/persons\\" 似乎已被移除或者发生了变化，请更新",
+    "【错误】方法 \\"personsUsingGET_2\\" 对应的 \\"get /api/v1/interviewer/{user-name}\\" 似乎已被移除或者发生了变化，请更新",
   ],
   "suggestions": Array [],
   "warnings": Array [],
@@ -130,6 +162,7 @@ exports[`guard operationIdGuard safe mode should work ok: 4 partial remove error
 Object {
   "errors": Array [
     "【错误】方法 \\"personsUsingGET\\" 对应的 \\"get /api/v1/persons\\" 似乎已被移除或者发生了变化，请更新",
+    "【错误】方法 \\"personsUsingGET_2\\" 对应的 \\"get /api/v1/interviewer/{user-name}\\" 似乎已被移除或者发生了变化，请更新",
   ],
   "suggestions": Array [],
   "warnings": Array [
@@ -163,6 +196,7 @@ exports[`guard operationIdGuard safe mode should work ok: 5 partial remove ok 1`
 Object {
   "errors": Array [
     "【错误】方法 \\"personsUsingGET\\" 对应的 \\"get /api/v1/persons\\" 似乎已被移除或者发生了变化，请更新",
+    "【错误】方法 \\"personsUsingGET_2\\" 对应的 \\"get /api/v1/interviewer/{user-name}\\" 似乎已被移除或者发生了变化，请更新",
   ],
   "suggestions": Array [],
   "warnings": Array [
@@ -197,6 +231,7 @@ Object {
   "errors": Array [
     "【错误】方法 \\"personsUsingGET\\" & \\"get /api/v1/interviewer/persons\\" 存在不可控风险，需锁定映射关系",
     "【错误】方法 \\"personsUsingGET_1\\" & \\"get /api/v1/persons\\" 存在不可控风险，需锁定映射关系",
+    "【错误】方法 \\"personsUsingGET_2\\" & \\"get /api/v1/interviewer/{user-name}\\" 存在不可控风险，需锁定映射关系",
   ],
   "suggestions": Array [
     "锁定映射建议，添加到 service 配置",
@@ -204,6 +239,7 @@ Object {
       "guardConfig": Object {
         "methodUrl2OperationIdMap": Object {
           "get /api/v1/interviewer/persons": "personsUsingGET",
+          "get /api/v1/interviewer/{user-name}": "personsUsingGET_2",
           "get /api/v1/persons": "personsUsingGET_1",
         },
       },
@@ -224,6 +260,20 @@ Object {
         "parameters": Array [],
         "privateMethodUrl": "get /api/v1/interviewer/persons",
         "privateOperationId": "v1InterviewerPersonsUsingGet",
+        "responses": Object {
+          "200": Object {
+            "description": "OK",
+          },
+        },
+      },
+    },
+    "/api/v1/interviewer/{user-name}": Object {
+      "get": Object {
+        "deprecated": false,
+        "operationId": "personsUsingGET_2",
+        "parameters": Array [],
+        "privateMethodUrl": "get /api/v1/interviewer/{user-name}",
+        "privateOperationId": "v1InterviewerUserNameUsingGet",
         "responses": Object {
           "200": Object {
             "description": "OK",
@@ -277,6 +327,20 @@ Object {
         },
       },
     },
+    "/api/v1/interviewer/{user-name}": Object {
+      "get": Object {
+        "deprecated": false,
+        "operationId": "personsUsingGET_2",
+        "parameters": Array [],
+        "privateMethodUrl": "get /api/v1/interviewer/{user-name}",
+        "privateOperationId": "v1InterviewerUserNameUsingGet",
+        "responses": Object {
+          "200": Object {
+            "description": "OK",
+          },
+        },
+      },
+    },
     "/api/v1/persons": Object {
       "get": Object {
         "deprecated": false,
@@ -299,6 +363,7 @@ Object {
   "errors": Array [
     "【错误】方法 \\"personsUsingGET\\" 对应的 \\"get /api/v1/persons\\" 似乎已被移除或者发生了变化，请更新",
     "【错误】方法 \\"personsUsingGET_1\\" 对应的 \\"get /api/v1/interviewer/persons\\" 似乎已被移除或者发生了变化，请更新",
+    "【错误】方法 \\"personsUsingGET_2\\" 对应的 \\"get /api/v1/interviewer/{user-name}\\" 似乎已被移除或者发生了变化，请更新",
   ],
   "suggestions": Array [],
   "warnings": Array [],
@@ -316,6 +381,7 @@ exports[`guard operationIdGuard should work ok: 4 partial remove error 1`] = `
 Object {
   "errors": Array [
     "【错误】方法 \\"personsUsingGET\\" 对应的 \\"get /api/v1/persons\\" 似乎已被移除或者发生了变化，请更新",
+    "【错误】方法 \\"personsUsingGET_2\\" 对应的 \\"get /api/v1/interviewer/{user-name}\\" 似乎已被移除或者发生了变化，请更新",
   ],
   "suggestions": Array [],
   "warnings": Array [
@@ -349,6 +415,7 @@ exports[`guard operationIdGuard should work ok: 5 partial remove ok 1`] = `
 Object {
   "errors": Array [
     "【错误】方法 \\"personsUsingGET_1\\" 对应的 \\"get /api/v1/persons\\" 似乎已被移除或者发生了变化，请更新",
+    "【错误】方法 \\"personsUsingGET_2\\" 对应的 \\"get /api/v1/interviewer/{user-name}\\" 似乎已被移除或者发生了变化，请更新",
   ],
   "suggestions": Array [],
   "warnings": Array [],
@@ -382,6 +449,7 @@ Object {
   "errors": Array [
     "【错误】方法 \\"personsUsingGET\\" & \\"get /api/v1/interviewer/persons\\" 存在不可控风险，需锁定映射关系",
     "【错误】方法 \\"personsUsingGET_1\\" & \\"get /api/v1/persons\\" 存在不可控风险，需锁定映射关系",
+    "【错误】方法 \\"personsUsingGET_2\\" & \\"get /api/v1/interviewer/{user-name}\\" 存在不可控风险，需锁定映射关系",
   ],
   "suggestions": Array [
     "锁定映射建议，添加到 service 配置",
@@ -389,6 +457,7 @@ Object {
       "guardConfig": Object {
         "methodUrl2OperationIdMap": Object {
           "get /api/v1/interviewer/persons": "personsUsingGET",
+          "get /api/v1/interviewer/{user-name}": "personsUsingGET_2",
           "get /api/v1/persons": "personsUsingGET_1",
         },
       },
@@ -409,6 +478,20 @@ Object {
         "parameters": Array [],
         "privateMethodUrl": "get /api/v1/interviewer/persons",
         "privateOperationId": "v1InterviewerPersonsUsingGet",
+        "responses": Object {
+          "200": Object {
+            "description": "OK",
+          },
+        },
+      },
+    },
+    "/api/v1/interviewer/{user-name}": Object {
+      "get": Object {
+        "deprecated": false,
+        "operationId": "personsUsingGET_2",
+        "parameters": Array [],
+        "privateMethodUrl": "get /api/v1/interviewer/{user-name}",
+        "privateOperationId": "v1InterviewerUserNameUsingGet",
         "responses": Object {
           "200": Object {
             "description": "OK",
@@ -442,6 +525,7 @@ Object {
     Object {
       "personsUsingGET": "v1PersonsUsingGet",
       "personsUsingGET_1": "v1InterviewerPersonsUsingGet",
+      "personsUsingGET_2": "v1InterviewerUserNameUsingGet",
     },
   ],
   "warnings": Array [
@@ -461,6 +545,20 @@ Object {
         "operationId": "v1InterviewerPersonsUsingGet",
         "parameters": Array [],
         "privateOperationId": "v1InterviewerPersonsUsingGet",
+        "responses": Object {
+          "200": Object {
+            "description": "OK",
+          },
+        },
+      },
+    },
+    "/api/v1/interviewer/{user-name}": Object {
+      "get": Object {
+        "deprecated": false,
+        "operationId": "v1InterviewerUserNameUsingGet",
+        "parameters": Array [],
+        "privateMethodUrl": "get /api/v1/interviewer/{user-name}",
+        "privateOperationId": "v1InterviewerUserNameUsingGet",
         "responses": Object {
           "200": Object {
             "description": "OK",
@@ -490,6 +588,7 @@ Object {
   "errors": Array [
     "【错误】方法 \\"personsUsingGET\\" 对应的 \\"get /api/v1/persons\\" 似乎已被移除或者发生了变化，请更新",
     "【错误】方法 \\"personsUsingGET_1\\" 对应的 \\"get /api/v1/interviewer/persons\\" 似乎已被移除或者发生了变化，请更新",
+    "【错误】方法 \\"personsUsingGET_2\\" 对应的 \\"get /api/v1/interviewer/{user-name}\\" 似乎已被移除或者发生了变化，请更新",
   ],
   "suggestions": Array [],
   "warnings": Array [],
@@ -507,6 +606,7 @@ exports[`guard operationIdGuard strict mode should work ok: 4 partial remove err
 Object {
   "errors": Array [
     "【错误】方法 \\"personsUsingGET\\" 对应的 \\"get /api/v1/persons\\" 似乎已被移除或者发生了变化，请更新",
+    "【错误】方法 \\"personsUsingGET_2\\" 对应的 \\"get /api/v1/interviewer/{user-name}\\" 似乎已被移除或者发生了变化，请更新",
   ],
   "suggestions": Array [],
   "warnings": Array [
@@ -540,6 +640,7 @@ exports[`guard operationIdGuard strict mode should work ok: 5 partial remove ok 
 Object {
   "errors": Array [
     "【错误】方法 \\"personsUsingGET\\" 对应的 \\"get /api/v1/persons\\" 似乎已被移除或者发生了变化，请更新",
+    "【错误】方法 \\"personsUsingGET_2\\" 对应的 \\"get /api/v1/interviewer/{user-name}\\" 似乎已被移除或者发生了变化，请更新",
   ],
   "suggestions": Array [],
   "warnings": Array [
@@ -561,6 +662,65 @@ Object {
         "responses": Object {
           "200": Object {
             "description": "OK",
+          },
+        },
+      },
+    },
+  },
+}
+`;
+
+exports[`guard operationIdGuard strict mode should work ok: 6 params check error 1`] = `
+Object {
+  "errors": Array [
+    "【错误】\\"query\\" 参数 \\"bad arg\\" \\"bad arg\\" 不符合规范，请联系接口方修改",
+    "【错误】\\"form\\" 参数 \\"bad-arg\\" \\"bad-arg\\" 不符合规范，请联系接口方修改",
+    "【错误】\\"path\\" 参数 \\"bad坏arg\\" \\"bad坏arg\\" 不符合规范，请联系接口方修改",
+  ],
+  "suggestions": Array [],
+  "warnings": Array [],
+}
+`;
+
+exports[`guard operationIdGuard strict mode should work ok: 6 params check error 2`] = `
+Object {
+  "basePath": "/",
+  "paths": Object {
+    "/api/v1/interviewer/persons": Object {
+      "get": Object {
+        "deprecated": false,
+        "operationId": "personsUsingGET",
+        "parameters": Array [
+          Object {
+            "description": "bad arg",
+            "in": "query",
+            "name": "bad arg",
+            "required": false,
+          },
+          Object {
+            "description": "bad-arg",
+            "in": "form",
+            "name": "bad-arg",
+            "required": false,
+          },
+          Object {
+            "description": "bad坏arg",
+            "in": "path",
+            "name": "bad坏arg",
+            "required": false,
+          },
+          Object {
+            "description": "good arg",
+            "in": "path",
+            "name": "goodArg",
+            "required": false,
+          },
+        ],
+        "privateMethodUrl": "get /api/v1/interviewer/persons",
+        "privateOperationId": "v1InterviewerPersonsUsingGet",
+        "responses": Object {
+          "200": Object {
+            "description": "Test",
           },
         },
       },
