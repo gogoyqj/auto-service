@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as request from 'request';
 import chalk from 'chalk';
 
-import { Json2Service, GuardConfig } from './consts';
+import { Json2Service } from './consts';
 import swagger2ts from './swagger2ts';
 import serve from './yapi/serve';
 import { pluginsPath, DefaultBasePath, SmTmpDir, basePathToFileName } from './init';
@@ -102,18 +102,18 @@ export default async function gen(
   warnings.push(...w);
   if (warnings.length) {
     console.log(chalk.yellow(warnings.join('\n')));
-    fs.writeFileSync(swaggerUrl, JSON.stringify(swaggerData, null, 2), { encoding: 'utf8' });
   }
+  fs.writeFileSync(swaggerUrl, JSON.stringify(swaggerData, null, 2), { encoding: 'utf8' });
   if (errors.length) {
     console.log(chalk.red(errors.join('\n')));
-    if (Object.keys(suggestions).length) {
-      console.log(chalk.green('锁定映射建议，添加 "guardConfig" 到 service 配置'));
-      const guard: GuardConfig = {
-        methodUrl2OperationIdMap: suggestions
-      };
-      console.log(chalk.green(JSON.stringify(guard, undefined, 2)));
+    if (suggestions.length) {
+      console.log(chalk.green(JSON.stringify(suggestions, undefined, 2)));
     }
     return 1;
+  } else {
+    if (suggestions.length) {
+      console.log(chalk.green(JSON.stringify(suggestions, undefined, 2)));
+    }
   }
   const res = await swagger2ts({ ...swagger2tsConfig, '-i': swaggerUrl }, options.clear);
   if (res.code) {

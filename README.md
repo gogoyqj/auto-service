@@ -95,8 +95,17 @@ edit json2service.json
   },
   "validateResponse": false, // 是否生成校验逻辑
   "guardConfig": {
-    "mode": "strict", // 严格模式，校验 swagger tags【yapi 接口分类】是否是纯英文组成
-    // swagger 处理重复 operationId 逻辑有风险，因此需要锁定映射关系
+    // + strict 严格模式
+    //    - 校验 swagger tags【yapi 接口分类】是否是纯英文
+    //    - 方法名使用 http method + url 驼峰形式
+    //    - 新项目采用
+    // + safe 安全模式
+    //    - 方法名使用 http method + url 驼峰形式
+    //    - 老项目升级，不会校验 tags，会生成方法调用替换映射表
+    // + 默认
+    //    - http method + url => operationId 映射锁定
+    //    - 老项目维持现状
+    "mode": "strict",
     "methodUrl2OperationIdMap": {
       "get /api/xxx/xxx": "operationId"
     }

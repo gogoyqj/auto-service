@@ -1,3 +1,4 @@
+import 'jest';
 import * as stream from 'stream';
 import * as qs from 'qs';
 import { X_SM_BASEPATH, X_SM_PATH, SMAbstractRequest, SMAbstractResponse } from 'src/consts';

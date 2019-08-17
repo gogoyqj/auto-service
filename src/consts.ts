@@ -81,7 +81,7 @@ export const X_SM_BASEPATH = 'x-sm-basepath';
 export const X_SM_PARAMS = 'x-sm-params';
 export const X_SM_ERROR = 'x-sm-error';
 
-export type SwaggerGuardMode = 'strict';
+export type SwaggerGuardMode = 'strict' | 'safe';
 
 export interface String2StringMap {
   [key: string]: string;
@@ -90,6 +90,7 @@ export interface String2StringMap {
 export interface GuardConfig {
   methodUrl2OperationIdMap?: String2StringMap;
   mode?: SwaggerGuardMode;
+  prefixReg?: RegExp;
 }
 
 export interface Json2Service {

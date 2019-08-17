@@ -50,7 +50,7 @@ const optionIdMethodUrlMap2: GuardConfig = {
   }
 };
 
-describe('validate/utils', () => {
+describe('guard', () => {
   it('operationIdGuard should work ok', async () => {
     let swagger = getSwagger();
     let res = await operationIdGuard(swagger, {});
@@ -81,6 +81,74 @@ describe('validate/utils', () => {
       [url1]: swagger.paths[url1]
     };
     res = await operationIdGuard(swagger, optionIdMethodUrlMap2);
+    expect(res).toMatchSnapshot('5 partial remove ok');
+    expect(swagger).toMatchSnapshot('5 partial remove ok');
+  });
+
+  it('operationIdGuard safe mode should work ok', async () => {
+    let swagger = getSwagger();
+    let res = await operationIdGuard(swagger, { mode: 'safe' });
+    expect(res).toMatchSnapshot('1 error');
+    expect(swagger).toMatchSnapshot('1 error');
+
+    swagger = getSwagger();
+    res = await operationIdGuard(swagger, { ...optionIdMethodUrlMap, mode: 'safe' });
+    expect(res).toMatchSnapshot('2 autofix');
+    expect(swagger).toMatchSnapshot('2 autofix');
+
+    swagger = getSwagger();
+    swagger.paths = {};
+    res = await operationIdGuard(swagger, { ...optionIdMethodUrlMap, mode: 'safe' });
+    expect(res).toMatchSnapshot('3 remove error');
+    expect(swagger).toMatchSnapshot('3 remove error');
+
+    swagger = getSwagger();
+    swagger.paths = {
+      [url1]: swagger.paths[url1]
+    };
+    res = await operationIdGuard(swagger, { ...optionIdMethodUrlMap, mode: 'safe' });
+    expect(res).toMatchSnapshot('4 partial remove error');
+    expect(swagger).toMatchSnapshot('4 partial remove error');
+
+    swagger = getSwagger();
+    swagger.paths = {
+      [url1]: swagger.paths[url1]
+    };
+    res = await operationIdGuard(swagger, { ...optionIdMethodUrlMap, mode: 'safe' });
+    expect(res).toMatchSnapshot('5 partial remove ok');
+    expect(swagger).toMatchSnapshot('5 partial remove ok');
+  });
+
+  it('operationIdGuard strict mode should work ok', async () => {
+    let swagger = getSwagger();
+    let res = await operationIdGuard(swagger, { mode: 'safe' });
+    expect(res).toMatchSnapshot('1 error');
+    expect(swagger).toMatchSnapshot('1 error');
+
+    swagger = getSwagger();
+    res = await operationIdGuard(swagger, { ...optionIdMethodUrlMap, mode: 'strict' });
+    expect(res).toMatchSnapshot('2 autofix');
+    expect(swagger).toMatchSnapshot('2 autofix');
+
+    swagger = getSwagger();
+    swagger.paths = {};
+    res = await operationIdGuard(swagger, { ...optionIdMethodUrlMap, mode: 'strict' });
+    expect(res).toMatchSnapshot('3 remove error');
+    expect(swagger).toMatchSnapshot('3 remove error');
+
+    swagger = getSwagger();
+    swagger.paths = {
+      [url1]: swagger.paths[url1]
+    };
+    res = await operationIdGuard(swagger, { ...optionIdMethodUrlMap, mode: 'strict' });
+    expect(res).toMatchSnapshot('4 partial remove error');
+    expect(swagger).toMatchSnapshot('4 partial remove error');
+
+    swagger = getSwagger();
+    swagger.paths = {
+      [url1]: swagger.paths[url1]
+    };
+    res = await operationIdGuard(swagger, { ...optionIdMethodUrlMap, mode: 'strict' });
     expect(res).toMatchSnapshot('5 partial remove ok');
     expect(swagger).toMatchSnapshot('5 partial remove ok');
   });
