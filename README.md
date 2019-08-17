@@ -27,20 +27,78 @@ edit json2service.json
 
 ```json
 {
-  "url": "./api.json",
+  "url": "./api.json", // 文件路径或url
+  "requestConfig": {
+    "url": "./api.json" // 文件路径或url
+    // 以下所有 request 支持的参数
+    // headers?: Headers;
+    // baseUrl?: string;
+    // callback?: RequestCallback;
+    // jar?: CookieJar | boolean;
+    // formData?: { [key: string]: any };
+    // form?: { [key: string]: any } | string;
+    // auth?: AuthOptions;
+    // oauth?: OAuthOptions;
+    // aws?: AWSOptions;
+    // hawk?: HawkOptions;
+    // qs?: any;
+    // qsStringifyOptions?: any;
+    // qsParseOptions?: any;
+    // json?: any;
+    // jsonReviver?: (key: string, value: any) => any;
+    // jsonReplacer?: (key: string, value: any) => any;
+    // multipart?: RequestPart[] | Multipart;
+    // agent?: http.Agent | https.Agent;
+    // agentOptions?: http.AgentOptions | https.AgentOptions;
+    // agentClass?: any;
+    // forever?: any;
+    // host?: string;
+    // port?: number;
+    // method?: string;
+    // body?: any;
+    // family?: 4 | 6;
+    // followRedirect?: boolean | ((response: http.IncomingMessage) => boolean);
+    // followAllRedirects?: boolean;
+    // followOriginalHttpMethod?: boolean;
+    // maxRedirects?: number;
+    // removeRefererHeader?: boolean;
+    // encoding?: string | null;
+    // pool?: any;
+    // timeout?: number;
+    // localAddress?: string;
+    // proxy?: any;
+    // tunnel?: boolean;
+    // strictSSL?: boolean;
+    // rejectUnauthorized?: boolean;
+    // time?: boolean;
+    // gzip?: boolean;
+    // preambleCRLF?: boolean;
+    // postambleCRLF?: boolean;
+    // withCredentials?: boolean;
+    // key?: Buffer;
+    // cert?: Buffer;
+    // passphrase?: string;
+    // ca?: string | Buffer | string[] | Buffer[];
+    // har?: HttpArchiveRequest;
+    // useQuerystring?: boolean;
+  },
   "type": "yapi",
   "yapiConfig": {
     "required": false,
-    "bodyJsonRequired": false
+    "bodyJsonRequired": false,
+    "categoryMap": {
+      "中文": "English" // yapi 接口分类中英文映射
+    }
   },
   "swaggerParser": {
     "-o": "tmp/services"
   },
   "validateResponse": false, // 是否生成校验逻辑
   "guardConfig": {
+    "mode": "strict", // 严格模式，校验 swagger tags【yapi 接口分类】是否是纯英文组成
     // swagger 处理重复 operationId 逻辑有风险，因此需要锁定映射关系
-    "optionIdMethodUrlMap": {
-      "methodName": "get /api/xxx/xxx"
+    "methodUrl2OperationIdMap": {
+      "get /api/xxx/xxx": "operationId"
     }
   }
 }

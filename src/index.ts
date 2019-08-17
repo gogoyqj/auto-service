@@ -7,7 +7,7 @@ import { Json2Service, GuardConfig } from './consts';
 import swagger2ts from './swagger2ts';
 import serve from './yapi/serve';
 import { pluginsPath, DefaultBasePath, SmTmpDir, basePathToFileName } from './init';
-import { operationIdGuard } from './guard';
+import { operationIdGuard, strictModeGuard } from './guard';
 
 const defaultParseConfig = {
   '-l': 'typescript-angularjs',
@@ -18,10 +18,14 @@ export default async function gen(
   config: Json2Service,
   options: { clear?: boolean }
 ): Promise<number> {
-  const { url, type = 'swagger', swaggerParser } = config;
-  let swaggerUrl = url;
+  const { url, type = 'swagger', swaggerParser, requestConfig = {} } = config;
+  let swaggerUrl = (requestConfig.url = requestConfig.url || url || '');
+  if (!swaggerUrl) {
+    console.log(chalk.red(`[ERROR]: swagger url not specified`));
+    return 1;
+  }
   if (!swaggerUrl.match(/^http/)) {
-    swaggerUrl = path.join(process.cwd(), url);
+    swaggerUrl = path.join(process.cwd(), swaggerUrl);
     if (!fs.existsSync(swaggerUrl)) {
       console.log(chalk.red(`[ERROR]: swagger ${swaggerUrl} not found`));
       return 1;
@@ -42,7 +46,13 @@ export default async function gen(
   const code: number = await new Promise(rs => {
     const loader = (cb: (err: any, res: { body?: any }) => any) => {
       if (swaggerUrl.match(/^http/)) {
-        request.get(swaggerUrl, cb);
+        request.get(
+          {
+            ...requestConfig,
+            url: swaggerUrl
+          },
+          cb
+        );
       } else {
         try {
           cb(undefined, { body: JSON.stringify(require(swaggerUrl)) });
@@ -63,7 +73,9 @@ export default async function gen(
           `${(body && JSON.parse(body).basePath) || DefaultBasePath}.json`
         );
         const swaggerPath = path.join(SmTmpDir, swaggerFileName);
-        fs.writeFileSync(swaggerPath, body, { encoding: 'utf8' });
+        fs.writeFileSync(swaggerPath, body ? JSON.stringify(JSON.parse(body), null, 2) : body, {
+          encoding: 'utf8'
+        });
         swaggerUrl = swaggerPath;
         rs(0);
       }
@@ -72,20 +84,32 @@ export default async function gen(
   if (code) {
     return code;
   }
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const swaggerData = require(swaggerUrl);
+  const guardConfig = config.guardConfig || {};
+  // @cc: tags 校验
+  const warnings = Array<string>();
+  {
+    const { warnings: w, errors } = await strictModeGuard(swaggerData, guardConfig);
+    warnings.push(...w);
+    if (errors.length) {
+      console.log(chalk.red(errors.join('\n')));
+      return 1;
+    }
+  }
   // @cc: 风险校验
-  const { errors, warnings, suggestions } = await operationIdGuard(
-    require(swaggerUrl),
-    (config.guardConfig && config.guardConfig.operationIdMethodUrlMap) || {}
-  );
+  const { errors, warnings: w, suggestions } = await operationIdGuard(swaggerData, guardConfig);
+  warnings.push(...w);
   if (warnings.length) {
     console.log(chalk.yellow(warnings.join('\n')));
+    fs.writeFileSync(swaggerUrl, JSON.stringify(swaggerData, null, 2), { encoding: 'utf8' });
   }
   if (errors.length) {
     console.log(chalk.red(errors.join('\n')));
     if (Object.keys(suggestions).length) {
       console.log(chalk.green('锁定映射建议，添加 "guardConfig" 到 service 配置'));
       const guard: GuardConfig = {
-        operationIdMethodUrlMap: suggestions
+        methodUrl2OperationIdMap: suggestions
       };
       console.log(chalk.green(JSON.stringify(guard, undefined, 2)));
     }
@@ -96,7 +120,7 @@ export default async function gen(
     console.log(chalk.red(`[ERROR]: gen failed with: ${res.message}`));
     return 1;
   } else {
-    console.log(chalk.green(`[INFO]: gen success with: ${url}`));
+    console.log(chalk.green(`[INFO]: gen success with: ${requestConfig.url}`));
   }
   return 0;
 }

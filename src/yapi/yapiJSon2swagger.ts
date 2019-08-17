@@ -54,7 +54,7 @@ interface STag {
   description?: string;
 }
 
-export default function yapiJSon2swagger(list: API[], yapiConfig: Json2Service['yapiConfig']) {
+export default function yapiJSon2swagger(list: API[], yapiConfig: Json2Service['yapiConfig'] = {}) {
   let basePath = '';
   let info = {
     title: 'unknown',
@@ -62,15 +62,18 @@ export default function yapiJSon2swagger(list: API[], yapiConfig: Json2Service['
     description: 'unknown'
   };
   let tags: STag[] = [];
+  const { categoryMap = <T>(s: T) => s, bodyJsonRequired, required } = yapiConfig;
   list.forEach(t => {
     if (t.proBasepath) {
       basePath = t.proBasepath;
     }
     if (t.proName) info.title = t.proName;
     if (t.proDescription) info.description = t.proDescription;
+    const name =
+      typeof categoryMap === 'function' ? categoryMap(t.name) : categoryMap[t.name] || t.name;
     tags.push({
-      name: t.name,
-      description: t.desc
+      name: name,
+      description: t.desc || t.name
     });
   });
   let reg = basePath ? new RegExp(`^${basePath}`) : undefined;
@@ -84,9 +87,9 @@ export default function yapiJSon2swagger(list: API[], yapiConfig: Json2Service['
     ],
     paths: (() => {
       let apisObj: SwaggerJson['paths'] = {};
-      for (let aptTag of list) {
+      for (let category of list) {
         // list of category
-        for (let api of aptTag.list) {
+        for (let api of category.list) {
           // list of api
           const url = reg ? api.path.replace(reg, '') : api.path;
           if (apisObj[url] == null) {
@@ -95,7 +98,7 @@ export default function yapiJSon2swagger(list: API[], yapiConfig: Json2Service['
           apisObj[url][api.method.toLowerCase()] = (() => {
             // eslint-disable-next-line @typescript-eslint/no-object-literal-type-assertion
             let apiItem = {} as PathJson;
-            apiItem['tags'] = [aptTag.name];
+            apiItem['tags'] = [category.name];
             apiItem['summary'] = api.title;
             apiItem['description'] = api.markdown;
             switch (api.req_body_type) {
@@ -170,7 +173,7 @@ export default function yapiJSon2swagger(list: API[], yapiConfig: Json2Service['
                     if (jsonParam !== null) {
                       if (!jsonParam['type']) {
                         // required
-                        if (yapiConfig && yapiConfig.bodyJsonRequired) {
+                        if (bodyJsonRequired) {
                           jsonParam = JSON.parse(
                             JSON.stringify(jsonParam).replace(
                               /"([^*"]+":)/g,
@@ -248,7 +251,7 @@ export default function yapiJSon2swagger(list: API[], yapiConfig: Json2Service['
                           schemaObj = resBody; // as the parameters,
                         } else {
                           // required
-                          if (yapiConfig && yapiConfig.required) {
+                          if (required) {
                             resBody = JSON.parse(
                               JSON.stringify(resBody).replace(
                                 /"([^*"]+":)/g,

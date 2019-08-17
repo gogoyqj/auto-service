@@ -1,5 +1,6 @@
 import { IncomingMessage, ServerResponse } from 'http';
 import { JSONSchema4, JSONSchema6 } from 'json-schema';
+import { CoreOptions } from 'request';
 
 export type SMSchema = JSONSchema4 | JSONSchema6;
 
@@ -31,6 +32,10 @@ export interface SwaggerJson {
   __mtime?: any;
   swagger?: string;
   info?: any;
+  tags?: {
+    name?: string;
+    description?: string;
+  }[];
   paths: {
     [path: string]: {
       [method: string]: PathJson;
@@ -76,22 +81,29 @@ export const X_SM_BASEPATH = 'x-sm-basepath';
 export const X_SM_PARAMS = 'x-sm-params';
 export const X_SM_ERROR = 'x-sm-error';
 
+export type SwaggerGuardMode = 'strict';
+
+export interface String2StringMap {
+  [key: string]: string;
+}
+
 export interface GuardConfig {
-  operationIdMethodUrlMap?: {
-    [id: string]: string;
-  };
+  methodUrl2OperationIdMap?: String2StringMap;
+  mode?: SwaggerGuardMode;
 }
 
 export interface Json2Service {
-  url: string;
+  url?: string;
   type?: 'yapi' | 'swagger';
   yapiConfig?: {
     required?: boolean;
     bodyJsonRequired?: boolean;
+    categoryMap?: String2StringMap | ((cate: string) => string);
   };
   swaggerParser?: SwaggerParser;
   validateResponse?: boolean;
   guardConfig?: GuardConfig;
+  requestConfig?: { url?: string } & CoreOptions;
 }
 
 export interface SwaggerParser {

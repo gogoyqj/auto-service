@@ -1,17 +1,65 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`validate/utils operationIdGuard should work ok: autofix 1`] = `
+exports[`validate/utils operationIdGuard should work ok: 1 error 1`] = `
+Object {
+  "errors": Array [
+    "【错误】方法 \\"personsUsingGET\\" & \\"get /api/v1/interviewer/persons\\" 存在不可控风险，需锁定映射关系",
+    "【错误】方法 \\"personsUsingGET_1\\" & \\"get /api/v1/persons\\" 存在不可控风险，需锁定映射关系",
+  ],
+  "suggestions": Object {
+    "get /api/v1/interviewer/persons": "personsUsingGET",
+    "get /api/v1/persons": "personsUsingGET_1",
+  },
+  "warnings": Array [],
+}
+`;
+
+exports[`validate/utils operationIdGuard should work ok: 1 error 2`] = `
+Object {
+  "basePath": "/",
+  "paths": Object {
+    "/api/v1/interviewer/persons": Object {
+      "get": Object {
+        "deprecated": false,
+        "operationId": "personsUsingGET",
+        "parameters": Array [],
+        "privateMethodUrl": "get /api/v1/interviewer/persons",
+        "responses": Object {
+          "200": Object {
+            "description": "OK",
+          },
+        },
+      },
+    },
+    "/api/v1/persons": Object {
+      "get": Object {
+        "deprecated": false,
+        "operationId": "personsUsingGET_1",
+        "parameters": Array [],
+        "privateMethodUrl": "get /api/v1/persons",
+        "responses": Object {
+          "200": Object {
+            "description": "OK",
+          },
+        },
+      },
+    },
+  },
+}
+`;
+
+exports[`validate/utils operationIdGuard should work ok: 2 autofix 1`] = `
 Object {
   "errors": Array [],
   "suggestions": Object {},
   "warnings": Array [
-    "【警告】方法 \\"personsUsingGET\\" & \\"get /api/v1/persons\\" 与 \\"get /api/v1/interviewer/persons\\" 不匹配，自动纠正为 \\"personsUsingGET_1\\"",
-    "【警告】方法 \\"personsUsingGET_1\\" & \\"get /api/v1/interviewer/persons\\" 与 \\"get /api/v1/persons\\" 不匹配，自动纠正为 \\"personsUsingGET\\"",
+    "【警告】方法 \\"personsUsingGET\\" 与 \\"get /api/v1/interviewer/persons\\" 不匹配，自动纠正为 \\"personsUsingGET_1\\"",
+    "【警告】方法 \\"personsUsingGET_1\\" 与 \\"get /api/v1/persons\\" 不匹配，自动纠正为 \\"personsUsingGET\\"",
   ],
 }
 `;
 
-exports[`validate/utils operationIdGuard should work ok: autofix 2`] = `
+exports[`validate/utils operationIdGuard should work ok: 2 autofix 2`] = `
 Object {
   "basePath": "/",
   "paths": Object {
@@ -43,115 +91,7 @@ Object {
 }
 `;
 
-exports[`validate/utils operationIdGuard should work ok: error 1`] = `
-Object {
-  "errors": Array [
-    "【错误】方法 \\"personsUsingGET\\" & \\"get /api/v1/interviewer/persons\\" 与 \\"personsUsingGET\\" & \\"get /api/v1/interviewer/persons\\" 存在不可控风险，需锁定映射关系",
-    "【错误】方法 \\"personsUsingGET_1\\" & \\"get /api/v1/persons\\" 与 \\"personsUsingGET\\" & \\"get /api/v1/interviewer/persons\\" 存在不可控风险，需锁定映射关系",
-  ],
-  "suggestions": Object {
-    "personsUsingGET": "get /api/v1/interviewer/persons",
-    "personsUsingGET_1": "get /api/v1/persons",
-  },
-  "warnings": Array [],
-}
-`;
-
-exports[`validate/utils operationIdGuard should work ok: error 2`] = `
-Object {
-  "basePath": "/",
-  "paths": Object {
-    "/api/v1/interviewer/persons": Object {
-      "get": Object {
-        "deprecated": false,
-        "operationId": "personsUsingGET",
-        "parameters": Array [],
-        "responses": Object {
-          "200": Object {
-            "description": "OK",
-          },
-        },
-      },
-    },
-    "/api/v1/persons": Object {
-      "get": Object {
-        "deprecated": false,
-        "operationId": "personsUsingGET_1",
-        "parameters": Array [],
-        "responses": Object {
-          "200": Object {
-            "description": "OK",
-          },
-        },
-      },
-    },
-  },
-}
-`;
-
-exports[`validate/utils operationIdGuard should work ok: partial remove error 1`] = `
-Object {
-  "errors": Array [
-    "【错误】方法 \\"personsUsingGET\\" 对应的 \\"get /api/v1/persons\\" 似乎已被移除或者发生了变化，请更新",
-  ],
-  "suggestions": Object {},
-  "warnings": Array [
-    "【警告】方法 \\"personsUsingGET\\" & \\"get /api/v1/persons\\" 与 \\"get /api/v1/interviewer/persons\\" 不匹配，自动纠正为 \\"personsUsingGET_1\\"",
-  ],
-}
-`;
-
-exports[`validate/utils operationIdGuard should work ok: partial remove error 2`] = `
-Object {
-  "basePath": "/",
-  "paths": Object {
-    "/api/v1/interviewer/persons": Object {
-      "get": Object {
-        "deprecated": false,
-        "operationId": "personsUsingGET_1",
-        "parameters": Array [],
-        "responses": Object {
-          "200": Object {
-            "description": "OK",
-          },
-        },
-      },
-    },
-  },
-}
-`;
-
-exports[`validate/utils operationIdGuard should work ok: partial remove ok 1`] = `
-Object {
-  "errors": Array [
-    "【错误】方法 \\"personsUsingGET_1\\" 对应的 \\"get /api/v1/persons\\" 似乎已被移除或者发生了变化，请更新",
-  ],
-  "suggestions": Object {},
-  "warnings": Array [],
-}
-`;
-
-exports[`validate/utils operationIdGuard should work ok: partial remove ok 2`] = `
-Object {
-  "basePath": "/",
-  "paths": Object {
-    "/api/v1/interviewer/persons": Object {
-      "get": Object {
-        "deprecated": false,
-        "operationId": "personsUsingGET",
-        "parameters": Array [],
-        "responses": Object {
-          "200": Object {
-            "description": "OK",
-          },
-        },
-      },
-    },
-  },
-}
-`;
-
-exports[`validate/utils operationIdGuard should work ok: remove error 1`] = `
+exports[`validate/utils operationIdGuard should work ok: 3 remove error 1`] = `
 Object {
   "errors": Array [
     "【错误】方法 \\"personsUsingGET\\" 对应的 \\"get /api/v1/persons\\" 似乎已被移除或者发生了变化，请更新",
@@ -162,9 +102,88 @@ Object {
 }
 `;
 
-exports[`validate/utils operationIdGuard should work ok: remove error 2`] = `
+exports[`validate/utils operationIdGuard should work ok: 3 remove error 2`] = `
 Object {
   "basePath": "/",
   "paths": Object {},
+}
+`;
+
+exports[`validate/utils operationIdGuard should work ok: 4 partial remove error 1`] = `
+Object {
+  "errors": Array [
+    "【错误】方法 \\"personsUsingGET\\" 对应的 \\"get /api/v1/persons\\" 似乎已被移除或者发生了变化，请更新",
+  ],
+  "suggestions": Object {},
+  "warnings": Array [
+    "【警告】方法 \\"personsUsingGET\\" 与 \\"get /api/v1/interviewer/persons\\" 不匹配，自动纠正为 \\"personsUsingGET_1\\"",
+  ],
+}
+`;
+
+exports[`validate/utils operationIdGuard should work ok: 4 partial remove error 2`] = `
+Object {
+  "basePath": "/",
+  "paths": Object {
+    "/api/v1/interviewer/persons": Object {
+      "get": Object {
+        "deprecated": false,
+        "operationId": "personsUsingGET_1",
+        "parameters": Array [],
+        "responses": Object {
+          "200": Object {
+            "description": "OK",
+          },
+        },
+      },
+    },
+  },
+}
+`;
+
+exports[`validate/utils operationIdGuard should work ok: 5 partial remove ok 1`] = `
+Object {
+  "errors": Array [
+    "【错误】方法 \\"personsUsingGET_1\\" 对应的 \\"get /api/v1/persons\\" 似乎已被移除或者发生了变化，请更新",
+  ],
+  "suggestions": Object {},
+  "warnings": Array [],
+}
+`;
+
+exports[`validate/utils operationIdGuard should work ok: 5 partial remove ok 2`] = `
+Object {
+  "basePath": "/",
+  "paths": Object {
+    "/api/v1/interviewer/persons": Object {
+      "get": Object {
+        "deprecated": false,
+        "operationId": "personsUsingGET",
+        "parameters": Array [],
+        "privateMethodUrl": "get /api/v1/interviewer/persons",
+        "responses": Object {
+          "200": Object {
+            "description": "OK",
+          },
+        },
+      },
+    },
+  },
+}
+`;
+
+exports[`validate/utils strictModeGuard should work ok: strictModeGuard 1`] = `
+Object {
+  "errors": Array [
+    "【错误】 tags \\"{
+  \\"name\\": \\"错误\\",
+  \\"description\\": \\"这个tags不合格\\"
+}\\" 命名包含非英文字符，请联系接口方修改",
+    "【错误】 tags \\"{
+  \\"name\\": \\"xxx-controller\\",
+  \\"description\\": \\"这个tags不合格\\"
+}\\" 命名不符合规范或由于 @Api 未添加 tags，存在不可控风险，请联系接口方修改",
+  ],
+  "warnings": Array [],
 }
 `;

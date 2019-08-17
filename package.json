@@ -1,6 +1,6 @@
 {
   "name": "sm2tsservice",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "swagger or yapi mock to typescript services and models",
   "repository": "git@github.com:gogoyqj/sm2tsservice.git",
   "author": "杨乾军 <yang@yang>",
@@ -16,7 +16,7 @@
   },
   "scripts": {
     "build": "node build.js --declaration --project tsconfig.prod.json",
-    "test": "node test.js"
+    "test": "jest --all"
   },
   "jest": {
     "collectCoverageFrom": [
@@ -40,6 +40,7 @@
     ],
     "moduleNameMapper": {
       "^src(.*)$": "<rootDir>/src/$1",
+      "^@src(.*)$": "<rootDir>/src/$1",
       "^tests(.*)$": "<rootDir>/tests/$1",
       "^react-native$": "react-native-web"
     },
