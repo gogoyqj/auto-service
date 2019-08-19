@@ -11,10 +11,10 @@ export interface PathJson {
   summary?: string;
   consumes?: string[];
   parameters: {
-    name: string;
-    in: 'path' | 'form' | 'query' | 'body' | string;
-    description: string;
-    required: boolean;
+    name?: string;
+    in?: 'path' | 'form' | 'query' | 'body' | string;
+    description?: string;
+    required?: boolean;
     type?: string;
     schema?: SMSchema;
     format?: any;

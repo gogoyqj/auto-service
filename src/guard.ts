@@ -11,7 +11,7 @@ type API = SwaggerJson['paths']['a']['get'];
 
 export const dangerousOperationIdReg = /_[0-9]{1,}$/g;
 export const defaultPrefixReg = /^(\/)?api\//g;
-export const defaultBadParamsReg = /[^a-z0-9_$]/gi;
+export const defaultBadParamsReg = /[^a-z0-9_.$]/gi;
 
 export interface HttpMethodUrl2APIMap {
   [url: string]: API;
@@ -53,10 +53,10 @@ export function operationIdGuard(swagger: SwaggerJson, config: GuardConfig = {})
         const api = apiItem[method];
         const { operationId, parameters = [] } = api;
         // @cc: 扫描参数名字
-        parameters.forEach(({ name, in: pType, description = '' }) => {
+        parameters.forEach(({ name = '', in: pType, description = '' }) => {
           if (name.match(badParamsReg)) {
             errors.push(
-              `【错误】"${pType}" 参数 "${name}" "${description}" 不符合规范，请联系接口方修改`
+              `【错误】接口 "${method} ${url}" "${pType}" 参数 "${name}" "${description}" 不符合规范，请联系接口方修改`
             );
           }
         });
@@ -74,7 +74,7 @@ export function operationIdGuard(swagger: SwaggerJson, config: GuardConfig = {})
           api.privateMethodUrl = methodUrl;
           methodUrl2ApiMap[methodUrl] = api;
           const dangerousOperationId = operationId.replace(dangerousOperationIdReg, '');
-          if (operationId.match(dangerousOperationIdReg)) {
+          if (`${operationId || ''}`.match(dangerousOperationIdReg)) {
             dangers[dangerousOperationId] = '';
           }
           dangerousOperationId2ApiMap[dangerousOperationId] =
@@ -213,12 +213,16 @@ export function strictModeGuard(swagger: SwaggerJson, config: GuardConfig) {
             tag,
             null,
             2
-          )}" 命名不符合规范或由于 @Api 未添加 tags，存在不可控风险，请联系接口方修改`
+          )}" 命名不符合规范或由于 @Api 装饰器未添加 tags，存在不可控风险，请联系接口方修改`
         );
       }
       if (!name.match(validTagsReg)) {
         errors.push(
-          `【错误】 tags "${JSON.stringify(tag, null, 2)}" 命名包含非英文字符，请联系接口方修改`
+          `【错误】 tags "${JSON.stringify(
+            tag,
+            null,
+            2
+          )}" 命名包含非英文字符，@Api 装饰器不能添加非法 tags，请联系接口方修改`
         );
       }
       return errors;
@@ -226,7 +230,9 @@ export function strictModeGuard(swagger: SwaggerJson, config: GuardConfig) {
     // @cc: definitions 是否符合规范
     Object.keys(definitions).reduce((errors, dto) => {
       if (!dto.match(validDefinitionReg)) {
-        errors.push(`【错误】 definitions name "${dto}" 命名包含非英文字符，请联系接口方修改`);
+        errors.push(
+          `【错误】 definitions name - DTO "${dto}" 命名包含非英文字符，请联系接口方修改`
+        );
       }
       return errors;
     }, info.errors);

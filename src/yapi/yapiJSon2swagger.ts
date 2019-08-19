@@ -75,6 +75,7 @@ export default function yapiJSon2swagger(list: API[], yapiConfig: Json2Service['
       name: name,
       description: t.desc || t.name
     });
+    t.name = name;
   });
   let reg = basePath ? new RegExp(`^${basePath}`) : undefined;
   const swaggerObj: SwaggerJson = {

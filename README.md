@@ -12,18 +12,24 @@
 
 edit json2service.json
 
-| 参数             | 值               | 说明                                                                                                                                               |
-| ---------------- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| url              | url 或者文件地址 | swagger、yapi 文档 url 地址或者文件目录，注意：如果是本地文件，文件名不能以 http 开头                                                              |
-| type             | yapi、swagger    | 标记类型，默认是 swagger                                                                                                                           |
-| swaggerParser    |                  | swagger-code-gen 配置                                                                                                                              |
-|                  | -o               | 输出 typescript 代码目录，默认是当前 src/services                                                                                                  |
-|                  | -t               | 模板目录，默认是工具内置模板目录 plugins/typescript-tkit/，避免修改                                                                                |
-|                  | -l               | 模板目录，默认是 typescript-angularjs，避免修改                                                                                                    |
-| validateResponse | boolean          | 是否生成校验逻辑，默认 false，[详细文档](./src/validate/README.md)                                                                                 |
-| yapiConfig       |                  | yapi 相关配置                                                                                                                                      |
-|                  | required         | 当直接使用 yapi json 定义返回数据格式的时候，生成的 typescript 文件，默认情况下，所有字段都是可选的，配置成 true，则所有字段都是不可缺省的         |
-|                  | bodyJsonRequired | 当直接使用 yapi json 定义 json 格式 body 参数的时候，生成的 typescript 文件，默认情况下，所有字段都是可选的，配置成 true，则所有字段都是不可缺省的 |
+| 参数             | 值                       | 说明                                                                                                                                               |
+| ---------------- | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| url              | url 或者文件地址         | swagger、yapi 文档 url 地址或者文件目录，注意：如果是本地文件，文件名不能以 http 开头                                                              |
+| requestConfig    |                          | 拉取远程文档配置                                                                                                                                   |
+|                  | url                      | 同 url                                                                                                                                             |
+|                  | headers                  | 请求头配置，见 [headers](https://github.com/request/request#custom-http-headers)                                                                   |
+| type             | yapi、swagger            | 标记类型，默认是 swagger                                                                                                                           |
+| swaggerParser    |                          | swagger-code-gen 配置                                                                                                                              |
+|                  | -o                       | 输出 typescript 代码目录，默认是当前 src/services                                                                                                  |
+|                  | -t                       | 模板目录，默认是工具内置模板目录 plugins/typescript-tkit/，避免修改                                                                                |
+|                  | -l                       | 模板目录，默认是 typescript-angularjs，避免修改                                                                                                    |
+| validateResponse | boolean                  | 是否生成校验逻辑，默认 false，[详细文档](./src/validate/README.md)                                                                                 |
+| yapiConfig       |                          | yapi 相关配置                                                                                                                                      |
+|                  | required                 | 当直接使用 yapi json 定义返回数据格式的时候，生成的 typescript 文件，默认情况下，所有字段都是可选的，配置成 true，则所有字段都是不可缺省的         |
+|                  | bodyJsonRequired         | 当直接使用 yapi json 定义 json 格式 body 参数的时候，生成的 typescript 文件，默认情况下，所有字段都是可选的，配置成 true，则所有字段都是不可缺省的 |
+|                  | categoryMap              | 对象，yapi 项目接口分类中英文映射，如 `{ "公共分类": "Common" }`                                                                                   |
+| guardConfig      | mode                     | 缺省, safe, strict                                                                                                                                 |
+|                  | methodUrl2OperationIdMap | 对象，http method + url => operationId 映射，如 `{"get /api/xxx/xxx": "operationId"}`                                                              |
 
 ```json
 {
@@ -106,6 +112,7 @@ edit json2service.json
     //    - http method + url => operationId 映射锁定
     //    - 老项目维持现状
     "mode": "strict",
+    // swagger 处理重复 operationId 逻辑有风险，因此需要锁定映射关系
     "methodUrl2OperationIdMap": {
       "get /api/xxx/xxx": "operationId"
     }
@@ -227,9 +234,9 @@ export default new WrappedFetch();
 ```
 
 ```shell
-  ./node_modules/.bin/sm2tsservice # 使用默认配置
-  ./node_modules/.bin/sm2tsservice -c config.json # 指定配置文件
-  ./node_modules/.bin/sm2tsservice --clear # 清空上次生成产物
+  ./node_modules/.bin/service # 使用默认配置
+  ./node_modules/.bin/service -c config.json # 指定配置文件
+  ./node_modules/.bin/service --clear # 清空上次生成产物
 ```
 
 或可以写入 `package.json`，通过 `npm run api` 使用
@@ -237,7 +244,8 @@ export default new WrappedFetch();
 ```json
 {
   "scripts": {
-    "api": "sm2tsservice --clear"
+    "api": "service --clear"
   }
 }
 ```
+

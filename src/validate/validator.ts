@@ -70,7 +70,7 @@ export function getParamSchema(parameters: PathJson['parameters']) {
     properties: {}
   };
   return parameters.reduce((parentSchema, param) => {
-    const { in: paramType, schema, name, type, required, description, format } = param;
+    const { in: paramType = '', schema, name = '', type, required, description, format } = param;
     if (parentSchema.properties) {
       let cur = parentSchema.properties[paramType] as SMSchema;
       if (schema) {

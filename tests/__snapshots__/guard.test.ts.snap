@@ -673,9 +673,9 @@ Object {
 exports[`guard operationIdGuard strict mode should work ok: 6 params check error 1`] = `
 Object {
   "errors": Array [
-    "【错误】\\"query\\" 参数 \\"bad arg\\" \\"bad arg\\" 不符合规范，请联系接口方修改",
-    "【错误】\\"form\\" 参数 \\"bad-arg\\" \\"bad-arg\\" 不符合规范，请联系接口方修改",
-    "【错误】\\"path\\" 参数 \\"bad坏arg\\" \\"bad坏arg\\" 不符合规范，请联系接口方修改",
+    "【错误】接口 \\"get /api/v1/interviewer/persons\\" \\"query\\" 参数 \\"bad arg\\" \\"bad arg\\" 不符合规范，请联系接口方修改",
+    "【错误】接口 \\"get /api/v1/interviewer/persons\\" \\"form\\" 参数 \\"bad-arg\\" \\"bad-arg\\" 不符合规范，请联系接口方修改",
+    "【错误】接口 \\"get /api/v1/interviewer/persons\\" \\"path\\" 参数 \\"bad坏arg\\" \\"bad坏arg\\" 不符合规范，请联系接口方修改",
   ],
   "suggestions": Array [],
   "warnings": Array [],
@@ -735,11 +735,11 @@ Object {
     "【错误】 tags \\"{
   \\"name\\": \\"错误\\",
   \\"description\\": \\"这个tags不合格\\"
-}\\" 命名包含非英文字符，请联系接口方修改",
+}\\" 命名包含非英文字符，@Api 装饰器不能添加非法 tags，请联系接口方修改",
     "【错误】 tags \\"{
   \\"name\\": \\"xxx-controller\\",
   \\"description\\": \\"这个tags不合格\\"
-}\\" 命名不符合规范或由于 @Api 未添加 tags，存在不可控风险，请联系接口方修改",
+}\\" 命名不符合规范或由于 @Api 装饰器未添加 tags，存在不可控风险，请联系接口方修改",
   ],
   "warnings": Array [],
 }
