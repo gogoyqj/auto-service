@@ -1,5 +1,133 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`guard operationIdGuard duplicate map should throw errors 1`] = `
+Object {
+  "errors": Array [
+    "【错误】映射内检测到重复 personsUsingGET，无法生成正确旧、新方法替换映射关系",
+  ],
+  "suggestions": Array [],
+  "warnings": Array [],
+}
+`;
+
+exports[`guard operationIdGuard duplicate map should throw errors 2`] = `
+Object {
+  "basePath": "/",
+  "paths": Object {
+    "/api/v1/interviewer/persons": Object {
+      "get": Object {
+        "deprecated": false,
+        "operationId": "v1InterviewerPersonsUsingGet",
+        "parameters": Array [],
+        "privateMethodUrl": "get /api/v1/interviewer/persons",
+        "privateOperationId": "v1InterviewerPersonsUsingGet",
+        "responses": Object {
+          "200": Object {
+            "description": "OK",
+          },
+        },
+      },
+    },
+    "/api/v1/interviewer/{user-name}": Object {
+      "get": Object {
+        "deprecated": false,
+        "operationId": "v1InterviewerUserNameUsingGet",
+        "parameters": Array [],
+        "privateOperationId": "v1InterviewerUserNameUsingGet",
+        "responses": Object {
+          "200": Object {
+            "description": "OK",
+          },
+        },
+      },
+    },
+    "/api/v1/persons": Object {
+      "get": Object {
+        "deprecated": false,
+        "operationId": "v1PersonsUsingGet",
+        "parameters": Array [],
+        "privateOperationId": "v1PersonsUsingGet",
+        "responses": Object {
+          "200": Object {
+            "description": "OK",
+          },
+        },
+      },
+    },
+  },
+}
+`;
+
+exports[`guard operationIdGuard increment should work ok 1`] = `
+Object {
+  "errors": Array [
+    "【错误】方法 \\"personsUsingGET_2\\" & \\"get /api/v1/interviewer/{user-name}\\" 存在不可控风险，需锁定映射关系",
+  ],
+  "suggestions": Array [
+    "锁定映射建议，添加到 service 配置",
+    Object {
+      "guardConfig": Object {
+        "methodUrl2OperationIdMap": Object {
+          "get /api/v1/interviewer/{user-name}": "v1InterviewerUserNameUsingGet",
+        },
+      },
+    },
+  ],
+  "warnings": Array [
+    "【警告】方法 \\"personsUsingGET\\" 与 \\"get /api/v1/interviewer/persons\\" 不匹配，自动纠正为 \\"personsUsingGET_1\\"",
+    "【警告】方法 \\"personsUsingGET_1\\" 与 \\"get /api/v1/persons\\" 不匹配，自动纠正为 \\"personsUsingGET\\"",
+  ],
+}
+`;
+
+exports[`guard operationIdGuard increment should work ok 2`] = `
+Object {
+  "basePath": "/",
+  "paths": Object {
+    "/api/v1/interviewer/persons": Object {
+      "get": Object {
+        "deprecated": false,
+        "operationId": "personsUsingGET_1",
+        "parameters": Array [],
+        "privateOperationId": "v1InterviewerPersonsUsingGet",
+        "responses": Object {
+          "200": Object {
+            "description": "OK",
+          },
+        },
+      },
+    },
+    "/api/v1/interviewer/{user-name}": Object {
+      "get": Object {
+        "deprecated": false,
+        "operationId": "personsUsingGET_2",
+        "parameters": Array [],
+        "privateMethodUrl": "get /api/v1/interviewer/{user-name}",
+        "privateOperationId": "v1InterviewerUserNameUsingGet",
+        "responses": Object {
+          "200": Object {
+            "description": "OK",
+          },
+        },
+      },
+    },
+    "/api/v1/persons": Object {
+      "get": Object {
+        "deprecated": false,
+        "operationId": "personsUsingGET",
+        "parameters": Array [],
+        "privateOperationId": "v1PersonsUsingGet",
+        "responses": Object {
+          "200": Object {
+            "description": "OK",
+          },
+        },
+      },
+    },
+  },
+}
+`;
+
 exports[`guard operationIdGuard safe mode should work ok: 1 error 1`] = `
 Object {
   "errors": Array [
@@ -673,12 +801,13 @@ Object {
 exports[`guard operationIdGuard strict mode should work ok: 6 params check error 1`] = `
 Object {
   "errors": Array [
-    "【错误】接口 \\"get /api/v1/interviewer/persons\\" \\"query\\" 参数 \\"bad arg\\" \\"bad arg\\" 不符合规范，请联系接口方修改",
-    "【错误】接口 \\"get /api/v1/interviewer/persons\\" \\"form\\" 参数 \\"bad-arg\\" \\"bad-arg\\" 不符合规范，请联系接口方修改",
-    "【错误】接口 \\"get /api/v1/interviewer/persons\\" \\"path\\" 参数 \\"bad坏arg\\" \\"bad坏arg\\" 不符合规范，请联系接口方修改",
+    "【错误】方法 \\"personsUsingGET\\" 对应的 \\"get /api/v1/persons\\" 似乎已被移除或者发生了变化，请更新",
+    "【错误】方法 \\"personsUsingGET_2\\" 对应的 \\"get /api/v1/interviewer/{user-name}\\" 似乎已被移除或者发生了变化，请更新",
   ],
   "suggestions": Array [],
-  "warnings": Array [],
+  "warnings": Array [
+    "【警告】方法 \\"personsUsingGET\\" 与 \\"get /api/v1/interviewer/persons\\" 不匹配，自动纠正为 \\"personsUsingGET_1\\"",
+  ],
 }
 `;
 
@@ -689,7 +818,7 @@ Object {
     "/api/v1/interviewer/persons": Object {
       "get": Object {
         "deprecated": false,
-        "operationId": "personsUsingGET",
+        "operationId": "personsUsingGET_1",
         "parameters": Array [
           Object {
             "description": "bad arg",
@@ -716,7 +845,6 @@ Object {
             "required": false,
           },
         ],
-        "privateMethodUrl": "get /api/v1/interviewer/persons",
         "privateOperationId": "v1InterviewerPersonsUsingGet",
         "responses": Object {
           "200": Object {

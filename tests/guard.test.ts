@@ -49,6 +49,21 @@ function getSwagger(): SwaggerJson {
   };
 }
 
+const optionIdMethodUrlIncrementMap: GuardConfig = {
+  methodUrl2OperationIdMap: {
+    'get /api/v1/persons': 'personsUsingGET',
+    'get /api/v1/interviewer/persons': 'personsUsingGET_1'
+  }
+};
+const optionIdMethodUrlSafeModeDuplicateMap: GuardConfig = {
+  mode: 'safe',
+  methodUrl2OperationIdMap: {
+    'get /api/v1/persons': 'personsUsingGET',
+    'get /api/v1/interviewer/persons': 'personsUsingGET',
+    'get /api/v1/interviewer/{user-name}': 'v1InterviewerUserNameUsingGet'
+  }
+};
+
 const optionIdMethodUrlMap: GuardConfig = {
   methodUrl2OperationIdMap: {
     'get /api/v1/persons': 'personsUsingGET',
@@ -98,6 +113,20 @@ describe('guard', () => {
     res = await operationIdGuard(swagger, optionIdMethodUrlMap2);
     expect(res).toMatchSnapshot('5 partial remove ok');
     expect(swagger).toMatchSnapshot('5 partial remove ok');
+  });
+
+  it('operationIdGuard increment should work ok', async () => {
+    let swagger = getSwagger();
+    let res = await operationIdGuard(swagger, optionIdMethodUrlIncrementMap);
+    expect(res).toMatchSnapshot();
+    expect(swagger).toMatchSnapshot();
+  });
+
+  it('operationIdGuard duplicate map should throw errors', async () => {
+    let swagger = getSwagger();
+    let res = await operationIdGuard(swagger, optionIdMethodUrlSafeModeDuplicateMap);
+    expect(res).toMatchSnapshot();
+    expect(swagger).toMatchSnapshot();
   });
 
   it('operationIdGuard safe mode should work ok', async () => {

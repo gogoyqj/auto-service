@@ -8,7 +8,7 @@
 
 生成与 tags 一一对应的 service 文件，比如 `"User" => "UserApi.ts"` - 所以 tags 一旦设定不许更改
 
-工具不能处理中文 - 所以要求 tags 必须为中文，所以 yapi 需要中英文映射
+工具不能处理中文 - 所以要求 tags 必须为英文，所以 yapi 需要中英文映射
 
 ```js
   "yapiConfig": {
@@ -94,7 +94,7 @@ npm i -D sm2tsservice  // 公司外部 1.1.8+
 
 ##### 维持现状
 
-老项目，不配置 `mode`，重新生成 service 代码，如果检测到风险 operationId，则抛错错误生成失败，输出映射关系，请手动将提示添加到配置文件内，并提交到仓库，如：
+老项目，不配置 `mode`，重新生成 service 代码，如果检测到风险 operationId，则抛出错误生成失败，输出映射关系，请手动将提示添加到配置文件内，并提交到仓库，如：
 
 ```js
   "guardConfig": {
@@ -108,6 +108,12 @@ npm i -D sm2tsservice  // 公司外部 1.1.8+
 ```
 
 后续有任何变动的时候，工具会根据本地已有映射关系对 swagger 返回 `operationId` 进行校正，并对增删改做出检测提示，确保业务逻辑不受影响
+
+<font color="red">警告</font>
+
+> - @tkit/service@3.0.7 sm2tservice@1.1.8 本身及以下，仅能确保初次给出的映射建议正确
+> - 后续给出增量映射关系，务必人工确保新增映射 `operationId` 不与老映射 `operationId` 重复，校正为任一不重复有语义值即可，建议 `url + Using + http method` - 否则可能会报 java `overload` 错误，且后续无法升级到 `safe` 模式
+> - 或请升级到 @tkit/service@3.0.8+ sm2tservice@1.1.9+
 
 ##### 安全模式
 

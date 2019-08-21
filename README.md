@@ -10,7 +10,7 @@
 
 ## config
 
-edit json2service.json
+edit `json2service.json`，也可用 `xxx.js`，然后配置 `-c xxx.js`
 
 | 参数             | 值                       | 说明                                                                                                                                               |
 | ---------------- | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -30,6 +30,8 @@ edit json2service.json
 |                  | categoryMap              | 对象，yapi 项目接口分类中英文映射，如 `{ "公共分类": "Common" }`                                                                                   |
 | guardConfig      | mode                     | 缺省, safe, strict                                                                                                                                 |
 |                  | methodUrl2OperationIdMap | 对象，http method + url => operationId 映射，如 `{"get /api/xxx/xxx": "operationId"}`                                                              |
+|                  | badParamsReg             | 非法参数格式校验正则，默认 `/[^a-z0-9_.[]$]/gi`，仅配置文件是 `*.js` 可用                                                                          |
+|                  | prefixReg                | 生成 `url + Using + http method` 时，需移除 url 前缀正则，默认是 `/^(\/)?api\//g` ，仅配置文件是 `*.js` 可用                                       |
 
 ```json
 {
@@ -248,4 +250,3 @@ export default new WrappedFetch();
   }
 }
 ```
-

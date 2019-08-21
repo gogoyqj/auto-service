@@ -11,7 +11,7 @@ type API = SwaggerJson['paths']['a']['get'];
 
 export const dangerousOperationIdReg = /_[0-9]{1,}$/g;
 export const defaultPrefixReg = /^(\/)?api\//g;
-export const defaultBadParamsReg = /[^a-z0-9_.$]/gi;
+export const defaultBadParamsReg = /[^a-z0-9_.[]$]/gi;
 
 export interface HttpMethodUrl2APIMap {
   [url: string]: API;
@@ -34,6 +34,7 @@ export function operationIdGuard(swagger: SwaggerJson, config: GuardConfig = {})
   // operationId 匹配 _[0-9] 格式，及存在被 swagger
   const dangerousOperationId2ApiMap: { [id: string]: API[] } = {};
   const copySavedMethodUrl2OperationIdMap = { ...savedMethodUrl2OperationIdMap };
+  const mapped = !!Object.keys(copySavedMethodUrl2OperationIdMap).length;
 
   // @cc: 风险日志
   const errors: string[] = [];
@@ -95,13 +96,14 @@ export function operationIdGuard(swagger: SwaggerJson, config: GuardConfig = {})
   }
 
   const validateThrowAndFix = (api: API) => {
-    const { operationId = '', privateMethodUrl = '' } = api;
+    const { operationId = '', privateMethodUrl = '', privateOperationId } = api;
     const savedOperationId = copySavedMethodUrl2OperationIdMap[privateMethodUrl];
     if (!savedOperationId) {
       errors.push(
         `【错误】方法 "${operationId}" & "${privateMethodUrl}" 存在不可控风险，需锁定映射关系`
       );
-      suggestions[privateMethodUrl] = operationId;
+      // @cc: 增量情况下，避免重复
+      suggestions[privateMethodUrl] = mapped ? privateOperationId : operationId;
     } else if (savedOperationId !== operationId) {
       /**
        * 尝试自动人工干涉
@@ -144,18 +146,33 @@ export function operationIdGuard(swagger: SwaggerJson, config: GuardConfig = {})
   }, errors);
   // @cc: 校正成功之后才可迁移
   if (!errors.length && !Object.keys(suggestions).length && (isSafe || isStrict)) {
-    Object.keys(paths).forEach(url => {
-      const apiItem = paths[url];
-      Object.keys(apiItem).forEach(method => {
-        const api = apiItem[method];
-        const { operationId, privateOperationId } = api;
-        if (operationId) {
-          // @cc: urlUsingMethod 作为 operationId
-          api.operationId = privateOperationId;
-          suggestions[operationId] = privateOperationId;
-        }
+    try {
+      Object.keys(paths).forEach(url => {
+        const apiItem = paths[url];
+        Object.keys(apiItem).forEach(method => {
+          const api = apiItem[method];
+          const { operationId, privateOperationId } = api;
+          if (operationId) {
+            // @cc: urlUsingMethod 作为 operationId
+            api.operationId = privateOperationId;
+            // @cc: 处置重复 operationId
+            if (operationId in suggestions) {
+              throw Error(
+                `【错误】映射内检测到重复 ${operationId}，无法生成正确旧、新方法替换映射关系`
+              );
+            } else {
+              suggestions[operationId] = privateOperationId;
+            }
+          }
+        });
       });
-    });
+    } catch (e) {
+      return {
+        errors: [e.message],
+        warnings: [],
+        suggestions: []
+      };
+    }
     return {
       errors,
       warnings,
