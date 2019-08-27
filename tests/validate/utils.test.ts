@@ -6,7 +6,7 @@ import {
   getParams,
   getReadableDataAsync
 } from 'src/validate/utils';
-import { SMAbstractRequest } from 'src/types';
+import { SMAbstractRequest } from 'src/consts';
 import { Request, mockRequest, testJSON } from 'tests/consts';
 
 describe('validate/utils', () => {

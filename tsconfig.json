@@ -24,7 +24,10 @@
     "typeRoots": ["node_modules/@types"],
     "traceResolution": false,
     "skipLibCheck": true,
-    "types": ["node"]
+    "types": ["node"],
+    "paths": {
+      "@src/*": ["src/*"]
+    }
   },
   "exclude": ["node_modules", "lib", "es", "dist", "tmp", "services"]
 }

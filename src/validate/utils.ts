@@ -1,5 +1,5 @@
 import * as qs from 'qs';
-import { SMAbstractRequest, SMAjaxConfig, SMAbstractResponse, SMValidateInfo } from '../types';
+import { SMAbstractRequest, SMAjaxConfig, SMAbstractResponse, SMValidateInfo } from '../consts';
 import { X_SM_PATH, X_SM_BASEPATH } from '../init';
 
 export const pathToReg = (path: string) => {

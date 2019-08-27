@@ -1,9 +1,9 @@
 import * as _ from 'lodash';
 // @ts-ignore
-import * as ejs from 'easy-json-schema';
+import * as ejs from 'easy-json-schema'; // @fix module.exports = ejs;
 import { JSONSchema6 } from 'json-schema';
 import * as JSON5 from 'json5';
-import { Json2Service } from '../cli';
+import { PathJson, SwaggerJson, Json2Service } from '../consts';
 
 interface API {
   name: string;
@@ -54,7 +54,7 @@ interface STag {
   description?: string;
 }
 
-export default function yapiJSon2swagger(list: API[], yapiConfig: Json2Service['yapiConfig']) {
+export default function yapiJSon2swagger(list: API[], yapiConfig: Json2Service['yapiConfig'] = {}) {
   let basePath = '';
   let info = {
     title: 'unknown',
@@ -62,19 +62,23 @@ export default function yapiJSon2swagger(list: API[], yapiConfig: Json2Service['
     description: 'unknown'
   };
   let tags: STag[] = [];
+  const { categoryMap = <T>(s: T) => s, bodyJsonRequired, required } = yapiConfig;
   list.forEach(t => {
     if (t.proBasepath) {
       basePath = t.proBasepath;
     }
     if (t.proName) info.title = t.proName;
     if (t.proDescription) info.description = t.proDescription;
+    const name =
+      typeof categoryMap === 'function' ? categoryMap(t.name) : categoryMap[t.name] || t.name;
     tags.push({
-      name: t.name,
-      description: t.desc
+      name: name,
+      description: t.desc || t.name
     });
+    t.name = name;
   });
   let reg = basePath ? new RegExp(`^${basePath}`) : undefined;
-  const swaggerObj = {
+  const swaggerObj: SwaggerJson = {
     swagger: '2.0',
     info,
     basePath,
@@ -83,18 +87,19 @@ export default function yapiJSon2swagger(list: API[], yapiConfig: Json2Service['
       'http' // Only http
     ],
     paths: (() => {
-      let apisObj = {};
-      for (let aptTag of list) {
+      let apisObj: SwaggerJson['paths'] = {};
+      for (let category of list) {
         // list of category
-        for (let api of aptTag.list) {
+        for (let api of category.list) {
           // list of api
           const url = reg ? api.path.replace(reg, '') : api.path;
           if (apisObj[url] == null) {
             apisObj[url] = {};
           }
           apisObj[url][api.method.toLowerCase()] = (() => {
-            let apiItem = {};
-            apiItem['tags'] = [aptTag.name];
+            // eslint-disable-next-line @typescript-eslint/no-object-literal-type-assertion
+            let apiItem = {} as PathJson;
+            apiItem['tags'] = [category.name];
             apiItem['summary'] = api.title;
             apiItem['description'] = api.markdown;
             switch (api.req_body_type) {
@@ -169,7 +174,7 @@ export default function yapiJSon2swagger(list: API[], yapiConfig: Json2Service['
                     if (jsonParam !== null) {
                       if (!jsonParam['type']) {
                         // required
-                        if (yapiConfig && yapiConfig.bodyJsonRequired) {
+                        if (bodyJsonRequired) {
                           jsonParam = JSON.parse(
                             JSON.stringify(jsonParam).replace(
                               /"([^*"]+":)/g,
@@ -221,7 +226,7 @@ export default function yapiJSon2swagger(list: API[], yapiConfig: Json2Service['
                 default:
                   break;
               }
-              return paramArray;
+              return paramArray as PathJson['parameters'];
             })();
             apiItem['responses'] = {
               '200': {
@@ -247,7 +252,7 @@ export default function yapiJSon2swagger(list: API[], yapiConfig: Json2Service['
                           schemaObj = resBody; // as the parameters,
                         } else {
                           // required
-                          if (yapiConfig && yapiConfig.required) {
+                          if (required) {
                             resBody = JSON.parse(
                               JSON.stringify(resBody).replace(
                                 /"([^*"]+":)/g,
@@ -287,3 +292,5 @@ export default function yapiJSon2swagger(list: API[], yapiConfig: Json2Service['
   };
   return swaggerObj;
 }
+
+export type SwaggerLikeJson = ReturnType<typeof yapiJSon2swagger>;

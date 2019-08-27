@@ -1,8 +1,9 @@
 import { exec } from 'child_process';
 import { promisify } from 'es6-promisify';
-import { SwaggerParser } from './cli';
-import { generatorPath } from './init';
 import * as fs from 'fs-extra';
+import chalk from 'chalk';
+import { SwaggerParser } from './consts';
+import { generatorPath } from './init';
 
 const wrappedExec = <C>(url: string, cb: C) => exec(url, cb);
 wrappedExec[promisify.argumentNames] = ['error', 'stdout', 'stderr'];
@@ -19,7 +20,7 @@ export default async function swagger2ts(
 ): Promise<{ code: number; message?: string }> {
   const java = await checkJava();
   if (java.code) {
-    console.error(`[ERROR]: check java failed with ${java.message}`);
+    console.log(chalk.red(`[ERROR]: check java failed with ${java.message}`));
     return java;
   }
   return await parseSwagger(swaggerParser, clear);

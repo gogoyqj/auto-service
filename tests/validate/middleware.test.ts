@@ -4,8 +4,14 @@ import {
   responseHooksFactory
 } from 'src/validate/middleware';
 import { Request, Response, testJSON, mockRequest } from 'tests/consts';
-import { SMAbstractRequest, SMAbstractResponse, SMValidateInfo } from 'src/types';
-import { X_SM_BASEPATH, X_SM_PATH, X_SM_PARAMS } from 'src/consts';
+import {
+  X_SM_BASEPATH,
+  X_SM_PATH,
+  X_SM_PARAMS,
+  SMAbstractRequest,
+  SMAbstractResponse,
+  SMValidateInfo
+} from 'src/consts';
 
 describe('validate/middleware', () => {
   it('createValidateMiddle ok', async () => {

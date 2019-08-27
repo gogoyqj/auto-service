@@ -2,8 +2,9 @@
 import * as http from 'http';
 import * as request from 'request';
 import * as detectPort from 'detect-port';
+import chalk from 'chalk';
+import { Json2Service } from '../consts';
 import yapiJSon2swagger from './yapiJSon2swagger';
-import { Json2Service } from '../cli';
 
 export interface SwaggerParser {
   '-o'?: string;
@@ -73,7 +74,7 @@ export default async function serve(
       };
     },
     e => {
-      console.error(`[ERROR]: create tmp server faild with: ${e}`);
+      console.log(chalk.red(`[ERROR]: create tmp server faild with: ${e}`));
       return {
         code: 4,
         message: e
