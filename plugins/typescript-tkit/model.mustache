@@ -5,14 +5,14 @@ import * as models from './models';
 {{#model}}
 {{#description}}
 /**
- * {{{description}}}
+ * **`{{classname}}`** {{{description}}}
  */
 {{/description}}
 export interface {{classname}} {{#parent}}extends {{{parent}}} {{/parent}}{
 {{#vars}}
 {{#description}}
   /**
-   * {{{description}}}
+   * **`{{name}}`** {{{description}}}
    */
 {{/description}}
   "{{name}}"{{^required}}?{{/required}}: {{#isEnum}}{{{datatypeWithEnum}}}{{/isEnum}}{{^isEnum}}{{{datatype}}}{{/isEnum}};
@@ -26,6 +26,11 @@ export namespace {{classname}} {
   export enum {{enumName}} {
   {{#allowableValues}}
   {{#enumVars}}
+  {{#description}}
+  /**
+   * **`{{name}}`** {{{description}}}
+   */
+  {{/description}}
     {{{name}}} = <any> {{{value}}}{{^-last}},{{/-last}}
   {{/enumVars}}
   {{/allowableValues}}

@@ -14,18 +14,33 @@ export interface Params{{nickname}} {
 {{#headerParams.0}}
   // headerParams
   {{#headerParams}}
+  {{#description}}
+  /**
+    * **`{{paramName}}`** {{&description}}
+    */
+  {{/description}}
   {{paramName}}{{^required}}?{{/required}}: {{&dataType}};{{#description}} // {{&description}}{{/description}}
   {{/headerParams}}
 {{/headerParams.0}}
 {{#pathParams.0}}
   // pathParams
   {{#pathParams}}
+  {{#description}}
+  /**
+    * **`{{paramName}}`** {{&description}}
+    */
+  {{/description}}
   {{paramName}}{{^required}}?{{/required}}: {{&dataType}};{{#description}} // {{&description}}{{/description}}
   {{/pathParams}}
 {{/pathParams.0}}
 {{#queryParams.0}}
   // queryParams
   {{#queryParams}}
+  {{#description}}
+  /**
+    * **`{{paramName}}`** {{&description}}
+    */
+  {{/description}}
   {{paramName}}{{^required}}?{{/required}}: {{{dataType}}};{{#description}} // {{&description}}{{/description}}
   {{/queryParams}}
 {{/queryParams.0}}
