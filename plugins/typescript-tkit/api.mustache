@@ -16,7 +16,7 @@ export interface Params{{nickname}} {
   {{#headerParams}}
   {{#description}}
   /**
-    * **`{{paramName}}`** {{&description}}
+    * `{{paramName}}` {{&description}}
     */
   {{/description}}
   {{paramName}}{{^required}}?{{/required}}: {{&dataType}};{{#description}} // {{&description}}{{/description}}
@@ -27,7 +27,7 @@ export interface Params{{nickname}} {
   {{#pathParams}}
   {{#description}}
   /**
-    * **`{{paramName}}`** {{&description}}
+    * `paramName}}` {{&description}}
     */
   {{/description}}
   {{paramName}}{{^required}}?{{/required}}: {{&dataType}};{{#description}} // {{&description}}{{/description}}
@@ -38,7 +38,7 @@ export interface Params{{nickname}} {
   {{#queryParams}}
   {{#description}}
   /**
-    * **`{{paramName}}`** {{&description}}
+    * `paramName}}` {{&description}}
     */
   {{/description}}
   {{paramName}}{{^required}}?{{/required}}: {{{dataType}}};{{#description}} // {{&description}}{{/description}}
