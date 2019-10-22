@@ -207,6 +207,9 @@ Object {
   "suggestions": Array [
     "旧 => 新 方法替换映射关系，请按建议顺序降序逐一替换",
     Object {
+      "ParamspersonsUsingGET": "Paramsv1PersonsUsingGet",
+      "ParamspersonsUsingGET_1": "Paramsv1InterviewerPersonsUsingGet",
+      "ParamspersonsUsingGET_2": "Paramsv1InterviewerUserNameUsingGet",
       "personsUsingGET": "v1PersonsUsingGet",
       "personsUsingGET_1": "v1InterviewerPersonsUsingGet",
       "personsUsingGET_2": "v1InterviewerUserNameUsingGet",
@@ -651,6 +654,9 @@ Object {
   "suggestions": Array [
     "旧 => 新 方法替换映射关系，请按建议顺序降序逐一替换",
     Object {
+      "ParamspersonsUsingGET": "Paramsv1PersonsUsingGet",
+      "ParamspersonsUsingGET_1": "Paramsv1InterviewerPersonsUsingGet",
+      "ParamspersonsUsingGET_2": "Paramsv1InterviewerUserNameUsingGet",
       "personsUsingGET": "v1PersonsUsingGet",
       "personsUsingGET_1": "v1InterviewerPersonsUsingGet",
       "personsUsingGET_2": "v1InterviewerUserNameUsingGet",

@@ -6,12 +6,6 @@ import chalk from 'chalk';
 import { Json2Service } from '../consts';
 import yapiJSon2swagger from './yapiJSon2swagger';
 
-export interface SwaggerParser {
-  '-o'?: string;
-  '-t'?: string;
-  '-l'?: string;
-}
-
 async function download(url: string) {
   return new Promise<{ code: number; message?: string; result?: any }>(rs => {
     request

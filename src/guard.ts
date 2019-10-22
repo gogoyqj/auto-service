@@ -67,7 +67,7 @@ export function operationIdGuard(swagger: SwaggerJson, config: GuardConfig = {})
             url
               .replace(prefixReg, '')
               .replace(/(^\/|})/g, '')
-              .replace(/[/{-]{1,}([^/])/g, (mat, u: string) => u.toUpperCase()) +
+              .replace(/[/{_-]{1,}([^/])/g, (mat, u: string) => u.toUpperCase()) +
             'Using' +
             method[0].toUpperCase() +
             method.substring(1);
@@ -185,6 +185,7 @@ export function operationIdGuard(swagger: SwaggerJson, config: GuardConfig = {})
               })
               .reduce<String2StringMap>((s, id) => {
                 s[id] = suggestions[id];
+                s[`Params${id}`] = `Params${s[id]}`;
                 return s;
               }, {})
           ]
@@ -208,14 +209,19 @@ export function operationIdGuard(swagger: SwaggerJson, config: GuardConfig = {})
 }
 
 // @cc: 检测是否手写了 tags
-export const InstableTagsReg = /^[a-z-0-9_$A-Z]+-controller$/g;
+export const DefaultUnstableTagsReg = /^[a-z-0-9_$A-Z]+-controller$/g;
 // @cc: 检测是否全英文
-export const validTagsReg = /^[a-z-0-9_$]+$/gi;
-export const validDefinitionReg = /^[a-z-0-9_$«»]+$/gi;
+export const DefaultValidTagsReg = /^[a-z-0-9_$]+$/gi;
+export const DefaultValidDefinitionReg = /^[a-z-0-9_$«»,]+$/gi;
 
 export function strictModeGuard(swagger: SwaggerJson, config: GuardConfig) {
   const { tags = [], definitions = {} } = swagger;
-  const { mode } = config;
+  const {
+    mode,
+    unstableTagsReg = DefaultUnstableTagsReg,
+    validTagsReg = DefaultValidTagsReg,
+    validDefinitionReg = DefaultValidDefinitionReg
+  } = config;
   const info = {
     errors: Array<string>(),
     warnings: Array<string>()
@@ -224,7 +230,7 @@ export function strictModeGuard(swagger: SwaggerJson, config: GuardConfig) {
     // @cc: tags 是否符合规范
     tags.reduce<string[]>((errors, tag) => {
       const { name = '' } = tag;
-      if (name.match(InstableTagsReg)) {
+      if (name.match(unstableTagsReg)) {
         errors.push(
           `【错误】 tags "${JSON.stringify(
             tag,

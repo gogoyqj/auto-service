@@ -3,20 +3,24 @@ import * as fs from 'fs';
 import * as request from 'request';
 import chalk from 'chalk';
 
-import { Json2Service } from './consts';
+import { Json2Service, SwaggerParser } from './consts';
 import swagger2ts from './swagger2ts';
 import serve from './yapi/serve';
 import { pluginsPath, DefaultBasePath, SmTmpDir, basePathToFileName } from './init';
 import { operationIdGuard, strictModeGuard } from './guard';
 
-const defaultParseConfig = {
+const defaultParseConfig: Partial<SwaggerParser> = {
   '-l': 'typescript-angularjs',
   '-t': path.join(pluginsPath, 'typescript-tkit'),
   '-o': path.join(process.cwd(), 'src', 'services')
 };
+/** CLI入口函数 */
 export default async function gen(
   config: Json2Service,
-  options: { clear?: boolean }
+  options: {
+    /** 是否清空上次生成目录 */
+    clear?: boolean;
+  }
 ): Promise<number> {
   const { url, type = 'swagger', swaggerParser, requestConfig = {} } = config;
   let swaggerUrl = (requestConfig.url = requestConfig.url || url || '');
@@ -41,7 +45,7 @@ export default async function gen(
     }
   }
   const swagger2tsConfig = { ...defaultParseConfig, ...swaggerParser };
-  const servicesPath = swagger2tsConfig['-o'];
+  const servicesPath = swagger2tsConfig['-o'] || '';
   // @cc: 强制保存在本地，方便做安全检测
   const code: number = await new Promise(rs => {
     const loader = (cb: (err: any, res: { body?: any }) => any) => {
