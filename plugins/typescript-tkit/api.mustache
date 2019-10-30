@@ -1,5 +1,5 @@
 {{>licenseInfo}}
-import ajax, { AjaxPromise } from '@ajax';
+import ajax, { AjaxPromise, ExtraFetchParams } from '@ajax';
 {{^models.isEmpty}}
 import * as models from '../model/models';
 {{/models.isEmpty}}
@@ -117,11 +117,12 @@ export class {{classname}} {
    {{/description}}
    {{#allParams.0}}{{^hasOnlyBodyParams}}* @param params Params{{nickname}}{{/hasOnlyBodyParams}}{{/allParams.0}}
    {{#bodyParam}}* @param data: ParamsBody{{nickname}}{{#description}}// {{&description}}{{/description}}{{/bodyParam}}
+   * @param opt ajax config
    * @returns {{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}{}{{/returnType}}
    */
   public {{nickname}} = (
     {{#allParams.0}}{{^hasOnlyBodyParams}}params: Params{{nickname}},{{/hasOnlyBodyParams}}{{/allParams.0}}
-    {{#bodyParam}}data: ParamsBody{{nickname}}{{/bodyParam}}
+    {{#bodyParam}}data: ParamsBody{{nickname}},{{/bodyParam}}opt?: ExtraFetchParams
   ) : AjaxPromise<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}{}{{/returnType}}>  => {
     const path = '{{{path}}}';
     const url = this.$basePath + path{{#pathParams.0}}
@@ -157,6 +158,7 @@ export class {{classname}} {
     {{/required}}
 {{/bodyParam}}
     return ajax.ajax({
+      ...opt,
       method: '{{httpMethod}}',
       url,
       ...p

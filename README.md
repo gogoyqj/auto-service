@@ -158,7 +158,10 @@ function onStatusError(error: AxiosError | Error) {
 export type AjaxPromise<R> = Promise<R>;
 
 export interface ExtraFetchParams {
+  /** extra data for extends */
   extra?: any;
+  /** cancel request */
+  cancel?: Promise<string | undefined>;
 }
 
 export interface WrappedFetchParams extends ExtraFetchParams {
