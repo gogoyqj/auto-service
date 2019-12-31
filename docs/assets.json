@@ -1,11 +1,11 @@
 {
-  "vendors.js": "/static/js/vendors.ba5dca2a.js",
-  "vendors.js.map": "/static/js/vendors.a11e87cca49850447b38.js.map",
-  "app.js": "/static/js/app.a11e87cca49850447b38.js",
-  "app.js.map": "/static/js/app.a11e87cca49850447b38.js.map",
-  "readme.js": "/static/js/readme.70f3db9f.js",
-  "readme.js.map": "/static/js/readme.a11e87cca49850447b38.js.map",
-  "update.js": "/static/js/update.74d25931.js",
-  "update.js.map": "/static/js/update.a11e87cca49850447b38.js.map",
-  "index.html": "/index.html"
+  "vendors.js": "sm2tsservice/static/js/vendors.4dd460d3.js",
+  "vendors.js.map": "sm2tsservice/static/js/vendors.aa2842fafebb3b5939af.js.map",
+  "app.js": "sm2tsservice/static/js/app.aa2842fafebb3b5939af.js",
+  "app.js.map": "sm2tsservice/static/js/app.aa2842fafebb3b5939af.js.map",
+  "readme.js": "sm2tsservice/static/js/readme.70f3db9f.js",
+  "readme.js.map": "sm2tsservice/static/js/readme.aa2842fafebb3b5939af.js.map",
+  "update.js": "sm2tsservice/static/js/update.74d25931.js",
+  "update.js.map": "sm2tsservice/static/js/update.aa2842fafebb3b5939af.js.map",
+  "index.html": "sm2tsservice/index.html"
 }
