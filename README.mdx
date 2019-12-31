@@ -1,28 +1,28 @@
-# sm2tsservice
+---
+name: sm2tsservice
+route: /sm2tsservice
+---
 
-## start
+# `npm i -D sm2tsservice`
 
-```shell
-  cd yourProjectName
-  java -version
-  npm i sm2tsservice -D
-```
+根据 swagger 或者 yapi mock json 生成 typescript sm2tsservice 代码
 
-> 根据 swagger 或者 yapi mock json 生成 typescript service 代码，以取代 sm2tsservice - 将 `sm2tsservice` 替换为 `service`
+---
 
-## config
+## 1. 配置
 
 edit `json2service.json`，也可用 `xxx.js`，然后配置 `-c xxx.js`
 
 | 参数             | 值                       | 说明                                                                                                                                               |
 | ---------------- | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
 | url              | url 或者文件地址         | swagger、yapi 文档 url 地址或者文件目录，注意：如果是本地文件，文件名不能以 http 开头                                                              |
+| remoteUrl        | 远程地址                 | 自 @3.1.\* 支持，将 url 配置成本地文件地址，remoteUrl 配置成远程地址或本地另一文件地址，以实现本地——远程增量更新的功能                             |
 | requestConfig    |                          | 拉取远程文档配置                                                                                                                                   |
 |                  | url                      | 同 url                                                                                                                                             |
 |                  | headers                  | 请求头配置，见 [headers](https://github.com/request/request#custom-http-headers)                                                                   |
 | type             | yapi、swagger            | 标记类型，默认是 swagger                                                                                                                           |
 | swaggerParser    |                          | swagger-code-gen 配置                                                                                                                              |
-|                  | -o                       | 输出 typescript 代码目录，默认是当前 src/services                                                                                                  |
+|                  | -o                       | 输出 typescript 代码目录，默认是当前 src/sm2tsservices                                                                                             |
 |                  | -t                       | 模板目录，默认是工具内置模板目录 plugins/typescript-tkit/，避免修改                                                                                |
 |                  | -l                       | 模板目录，默认是 typescript-angularjs，避免修改                                                                                                    |
 | validateResponse | boolean                  | 是否生成校验逻辑，默认 false，[详细文档](./src/validate/README.md)                                                                                 |
@@ -38,9 +38,12 @@ edit `json2service.json`，也可用 `xxx.js`，然后配置 `-c xxx.js`
 |                  | validDefinitionReg       | `3.0.13+`，DTO 命名是否符合规范正则，默认 `/^[a-z-0-9_$«»,]+$/gi`，仅配置文件是 `*.js` 可用                                                        |
 |                  | prefixReg                | 生成 `url + Using + http method` 时，需移除 url 前缀正则，默认是 `/^(\/)?api\//g` ，仅配置文件是 `*.js` 可用                                       |
 
+## 1.1 Example
+
 ```json
 {
-  "url": "./api.json", // 文件路径或url
+  "url": "./api.json", // 文件路径
+  "remoteUrl": "http://**", // url
   "requestConfig": {
     "url": "./api.json" // 文件路径或url
     // 以下所有 request 支持的参数
@@ -104,7 +107,7 @@ edit `json2service.json`，也可用 `xxx.js`，然后配置 `-c xxx.js`
     }
   },
   "swaggerParser": {
-    "-o": "tmp/services"
+    "-o": "tmp/sm2tsservices"
   },
   "validateResponse": false, // 是否生成校验逻辑
   "guardConfig": {
@@ -127,134 +130,48 @@ edit `json2service.json`，也可用 `xxx.js`，然后配置 `-c xxx.js`
 }
 ```
 
-参考下方代码，实现 ajax 类【如果使用的 axios，且后端返回数据结构遵循 `{ code?:number;message?:string;result: any }`，可直接复制使用】
+## 1.2 生成 sm2tsservice 代码
 
-```ts
-import axios, { AxiosError } from 'axios';
-import qs from 'qs';
-
-const inst = axios.create({
-  timeout: 2000,
-  withCredentials: true,
-  headers: {}
-});
-
-// @cc: 检测 axios 响应状态
-function onStatusError(error: AxiosError | Error) {
-  const err =
-    'response' in error && error.response
-      ? {
-          code: error.response.status,
-          message: error.response.statusText
-        }
-      : { code: 10001, message: error.message };
-  if (err.code === 401 || err.code === 403) {
-    // @todo 未登录未授权
-    // EventCenter.emit('common.user.status', err);
-  }
-  return err;
-}
-
-export type AjaxPromise<R> = Promise<R>;
-
-export interface ExtraFetchParams {
-  /** extra data for extends */
-  extra?: any;
-  /** cancel request */
-  cancel?: Promise<string | undefined>;
-}
-
-export interface WrappedFetchParams extends ExtraFetchParams {
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'OPTIONS' | 'PATCH' | 'HEAD';
-  url: string;
-  data?: any; // post json
-  form?: any; // post form
-  query?: any;
-  header?: any;
-  path?: any;
-}
-
-export class WrappedFetch {
-  /**
-   * @description ajax 方法
-   */
-  public ajax(
-    { method, url, data, form, query, header, extra }: WrappedFetchParams,
-    path?: string,
-    basePath?: string
-  ) {
-    let config = {
-      ...extra,
-      method: method.toLocaleLowerCase(),
-      headers: { ...header }
-    };
-    // json
-    if (data) {
-      config = {
-        ...config,
-        headers: {
-          ...config.headers,
-          'Content-Type': 'application/json'
-        },
-        data
-      };
-    }
-    // form
-    if (form) {
-      config = {
-        ...config,
-        headers: {
-          ...config.headers,
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        data: qs.stringify(form)
-      };
-    }
-    return inst
-      .request({ ...config, url, params: query })
-      .then(res => res.data)
-      .catch(onStatusError);
-  }
-
-  /**
-   * @description 接口传参校验
-   */
-  public check<V>(value: V, name: string) {
-    if (value === null || value === undefined) {
-      const msg = `[ERROR PARAMS]: ${name} can't be null or undefined`;
-      // 非生产环境，直接抛出错误
-      if (process.env.NODE_ENV === 'development') {
-        throw Error(msg);
-      }
-    }
-  }
-}
-
-export default new WrappedFetch();
-```
-
-配置 tsconfig.json[如未使用 ts-loader，还需要配置 webpack alias]
-
-```json
-{
-  "paths": {
-    "@ajax": ["你的实现文件地址"]
-  }
-}
-```
+### 命令行
 
 ```shell
-  ./node_modules/.bin/service # 使用默认配置
-  ./node_modules/.bin/service -c config.json # 指定配置文件
-  ./node_modules/.bin/service --clear # 清空上次生成产物
+  ./node_modules/.bin/sm2tsservice # 使用默认配置
+  ./node_modules/.bin/sm2tsservice -c config.json # 指定配置文件
+  ./node_modules/.bin/sm2tsservice --clear # 清空上次生成产物
 ```
 
-或可以写入 `package.json`，通过 `npm run api` 使用
+### npm run
+
+写入 `package.json`，通过 `npm run api` 使用
 
 ```json
 {
   "scripts": {
-    "api": "service --clear"
+    "api": "sm2tsservice --clear"
   }
 }
 ```
+
+## 2. ajax 接口
+
+实现 ajax 类【如果使用的 axios，且后端返回数据结构遵循 `{ code?:number;message?:string;result: any }`】
+
+[详情 @tkit/ajax](./ajax)
+
+## 3. 增量更新
+
+自 @3.1.\* 版本起，支持增量更新
+
+### 流程
+
+- 配置文件变更
+  - url - 必须指向本地 swagger 文件【如文件不存在，在获取 remoteUrl 指定地址内容后，创建该文件
+  - remoteUrl - url 地址，即之前的 url
+- 执行 CLI 生成代码
+- CLI 对本地 swagger 文件和远程 swagger 文件进行 DIFF
+  - 有差异
+    - 打开浏览器，人工选择需要同步的差异，点保存
+    - CLI patch delta
+  - 无差异
+    - 直接下一步
+- CLI 生成 sm2tsservice 代码

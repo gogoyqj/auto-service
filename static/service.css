@@ -1,0 +1,35 @@
+.menu {
+  position: fixed;
+  height: 40px;
+  width: 100%;
+  top: 0;
+  padding-left: 10px;
+  box-sizing: border-box;
+  line-height: 40px;
+  background: #292961;
+  color: rgb(209, 209, 240);
+}
+.canvas {
+  margin-top: 40px;
+}
+.select-count {
+  float: right;
+  padding: 0 5px;
+}
+
+.select-change {
+  vertical-align: top;
+}
+body {
+  user-select: none;
+  padding: 0;
+  margin: 0;
+}
+label {
+  margin-right: 10px;
+}
+button {
+  display: inline-block;
+  height: 24px;
+  vertical-align: text-top;
+}
