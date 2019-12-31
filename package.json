@@ -1,6 +1,6 @@
 {
   "name": "sm2tsservice",
-  "version": "1.1.10",
+  "version": "3.2.0",
   "description": "swagger or yapi mock to typescript services and models",
   "repository": "git@github.com:gogoyqj/sm2tsservice.git",
   "author": "杨乾军 <yang@yang>",
@@ -14,55 +14,14 @@
       "commit-msg": "validate-commit-msg"
     }
   },
+  "files": [
+    "lib",
+    "static",
+    "plugins"
+  ],
   "scripts": {
-    "build": "node build.js --declaration --project tsconfig.prod.json",
-    "test": "jest --all"
-  },
-  "jest": {
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}"
-    ],
-    "setupFiles": [],
-    "testMatch": [
-      "<rootDir>/src/**/__tests__/**/*.(j|t)s?(x)",
-      "<rootDir>/tests/**/?(*.)(spec|test).(j|t)s?(x)"
-    ],
-    "testEnvironment": "node",
-    "testURL": "http://localhost:4444",
-    "transform": {
-      "^.+\\.(js|jsx|mjs)$": "<rootDir>/node_modules/babel-jest",
-      "^.+\\.tsx?$": "ts-jest",
-      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
-      "^(?!.*\\.(js|jsx|mjs|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
-    },
-    "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|ts|tsx)$"
-    ],
-    "moduleNameMapper": {
-      "^src(.*)$": "<rootDir>/src/$1",
-      "^@src(.*)$": "<rootDir>/src/$1",
-      "^tests(.*)$": "<rootDir>/tests/$1",
-      "^react-native$": "react-native-web"
-    },
-    "moduleFileExtensions": [
-      "web.ts",
-      "ts",
-      "web.tsx",
-      "tsx",
-      "web.js",
-      "js",
-      "web.jsx",
-      "jsx",
-      "json",
-      "node",
-      "mjs",
-      "d.ts"
-    ],
-    "globals": {
-      "ts-jest": {
-        "tsConfig": "<rootDir>/tsconfig.test.json"
-      }
-    }
+    "doc:build": "docz build",
+    "doc:dev": "docz dev"
   },
   "dependencies": {
     "ajv": "^6.9.1",
@@ -71,9 +30,11 @@
     "detect-port": "^1.3.0",
     "easy-json-schema": "^0.0.2-beta",
     "es6-promisify": "^6.0.1",
+    "express": "^4.17.1",
     "fs-extra": "^7.0.1",
     "json5": "^2.1.0",
     "lodash": "^4.17.11",
+    "open": "^7.0.0",
     "request": "^2.88.0",
     "tslib": "^1.9.3"
   },
@@ -93,6 +54,8 @@
     "@typescript-eslint/eslint-plugin": "^1.7.0",
     "@typescript-eslint/parser": "^1.7.0",
     "babel-jest": "^24.7.1",
+    "docz": "^1.2.0",
+    "docz-theme-default": "^1.2.0",
     "eslint": "^5.16.0",
     "eslint-config-prettier": "^4.1.0",
     "eslint-plugin-prettier": "^3.0.1",

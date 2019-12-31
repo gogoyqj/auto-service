@@ -10,7 +10,6 @@
     "allowJs": true,
     "moduleResolution": "node",
     "noEmitHelpers": true,
-    "rootDir": "src",
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
