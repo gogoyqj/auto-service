@@ -1,0 +1,192 @@
+---
+name: sm2tsservice
+route: /sm2tsservice
+---
+
+import { Props } from 'docz';
+import {
+  IGuardConfig,
+  IYAPIConfig,
+  ISwaggerParser,
+  IJson2Service,
+  IRequest,
+  ISwaggerConfig
+} from './__tests__/Doc.tsx';
+
+# `npm i -D sm2tsservice`
+
+根据 swagger 或者 yapi mock json 生成 typescript service 代码
+
+import Update from './update.md';
+
+<Update />
+
+---
+
+## 1. CLI
+
+## 1.1 配置文件
+
+edit `json2service.json`，也可用 `xxx.js`，然后配置 `-c xxx.js`
+
+## 1.1.1 CLI 配置
+
+<Props of={IJson2Service} />
+
+## 1.1.2 `swaggerParser`
+
+<Props of={ISwaggerParser} />
+
+## 1.1.3 `guardConfig`
+
+<Props of={IGuardConfig} />
+
+## 1.2.4 `yapiConfig`
+
+<Props of={IYAPIConfig} />
+
+## 1.2.4 `requestConfig`
+
+<Props of={IRequest} />
+
+## 1.2.5 `swaggerConfig`
+
+<Props of={ISwaggerConfig} />
+
+## 1.2 Example
+
+```json
+{
+  "url": "./api.json", // 文件路径
+  "remoteUrl": "http://**", // url
+  "requestConfig": {
+    "url": "./api.json" // 文件路径或url
+    // 以下所有 request 支持的参数
+    // headers?: Headers;
+    // baseUrl?: string;
+    // callback?: RequestCallback;
+    // jar?: CookieJar | boolean;
+    // formData?: { [key: string]: any };
+    // form?: { [key: string]: any } | string;
+    // auth?: AuthOptions;
+    // oauth?: OAuthOptions;
+    // aws?: AWSOptions;
+    // hawk?: HawkOptions;
+    // qs?: any;
+    // qsStringifyOptions?: any;
+    // qsParseOptions?: any;
+    // json?: any;
+    // jsonReviver?: (key: string, value: any) => any;
+    // jsonReplacer?: (key: string, value: any) => any;
+    // multipart?: RequestPart[] | Multipart;
+    // agent?: http.Agent | https.Agent;
+    // agentOptions?: http.AgentOptions | https.AgentOptions;
+    // agentClass?: any;
+    // forever?: any;
+    // host?: string;
+    // port?: number;
+    // method?: string;
+    // body?: any;
+    // family?: 4 | 6;
+    // followRedirect?: boolean | ((response: http.IncomingMessage) => boolean);
+    // followAllRedirects?: boolean;
+    // followOriginalHttpMethod?: boolean;
+    // maxRedirects?: number;
+    // removeRefererHeader?: boolean;
+    // encoding?: string | null;
+    // pool?: any;
+    // timeout?: number;
+    // localAddress?: string;
+    // proxy?: any;
+    // tunnel?: boolean;
+    // strictSSL?: boolean;
+    // rejectUnauthorized?: boolean;
+    // time?: boolean;
+    // gzip?: boolean;
+    // preambleCRLF?: boolean;
+    // postambleCRLF?: boolean;
+    // withCredentials?: boolean;
+    // key?: Buffer;
+    // cert?: Buffer;
+    // passphrase?: string;
+    // ca?: string | Buffer | string[] | Buffer[];
+    // har?: HttpArchiveRequest;
+    // useQuerystring?: boolean;
+  },
+  "type": "yapi",
+  "yapiConfig": {
+    "required": false,
+    "bodyJsonRequired": false,
+    "categoryMap": {
+      "中文": "English" // yapi 接口分类中英文映射
+    }
+  },
+  "swaggerParser": {
+    "-o": "tmp/services"
+  },
+  "validateResponse": false, // 是否生成校验逻辑
+  "guardConfig": {
+    // + strict 严格模式
+    //    - 校验 swagger tags【yapi 接口分类】是否是纯英文
+    //    - 方法名使用 http method + url 驼峰形式
+    //    - 新项目采用
+    // + safe 安全模式
+    //    - 方法名使用 http method + url 驼峰形式
+    //    - 老项目升级，不会校验 tags，会生成方法调用替换映射表
+    // + 默认
+    //    - http method + url => operationId 映射锁定
+    //    - 老项目维持现状
+    "mode": "strict",
+    // swagger 处理重复 operationId 逻辑有风险，因此需要锁定映射关系
+    "methodUrl2OperationIdMap": {
+      "get /api/xxx/xxx": "operationId"
+    }
+  }
+}
+```
+
+## 1.3 生成 service 代码
+
+### 命令行
+
+```shell
+  ./node_modules/.bin/sm2tsservice # 使用默认配置
+  ./node_modules/.bin/sm2tsservice -c config.json # 指定配置文件
+  ./node_modules/.bin/sm2tsservice --clear # 清空上次生成产物
+```
+
+### npm run
+
+写入 `package.json`，通过 `npm run api` 使用
+
+```json
+{
+  "scripts": {
+    "api": "sm2tsservice --clear"
+  }
+}
+```
+
+## 2. ajax 接口
+
+实现 ajax 类【如果使用的 axios，且后端返回数据结构遵循 `{ code?:number;message?:string;result: any }`】
+
+[详情 tkit-ajax](https://www.npmjs.com/package/tkit-ajax)
+
+## 3. 增量更新
+
+自 @3.1.\* 版本起，支持增量更新
+
+### 流程
+
+- 配置文件变更
+  - url - 必须指向本地 swagger 文件【如文件不存在，在获取 remoteUrl 指定地址内容后，创建该文件
+  - remoteUrl - url 地址，即之前的 url
+- 执行 CLI 生成代码
+- CLI 对本地 swagger 文件和远程 swagger 文件进行 DIFF
+  - 有差异
+    - 打开浏览器，人工选择需要同步的差异，点保存
+    - CLI patch delta
+  - 无差异
+    - 直接下一步
+- CLI 生成 service 代码
