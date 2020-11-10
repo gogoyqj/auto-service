@@ -1,12 +1,15 @@
 {
-  "name": "sm2tsservice",
+  "name": "auto-service",
   "version": "3.4.2",
-  "description": "swagger or yapi mock to typescript services and models",
+  "description": "auto generate swagger or yapi mock to typescript services and models",
   "repository": "git@github.com:gogoyqj/sm2tsservice.git",
   "author": "杨乾军 <yang@yang>",
   "license": "MIT",
   "main": "lib/index.js",
-  "bin": "./lib/cli.js",
+  "bin": {
+    "autos": "./lib/cli.js",
+    "sm2tsservice": "./lib/cli.js"
+  },
   "types": "lib/index.d.ts",
   "husky": {
     "hooks": {

@@ -1,11 +1,15 @@
 {
-  "vendors.js": "/sm2tsservice/static/js/vendors.4d7418f8.js",
-  "vendors.js.map": "/sm2tsservice/static/js/vendors.b0426461f4f1f174bba6.js.map",
-  "app.js": "/sm2tsservice/static/js/app.b0426461f4f1f174bba6.js",
-  "app.js.map": "/sm2tsservice/static/js/app.b0426461f4f1f174bba6.js.map",
-  "readme.js": "/sm2tsservice/static/js/readme.ff9609de.js",
-  "readme.js.map": "/sm2tsservice/static/js/readme.b0426461f4f1f174bba6.js.map",
-  "src-validate-readme.js": "/sm2tsservice/static/js/src-validate-readme.53e97d4b.js",
-  "src-validate-readme.js.map": "/sm2tsservice/static/js/src-validate-readme.b0426461f4f1f174bba6.js.map",
-  "index.html": "/sm2tsservice/index.html"
+  "vendors.js": "/auto-service/static/js/vendors.35ef962c.js",
+  "vendors.js.map": "/auto-service/static/js/vendors.daff22ec858d29423e47.js.map",
+  "app.js": "/auto-service/static/js/app.daff22ec858d29423e47.js",
+  "app.js.map": "/auto-service/static/js/app.daff22ec858d29423e47.js.map",
+  "getting-started.js": "/auto-service/static/js/getting-started.59de2712.js",
+  "getting-started.js.map": "/auto-service/static/js/getting-started.daff22ec858d29423e47.js.map",
+  "readme.js": "/auto-service/static/js/readme.d1053ec1.js",
+  "readme.js.map": "/auto-service/static/js/readme.daff22ec858d29423e47.js.map",
+  "src-validate-readme.js": "/auto-service/static/js/src-validate-readme.77f332ac.js",
+  "src-validate-readme.js.map": "/auto-service/static/js/src-validate-readme.daff22ec858d29423e47.js.map",
+  "index.html": "/auto-service/index.html",
+  "static/img/logo.png": "/auto-service/static/img/logo.f34d6017.png",
+  "static/img/swagger.png": "/auto-service/static/img/swagger.fcc098d8.png"
 }
