@@ -1,0 +1,315 @@
+---
+name: 快速上手
+route: /getting-started
+---
+
+import { Props } from 'docz';
+import {
+  IGuardConfig,
+  IYAPIConfig,
+  ISwaggerParser,
+  IJson2Service,
+  IRequest,
+  ISwaggerConfig
+} from './__tests__/Doc.tsx';
+
+# API
+
+## 1. 安装 Autos
+
+通过 npm 安装 Autos。
+
+```
+$ npm i -D auto-service
+$ npx autos --help
+```
+
+## 2. 参数配置
+
+## 2.1 命令行参数
+
+以下可直接通过命令行设置的参数：
+
+```
+  -V, --version                  output the version number
+  -c, --config [path]            config file (default: "json2service.json")
+  --clear                        rm typescript service before gen
+  --quiet                        auto merge without popup
+  --apis [boolean]               是否生成 apis，如果未指定 models 且未指定 typeScriptDataFile 则会生成 apis
+  --models [boolean]             是否生成 models，如果未指定 apis 且未指定 typeScriptDataFile 则会生成 models
+  --typeScriptDataFile [string]  是否仅生成 TypeScript Data，可用于完全自定义生成逻辑
+  -h, --help                     output usage information
+```
+
+## 2.2 主配置文件
+
+Autos 默认从当前目录下的 json2service.json 文件读取主配置，我们也可以通过命令行参数 `-c, --config` 指定任意格式为 JSON 或者 JavaScript 的配置文件。
+
+配置文件必须导出一个对象，包含以下可配置属性：
+
+<Props of={IJson2Service} />
+
+## 2.2.1 yapiConfig 参数
+
+yapiConfig 用以配置将 YApi 格式接口文档转换成 Swagger 接口文档格式的各种规则。
+
+<Props of={IYAPIConfig} />
+
+## 2.2.2 swaggerParser 参数
+
+swaggerParser 用以配置直接透传给 Swagger Codegen Java 生成工具的各种参数。
+
+<Props of={ISwaggerParser} />
+
+## 2.2.3 guardConfig 参数
+
+guardConfig 用以配置检查接口文档是否符合规范的各种规则。
+
+<Props of={IGuardConfig} />
+
+## 2.2.4 requestConfig 参数
+
+requestConfig 用以配置，当需要使用 http 请求从服务器侧下载接口文档文件时的各种参数。
+
+<Props of={IRequest} />
+
+## 2.2.5 swaggerConfig 参数
+
+swaggerConfig 用以配置在 Swagger 将被 Swagger Codegen 转换为目标代码前的各种修改器。
+
+<Props of={ISwaggerConfig} />
+
+## 2.2.6 示例
+
+以下是一个完整的主配置示例。
+
+```json
+{
+  "url": "./api.json", // 文件路径
+  "remoteUrl": "http://**", // url
+  "requestConfig": {
+    "url": "./api.json" // 文件路径或url
+    // 以下所有 request 支持的参数
+    // headers?: Headers;
+    // baseUrl?: string;
+    // callback?: RequestCallback;
+    // jar?: CookieJar | boolean;
+    // formData?: { [key: string]: any };
+    // form?: { [key: string]: any } | string;
+    // auth?: AuthOptions;
+    // oauth?: OAuthOptions;
+    // aws?: AWSOptions;
+    // hawk?: HawkOptions;
+    // qs?: any;
+    // qsStringifyOptions?: any;
+    // qsParseOptions?: any;
+    // json?: any;
+    // jsonReviver?: (key: string, value: any) => any;
+    // jsonReplacer?: (key: string, value: any) => any;
+    // multipart?: RequestPart[] | Multipart;
+    // agent?: http.Agent | https.Agent;
+    // agentOptions?: http.AgentOptions | https.AgentOptions;
+    // agentClass?: any;
+    // forever?: any;
+    // host?: string;
+    // port?: number;
+    // method?: string;
+    // body?: any;
+    // family?: 4 | 6;
+    // followRedirect?: boolean | ((response: http.IncomingMessage) => boolean);
+    // followAllRedirects?: boolean;
+    // followOriginalHttpMethod?: boolean;
+    // maxRedirects?: number;
+    // removeRefererHeader?: boolean;
+    // encoding?: string | null;
+    // pool?: any;
+    // timeout?: number;
+    // localAddress?: string;
+    // proxy?: any;
+    // tunnel?: boolean;
+    // strictSSL?: boolean;
+    // rejectUnauthorized?: boolean;
+    // time?: boolean;
+    // gzip?: boolean;
+    // preambleCRLF?: boolean;
+    // postambleCRLF?: boolean;
+    // withCredentials?: boolean;
+    // key?: Buffer;
+    // cert?: Buffer;
+    // passphrase?: string;
+    // ca?: string | Buffer | string[] | Buffer[];
+    // har?: HttpArchiveRequest;
+    // useQuerystring?: boolean;
+  },
+  "type": "yapi",
+  "yapiConfig": {
+    "required": false,
+    "bodyJsonRequired": false,
+    "categoryMap": {
+      "中文": "English" // yapi 接口分类中英文映射
+    }
+  },
+  "swaggerParser": {
+    "-o": "tmp/services"
+  },
+  "validateResponse": false, // 是否生成校验逻辑
+  "guardConfig": {
+    // + strict 严格模式
+    //    - 校验 swagger tags【yapi 接口分类】是否是纯英文
+    //    - 方法名使用 http method + url 驼峰形式
+    //    - 新项目采用
+    // + safe 安全模式
+    //    - 方法名使用 http method + url 驼峰形式
+    //    - 老项目升级，不会校验 tags，会生成方法调用替换映射表
+    // + 默认
+    //    - http method + url => operationId 映射锁定
+    //    - 老项目维持现状
+    "mode": "strict",
+    // swagger 处理重复 operationId 逻辑有风险，因此需要锁定映射关系
+    "methodUrl2OperationIdMap": {
+      "get /api/xxx/xxx": "operationId"
+    }
+  }
+}
+```
+
+## 2.3 使用方式
+
+### npx
+
+安装 npx `npm i -g npx`，通过 npx 直接使用 Autos 生成目标代码：
+
+```shell
+  npx autos # 使用默认配置
+  npx autos -c config.json # 指定配置文件
+  npx autos --clear # 清空上次生成产物
+  npx autos --quiet # 自动全量使用远程文档，不显示 diff & merge 页面
+  npx autos --models # 仅生成 models
+  npx autos --models --apis # 仅生成 models & apis
+  npx autos --typeScriptDataFile TypeSciptData.json # 仅生成类型信息 json 到 TypeSciptData.json
+```
+
+### npm scripts
+
+通过 npm scripts 使用 Autos 生成目标代码，在 package.json 内添加：
+
+```json
+{
+  "scripts": {
+    "api": "autos --clear"
+  }
+}
+```
+
+`npm run api` 生成目标代码。
+
+## 3. Ajax 接口
+
+Autos 生成的 Service 代码内包含以下和后端进行通信的固定代码：
+
+```ts
+import ajax, { AjaxPromise, ExtraFetchParams } from '@ajax';
+```
+
+你可以直接使用与 Auto 配套的 `@ajax` 模块实现，tkit-ajax ([文档](<](https://www.npmjs.com/package/tkit-ajax)>))。
+
+通过 npm 安装 tkit-ajax：
+
+```
+npm i tkit-ajax -S
+```
+
+配置 tsconfig.json:
+
+```json
+{
+  "compilerOptions": {
+    "paths": {
+      "@ajax": ["node_modules/@tkit/ajax"]
+    }
+  }
+}
+```
+
+如直接使用 tkit-ajax, 后端返回数据格式必须满足：
+
+```ts
+{
+    code?: number;
+    message?: string;
+    result: R;
+}
+```
+
+你也可以按照以下接口定义，实现自定义的 `@ajax` 模块：
+
+```ts
+/** 不再兼容非标准的数据结构 */
+export declare type AjaxPromise<R> = Promise<R>;
+/** 非标准包裹 */
+export declare type NonStandardAjaxPromise<R> = Promise<{
+  code?: number;
+  message?: string;
+  result: R;
+}>;
+export interface ExtraFetchParams {
+  /** extra data for extends */
+  extra?: any;
+  /** 扩展请求头 */
+  headers?: any;
+  /** cancel request */
+  cancel?: Promise<string | undefined>;
+}
+export interface WrappedFetchParams extends ExtraFetchParams {
+  /** http method */
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'OPTIONS' | 'PATCH' | 'HEAD';
+  url: string;
+  /** post json data */
+  data?: any;
+  /** post form data */
+  form?: any;
+  /** query data */
+  query?: any;
+  /** header */
+  header?: any;
+  /** path data */
+  path?: any;
+}
+export declare class Ajax {
+  /** ajax 方法 */
+  ajax(
+    { method, url, data, form, query, header, extra, cancel, headers }: WrappedFetchParams,
+    path?: string,
+    basePath?: string
+  ): Promise<any>;
+  /** 接口传参校验 */
+  check<V>(value: V, name: string): void;
+}
+declare const _default: Ajax;
+export default _default;
+```
+
+## 4. 增量更新
+
+Autos 支持交互勾选界面、增量同步远程增、删、改差异到本地文档。
+
+### 流程步骤
+
+- 主配置文件配置 url 和 remoteUrl
+  - url - 本地接口文档文件路径【如文件不存在，在获取 remoteUrl 指定地址内容后，创建该文件】
+  - remoteUrl - 新版接口文档 url 或者路径
+- 执行 Autos
+- Autos 对本地接口文档文件和新版接口文档进行 diff
+  - 有差异
+    - 打开浏览器，人工选择需要同步的差异，点击“保存”
+    - Autos patch Delta 生成同步差异后的接口文档
+    - 进入下一步
+  - 无差异
+    - 直接进入下一步
+- Autos 调用 Swagger Codegen 生成目标代码
+
+## 5. CHANGELOG
+
+import CHANGELOG from './CHANGELOG.md';
+
+<CHANGELOG />

@@ -1,0 +1,121 @@
+---
+name: 数据校验
+route: /service-validate
+---
+
+import { Props } from 'docz';
+import {
+  IProxyHandleConfig,
+  ISMValidateInfo,
+  ISMAjaxConfig,
+  ISMAbstractResponse,
+  IIncomingMessage
+} from '../../__tests__/Validate.tsx';
+
+# Autos 数据校验中间件
+
+Autos 内置了对接口调用前端传参、后端数据返回是否符合接口文档约定的校验功能，可通过 http-proxy-middleware 中间件的形式使用。
+
+## 1.1 特性
+
+- 校验 query, path, postJSON, post form 参数是否符合约定
+- 校验 response json 是否符合约定
+
+## 1.2 TODO
+
+- 不能正确校验 websocket 请求参数是否符合约定
+- 不能正确校验文件上传请求参数是否符合约定
+- 可能不能正确校验 headers 内参数是否符合约定
+- 未校验非 json 响应数据格式是否符合约定
+
+## 2. API
+
+```tsx
+const { createProxyMiddleware } = require('http-proxy-middleware');
+const { proxyHandle } = require('@tkit/service/lib/validate');
+
+proxyHandle(proxies: proxyConfig || proxyConfig[], config: IProxyHandleConfig)
+```
+
+## 2.1 IProxyHandleConfig
+
+IProxyHandleConfig 用以配置校验中间件的相关行为。
+
+<Props of={IProxyHandleConfig} />
+
+## 2.2 ISMValidateInfo
+
+<Props of={ISMValidateInfo} />
+
+## 2.3 ISMAjaxConfig
+
+<Props of={ISMAjaxConfig} />
+
+## 2.4 ISMAbstractResponse
+
+<Props of={ISMAbstractResponse} />
+
+## 2.5 IIncomingMessage
+
+<Props of={IIncomingMessage} />
+
+## 3 快速上手 - 面向前端 FE
+
+适用于前后端联调阶段，提升联调效率。
+
+## 3.1 配置 proxy
+
+配置 webpack proxy，如 cra 标配的 src/setupProxy.js：
+
+```js
+const { createProxyMiddleware } = require('http-proxy-middleware');
+/**
+ * @typedef { import('@tkit/service/lib/consts').ProxyHandleConfig } ProxyHandleConfig
+ */
+const { proxyHandle } = require('@tkit/service/lib/validate');
+
+module.exports = function (app) {
+  app.use(
+    '/test/api',
+    createProxyMiddleware({
+      ...proxyHandle(
+        {},
+        /** @type {ProxyHandleConfig} 配置 */
+        {
+          // 加载本地 swagger 文档的逻辑
+          loadSwagger: () => require('../swagger.json'),
+          // 返回接口返回的 result 字段
+          formatBodyBeforeValidate: (data) => data.result,
+          // 自定义校验信息显示逻辑
+          onValidate: (res) => {
+            const { code, result: { receive, send } = {}, message } = res;
+            if (code) {
+              // do something
+            }
+          }
+      )[0],
+      target: PROXY_TARGET,
+      changeOrigin: true
+    })
+  )
+};
+```
+
+## 3.2 默认 onValidate
+
+当传参或数据返回不符合文档约定时，默认 onValidate 配置会打出如下信息：
+
+```shell
+  接口 /mix/{id}/ 参数不符合约定: data.body.id should be number
+  接口 /mix/{id}/ 数据返回不符合约定: data.code should be number
+  接口 /mix/{id}/ 参数不符合约定: data.body.id should be number
+  接口 /mix/{id}/ 数据返回不符合约定: data.code should be number
+```
+
+你可以配置在 onValidate 内配置任意的处理逻辑，例如向与你联调的 RD 发送 IM 消息。
+
+## 4. 快速上手 - 面向测试 QA
+
+TODO
+
+自动测试并校验
