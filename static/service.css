@@ -1,0 +1,85 @@
+.menu {
+  border-radius: 20px;
+  position: fixed;
+  height: 40px;
+  left: 10%;
+  bottom: 10px;
+  padding: 0 20px;
+  box-sizing: border-box;
+  line-height: 40px;
+  background: #292961;
+  color: rgb(209, 209, 240);
+}
+.canvas {
+  margin: 10px 0 50px;
+}
+.select-count {
+  float: left;
+  padding: 0 5px;
+}
+
+.select-change {
+  vertical-align: top;
+}
+body {
+  user-select: none;
+  padding: 0;
+  margin: 0;
+}
+label {
+  margin-right: 10px;
+}
+button {
+  display: inline-block;
+  height: 24px;
+  vertical-align: text-top;
+}
+
+.show-added-only .jsondiffpatch-deleted,
+.show-added-only .jsondiffpatch-modified,
+.show-added-only .jsondiffpatch-unchanged {
+  display: none;
+}
+
+.show-add-deleted .jsondiffpatch-added,
+.show-add-deleted .jsondiffpatch-modified,
+.show-add-deleted .jsondiffpatch-unchanged {
+  display: none;
+}
+
+.show-added-deleted-only .jsondiffpatch-modified,
+.show-added-deleted-only .jsondiffpatch-unchanged {
+  display: none;
+}
+
+.show-modified-only .jsondiffpatch-added,
+.show-modified-only .jsondiffpatch-deleted,
+.show-modified-only .jsondiffpatch-unchanged {
+  display: none;
+}
+
+.show-only-property-name .jsondiffpatch-value {
+  display: none;
+}
+
+.help-info {
+  position: absolute;
+  right: 0;
+  bottom: 50px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 3px 20px 0 rgba(0, 0, 0, 0.3);
+  color: #000;
+  padding: 10px 14px;
+  max-width: 600px;
+  line-height: 150%;
+}
+.help-icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 1px solid #fff;
+  border-radius: 10px;
+  text-align: center;
+  line-height: 20px;
+}

@@ -1,0 +1,17 @@
+{
+  "helpMessage": "\ntype - commit 类型\n  feat: 添加新功能\n  fix: 修复bug\n  docs: 修改文档\n  style: 编码规范修改\n  refactor: 重构\n  perf: 性能优化\n  test: 添加测试\n  chore: 修改构建逻辑或辅助工具、库\n  revert: 回滚\n  custom: 自定义\n\nscope - commit 影响范围\n\nsubject - commit 目的简短描述\n\n示例:\n  feat(development): 添加 commit-msg 校验\n  revert: feat(development): 假装回滚一下\n",
+  "types": [
+    "feat",
+    "fix",
+    "docs",
+    "style",
+    "refactor",
+    "perf",
+    "test",
+    "chore",
+    "revert",
+    "custom"
+  ],
+  "warnOnFail": false,
+  "autoFix": true
+}

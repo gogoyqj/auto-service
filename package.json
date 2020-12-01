@@ -1,6 +1,6 @@
 {
   "name": "auto-service",
-  "version": "3.4.2",
+  "version": "3.4.5",
   "description": "auto generate swagger or yapi mock to typescript services and models",
   "repository": "git@github.com:gogoyqj/sm2tsservice.git",
   "author": "杨乾军 <yang@yang>",
@@ -23,7 +23,7 @@
     "plugins"
   ],
   "scripts": {
-    "build": "tsc --project tsconfig.prod.json",
+    "build": "tsc --project tsconfig.prod.json & tsc --project tsconfig.static.json",
     "doc:build": "docz build",
     "doc:dev": "docz dev"
   },

@@ -1,0 +1,23 @@
+{
+  "extends": "./tsconfig.json",
+  "include": ["static/service.ts"],
+  "compilerOptions": {
+    "outDir": "static",
+    "target": "ES3"
+  },
+  "exclude": [
+    "node_modules",
+    "build",
+    "es",
+    "lib",
+    "dist",
+    "umd",
+    "config",
+    "scripts",
+    "templates",
+    "__tests__",
+    "tests",
+    "**/__mocks__/*",
+    "tmp"
+  ]
+}

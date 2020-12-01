@@ -1,0 +1,87 @@
+{{>licenseInfo}}
+import ajax, { AjaxPromise, ExtraFetchParams } from '@ajax';
+{{^models.isEmpty}}
+import * as models from '../model/models';
+{{/models.isEmpty}}
+
+/* tslint:disable:no-unused-variable member-ordering object-literal-shorthand */
+
+{{#operations}}
+{{>params}}
+{{#description}}
+/**
+ * @description {{&description}}
+ */
+{{/description}}
+export class {{classname}} {
+  protected $basePath = '{{{contextPath}}}'.replace(/\/$/, '');
+
+  public constructor(basePath?: string) {
+    if (basePath !== undefined) {
+      this.$basePath = basePath.replace(/\/$/, '');
+    }
+  }
+
+{{#operation}}
+  /**
+   * {{&notes}}
+   {{#summary}}
+   * @summary {{&summary}}
+   {{/summary}}
+   {{#description}}
+   * @description {{&description}}
+   {{/description}}
+   {{#allParams.0}}{{^hasOnlyBodyParams}}* @param params Params{{nickname}}{{/hasOnlyBodyParams}}{{/allParams.0}}
+   {{#bodyParam}}* @param data: ParamsBody{{nickname}}{{#description}}// {{&description}}{{/description}}{{/bodyParam}}
+   * @param opt ajax config
+   * @returns {{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}{}{{/returnType}}
+   */
+  public {{nickname}} = (
+    {{#allParams.0}}{{^hasOnlyBodyParams}}params: Params{{nickname}},{{/hasOnlyBodyParams}}{{/allParams.0}}
+    {{#bodyParam}}data: ParamsBody{{nickname}},{{/bodyParam}}opt?: ExtraFetchParams
+  ) : AjaxPromise<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}{}{{/returnType}}>  => {
+    const path = '{{{path}}}';
+    const url = this.$basePath + path{{#pathParams.0}}
+      .replace(/\{([^}]+)\}/g, (all, param) => (param in params ? params[param] : param)){{/pathParams.0}};
+    const p: any = {};
+{{#queryParams.0}}
+    p.query = {};
+{{#queryParams}}
+    if ('{{paramName}}' in params) p.query.{{paramName}} = params.{{paramName}};
+    {{#required}}
+    ajax.check(params.{{paramName}}, '{{paramName}}');
+    {{/required}}
+{{/queryParams}}
+{{/queryParams.0}}
+{{#pathParams}}
+    {{#required}}
+    ajax.check(params.{{paramName}}, '{{paramName}}');
+    {{/required}}
+{{/pathParams}}
+{{#formParams.0}}
+    p.form = {};
+{{#formParams}}
+    if ('{{paramName}}' in params) p.form.{{paramName}} = params.{{paramName}};
+    {{#required}}
+    ajax.check(params.{{paramName}}, '{{paramName}}');
+    {{/required}}
+{{/formParams}}
+{{/formParams.0}}
+{{#bodyParam}}
+    p.data = data;
+    {{#required}}
+    ajax.check(data, 'body.{{paramName}}');
+    {{/required}}
+{{/bodyParam}}
+    return ajax.ajax({
+      ...opt,
+      method: '{{httpMethod}}',
+      url,
+      ...p
+    });
+  }
+{{/operation}}
+}
+{{/operations}}
+
+export default new {{classname}}();

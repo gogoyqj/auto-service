@@ -1,0 +1,191 @@
+import { IncomingMessage, ServerResponse } from 'http';
+import * as path from 'path';
+import { JSONSchema4, JSONSchema6 } from 'json-schema';
+import { CoreOptions } from 'request';
+import { YApiCategory } from './yapi/yapiJSon2swagger';
+
+export type SMSchema = JSONSchema4 | JSONSchema6;
+
+/** swagger path item 数据结构定义 */
+export interface PathJson {
+  description?: string;
+  operationId?: string;
+  tags?: string[];
+  summary?: string;
+  consumes?: string[];
+  parameters: {
+    name?: string;
+    in?: 'path' | 'form' | 'query' | 'body' | string;
+    description?: string;
+    required?: boolean;
+    type?: string;
+    schema?: SMSchema;
+    format?: any;
+  }[];
+  responses: {
+    [status: number]: {
+      description: string;
+      schema?: SMSchema;
+    };
+  };
+  [extra: string]: any;
+}
+
+export interface SwaggerJson {
+  __mtime?: any;
+  swagger?: string;
+  info?: any;
+  tags?: {
+    name?: string;
+    description?: string;
+  }[];
+  paths: {
+    [path: string]: {
+      [method: string]: PathJson;
+    };
+  };
+  definitions?: SMSchema;
+  basePath: string;
+  [extra: string]: any;
+}
+
+export interface SMAjaxConfig {
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'OPTIONS' | 'PATCH' | 'HEAD';
+  url: string;
+  data?: any; // post json
+  form?: any; // post form
+  query?: any;
+  header?: any;
+  path?: any;
+  body?: any; // put json or form in body 2
+}
+
+export interface SMValidateInfo {
+  send: SMAjaxConfig;
+  receive: {
+    body?: any;
+    status: number;
+  };
+  req: SMAbstractRequest;
+  res: SMAbstractResponse;
+}
+
+export interface ProxyHandleConfig {
+  /** 获取 swagger 文件 */
+  loadSwagger: (url: string) => SwaggerJson;
+  /** 校验结束后的回调 */
+  onValidate?: (e: { message: string; code: number; result?: SMValidateInfo }) => void;
+  /** 格式化响应 body  */
+  formatBodyBeforeValidate?: <J, O extends {}>(data: J) => O;
+}
+
+export type SMAbstractRequest = IncomingMessage;
+
+export type SMAbstractResponse = ServerResponse | IncomingMessage;
+
+export type SMAbstractNext = (...args: any[]) => any;
+
+export type SMValidator = (
+  info: { code: number; message?: string; result: SMValidateInfo },
+  config: ProxyHandleConfig
+) => any;
+
+export const X_SM_PARAMS = 'x-sm-params';
+export const X_SM_ERROR = 'x-sm-error';
+
+export enum ValidateErrorCode {
+  /** 接口返回不符合预期 */
+  ResponseNotMatched = 12000,
+  /** 参数不符合预期 */
+  ParamsNotMatched = 11000,
+  /** 其他奇怪的错误 */
+  Weird = 10000
+}
+
+export type SwaggerGuardMode = 'strict' | 'safe';
+
+export interface String2StringMap {
+  [key: string]: string;
+}
+
+/** 生成代码法法名安全配置 */
+export interface GuardConfig {
+  /** OperationId到url映射 */
+  methodUrl2OperationIdMap?: String2StringMap;
+  /** 生成唯一 operationId 时， method 前边的前置，默认是 Using，例如: 'Using' + 'Get' */
+  methodPrefix?: string;
+  /** 模式: safe strict */
+  mode?: SwaggerGuardMode;
+  /** 采用url生成方法名时，需要移除的前缀正则，默认值：/^(\/)?api\//g */
+  prefixReg?: RegExp;
+  /** 参数格式不符合规范的正则，默认值：/[^a-z0-9_.[]$]/gi */
+  badParamsReg?: RegExp;
+  /** 不符合规范Tag正则，默认值：/^[a-z-0-9_$A-Z]+-controller$/g */
+  unstableTagsReg?: RegExp;
+  /** 检测Tag是否全英文，默认值：/^[a-z-0-9_$]+$/gi */
+  validTagsReg?: RegExp;
+  /** DTO命名是否符合规范正则，默认值：/^[a-z-0-9_$«»,]+$/gi */
+  validDefinitionReg?: RegExp;
+  /** 校验 url 规则，默认值： /api/g，自 3.1.6 新增 */
+  validUrlReg?: RegExp;
+}
+
+export interface YAPIConfig {
+  /** 相应是否字段是否必须；当直接使用 yapi json 定义返回数据格式的时候，生成的 typescript 文件，默认情况下，所有字段都是可选的，配置成 true，则所有字段都是不可缺省的 */
+  required?: boolean;
+  /** postJSON字段是否必须；当直接使用 yapi json 定义 json 格式 body 参数的时候，生成的 typescript 文件，默认情况下，所有字段都是可选的，配置成 true，则所有字段都是不可缺省的 */
+  bodyJsonRequired?: boolean;
+  /** 分类名中文=>英文映射；yapi 项目接口分类中英文映射，如 `{ "公共分类": "Common" }` */
+  categoryMap?: String2StringMap | ((cate: string) => string);
+  /** yapi json 转换成 swagger json 的钩子 */
+  beforeTransform?: (yapiJSON: YApiCategory[]) => YApiCategory[];
+  /** yapi json 转换成 swagger json 后的钩子 */
+  afterTransform?: (swaggerJSON: SwaggerJson) => SwaggerJson;
+}
+
+/** CLI配置 */
+export interface Json2Service {
+  /** 本地存储的 Swagger 或者 YAPI Mock JSON 文件地址 */
+  url: string;
+  /** 新版 Swagger 或者 YAPI Mock JSON 文件地址或者 url */
+  remoteUrl?: string;
+  /** 类型 yapi 或默认 swagger */
+  type?: 'yapi' | 'swagger';
+  /** 如果是 yapi，配置 */
+  yapiConfig?: YAPIConfig;
+  /** Swagger生成TS代码相关配置 */
+  swaggerParser?: SwaggerParser;
+  /** Swagger 配置 */
+  swaggerConfig?: {
+    /** 排除指定的 path，当 exclude 和 include 冲突时，include 生效 */
+    exclude?: RegExp[];
+    /** 仅包含指定的 path，当 exclude 和 include 冲突时，include 生效 */
+    include?: RegExp[];
+    /** 变更swagger */
+    modifier?: <S extends SwaggerJson>(swagger: S, config: Json2Service) => S;
+  };
+  /** 生成自动校验逻辑 */
+  validateResponse?: boolean;
+  /** 方法名安全相关设置 */
+  guardConfig?: GuardConfig;
+  /** 拉取JSON文档请求相关设置 */
+  requestConfig?: { url?: string } & CoreOptions;
+}
+
+/** Swagger Codegen配置 */
+export interface SwaggerParser {
+  /** 输出 typescript 代码目录，默认是当前 src/services */
+  '-o'?: string;
+  /** 模板目录，默认是 plugins/typescript-tkit，避免修改；配置成 plugins/types-only 仅输出类型 */
+  '-t'?: string;
+  /** language，默认是 typescript-angularjs，避免修改  */
+  '-l'?: string;
+  /** 输入文件 */
+  '-i': string;
+}
+
+/** 项目目录 */
+export const ProjectDir = process.cwd();
+export const RemoteUrlReg = /^http/;
+/** 放置依赖 web 静态文件目录 */
+export const StaticDir = path.join(__dirname, '..', 'static');
