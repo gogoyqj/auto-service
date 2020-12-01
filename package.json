@@ -1,6 +1,6 @@
 {
   "name": "auto-service",
-  "version": "3.4.5",
+  "version": "3.4.6",
   "description": "auto generate swagger or yapi mock to typescript services and models",
   "repository": "git@github.com:gogoyqj/sm2tsservice.git",
   "author": "杨乾军 <yang@yang>",
