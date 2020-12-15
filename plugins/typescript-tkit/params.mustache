@@ -2,15 +2,24 @@
 {{#operation}}
 {{#allParams.0}}
 {{^hasOnlyBodyParams}}
+{{#headerParams.0}}
+/**{{#headerParams}}
+  * @description {{nickname}} headers 参数
+  * @property `{{^required}}[{{/required}}{{baseName}}{{^required}}]{{/required}}` {{&description}}
+  {{/headerParams}}*/
+export interface ParamsHeader{{nickname}} {
+  {{#headerParams}}
+  {{#description}}
+  /** {{&description}} */
+  {{/description}}
+  '{{baseName}}'{{^required}}?{{/required}}: {{&dataType}};
+  {{/headerParams}}
+}
+{{/headerParams.0}}
 /**
   {{#description}}
   * @description {{nickname}}参数
   {{/description}}
-{{#headerParams.0}}
-  {{#headerParams}}
-  * @property `{{^required}}[{{/required}}{{paramName}}{{^required}}]{{/required}}` {{&description}}
-  {{/headerParams}}
-{{/headerParams.0}}
 {{#pathParams.0}}
   {{#pathParams}}
   * @property `{{^required}}[{{/required}}{{paramName}}{{^required}}]{{/required}}` {{&description}}
@@ -28,17 +37,6 @@
 {{/formParams.0}}
   */
 export interface Params{{nickname}} {
-{{#headerParams.0}}
-  // headerParams
-  {{#headerParams}}
-  {{#description}}
-  /**
-   * {{&description}}
-   */
-  {{/description}}
-  {{paramName}}{{^required}}?{{/required}}: {{&dataType}};
-  {{/headerParams}}
-{{/headerParams.0}}
 {{#pathParams.0}}
   // pathParams
   {{#pathParams}}

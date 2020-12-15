@@ -38,7 +38,7 @@ export class {{classname}} {
    */
   public {{nickname}} = (
     {{#allParams.0}}{{^hasOnlyBodyParams}}params: Params{{nickname}},{{/hasOnlyBodyParams}}{{/allParams.0}}
-    {{#bodyParam}}data: ParamsBody{{nickname}},{{/bodyParam}}opt?: ExtraFetchParams
+    {{#bodyParam}}data: ParamsBody{{nickname}},{{/bodyParam}}opt?: {{^headerParams.0}}ExtraFetchParams{{/headerParams.0}}{{#headerParams.0}}{ headers: ParamsHeader{{nickname}} } & Omit<ExtraFetchParams, 'headers'> {{/headerParams.0}}
   ) : AjaxPromise<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}{}{{/returnType}}>  => {
     const path = '{{{path}}}';
     const url = this.$basePath + path{{#pathParams.0}}

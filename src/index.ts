@@ -84,12 +84,12 @@ export default async function gen(
       remoteSwaggerUrl
         ? remoteSwaggerUrl.match(RemoteUrlReg)
           ? request.get(
-            {
-              ...requestConfig,
-              url: remoteSwaggerUrl
-            },
-            (err, res) => cb(err, { body: JSON.parse(res.body) })
-          )
+              {
+                ...requestConfig,
+                url: remoteSwaggerUrl
+              },
+              (err, res) => cb(err, { body: JSON.parse(res.body) })
+            )
           : cb(undefined, { body: require(remoteSwaggerUrl) as SwaggerJson })
         : cb(undefined, {});
     };

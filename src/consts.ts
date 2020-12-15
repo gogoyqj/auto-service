@@ -145,9 +145,9 @@ export interface YAPIConfig {
 
 /** CLI配置 */
 export interface Json2Service {
-  /** 本地存储的 Swagger 或者 YAPI Mock JSON 文件地址 */
+  /** Swagger或者Mock JSON文档地址，自 3.1.* 起，请配置成本地文件 */
   url: string;
-  /** 新版 Swagger 或者 YAPI Mock JSON 文件地址或者 url */
+  /** 远程 url，配置成远程地址，用于增量更新使用；自 @3.1.* 支持 */
   remoteUrl?: string;
   /** 类型 yapi 或默认 swagger */
   type?: 'yapi' | 'swagger';

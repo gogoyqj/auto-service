@@ -58,8 +58,8 @@ export function operationIdGuard(swagger: SwaggerJson, config: GuardConfig = {})
               `【错误】接口 "${method} ${url}" "${pType}" 参数 "${name}" "${description}" 不符合规范，请联系接口方修改`
             );
           }
-          // 校验 schema
-          if (schema && !schema.$ref && !schema['$$ref'] && !schema.properties) {
+          // 校验 schema，+ type 缺省的情况下
+          if (schema && !schema.type && !schema.$ref && !schema['$$ref'] && !schema.properties) {
             errors.push(
               `【错误】接口 "${method} ${url}" "${pType}" 参数 "${name}" "${description}" 无效的 schema（缺少 "$ref" 或 "$$ref" 或 "properties" 字段），请联系接口方修改`
             );
@@ -71,7 +71,7 @@ export function operationIdGuard(swagger: SwaggerJson, config: GuardConfig = {})
             );
           }
         });
-        // 响应格式校验：响应不同于参数
+        // 响应格式校验：响应不同于参数，忽略
         // Object.keys(responses).forEach(httpStatus => {
         //   const { schema, description } = responses[httpStatus];
         //   if (schema && !schema.$ref && !schema['$$ref'] && !schema.properties) {
@@ -218,17 +218,17 @@ export function operationIdGuard(swagger: SwaggerJson, config: GuardConfig = {})
       warnings,
       suggestions: Object.keys(suggestions).length
         ? [
-          '旧 => 新 方法替换映射关系，请按建议顺序降序逐一替换',
-          Object.keys(suggestions)
-            .sort((a, b) => {
-              return -(parseInt(a.split('_')[1]) || 0) + (parseInt(b.split('_')[1]) || 0);
-            })
-            .reduce<String2StringMap>((s, id) => {
-              s[id] = suggestions[id];
-              s[`Params${id}`] = `Params${s[id]}`;
-              return s;
-            }, {})
-        ]
+            '旧 => 新 方法替换映射关系，请按建议顺序降序逐一替换',
+            Object.keys(suggestions)
+              .sort((a, b) => {
+                return -(parseInt(a.split('_')[1]) || 0) + (parseInt(b.split('_')[1]) || 0);
+              })
+              .reduce<String2StringMap>((s, id) => {
+                s[id] = suggestions[id];
+                s[`Params${id}`] = `Params${s[id]}`;
+                return s;
+              }, {})
+          ]
         : []
     };
   }
@@ -237,13 +237,13 @@ export function operationIdGuard(swagger: SwaggerJson, config: GuardConfig = {})
     warnings,
     suggestions: Object.keys(suggestions).length
       ? [
-        '锁定映射建议，添加到 service 配置',
-        {
-          guardConfig: {
-            methodUrl2OperationIdMap: suggestions
+          '锁定映射建议，添加到 service 配置',
+          {
+            guardConfig: {
+              methodUrl2OperationIdMap: suggestions
+            }
           }
-        }
-      ]
+        ]
       : []
   };
 }
