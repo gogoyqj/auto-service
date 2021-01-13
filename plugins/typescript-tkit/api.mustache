@@ -61,7 +61,21 @@ export class {{classname}} {
 {{#formParams.0}}
     p.form = {};
 {{#formParams}}
+    {{#isFile}}
+    // 上传文件
+    opt = {
+      ...opt,
+      headers: {
+        ...(opt && opt.headers),
+        'Content-Type': 'multipart/form-data'
+      }
+    };
+    p.form = new FormData();
+    if ('{{paramName}}' in params) p.form.append('{{baseName}}', params.{{paramName}});
+    {{/isFile}}
+    {{^isFile}}
     if ('{{paramName}}' in params) p.form.{{paramName}} = params.{{paramName}};
+    {{/isFile}}
     {{#required}}
     ajax.check(params.{{paramName}}, '{{paramName}}');
     {{/required}}

@@ -79,7 +79,7 @@ export function getPath(swagger: SwaggerJson, path: string) {
 }
 
 /** 将 swagger parameters 转换成 schema */
-export function getParamSchema(parameters: PathJson['parameters']) {
+export function getParamSchema(parameters: PathJson['parameters'] = []) {
   const paramsSchema: SMSchema = {
     type: 'object',
     properties: {}

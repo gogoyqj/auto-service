@@ -13,7 +13,7 @@ export interface PathJson {
   tags?: string[];
   summary?: string;
   consumes?: string[];
-  parameters: {
+  parameters?: {
     name?: string;
     in?: 'path' | 'form' | 'query' | 'body' | string;
     description?: string;
@@ -24,7 +24,7 @@ export interface PathJson {
   }[];
   responses: {
     [status: number]: {
-      description: string;
+      description?: string;
       schema?: SMSchema;
     };
   };
@@ -157,10 +157,14 @@ export interface Json2Service {
   swaggerParser?: SwaggerParser;
   /** Swagger 配置 */
   swaggerConfig?: {
-    /** 排除指定的 path，当 exclude 和 include 冲突时，include 生效 */
+    /** 排除指定的 path，当 exclude 和 include 冲突时，include 生效，3.5.0 版本会自动清理不再需要的 models 也清理掉 */
     exclude?: RegExp[];
-    /** 仅包含指定的 path，当 exclude 和 include 冲突时，include 生效 */
+    /** 仅包含指定的 path，当 exclude 和 include 冲突时，include 生效，3.5.0 版本会自动清理不再需要的 models 也清理掉 */
     include?: RegExp[];
+    /** 当接口被排除的时候，是否自动清理无用的 models，默认清理 */
+    autoClearModels?: boolean;
+    /** 强制保留指定的 models */
+    includeModels?: RegExp[];
     /** 变更swagger */
     modifier?: <S extends SwaggerJson>(swagger: S, config: Json2Service) => S;
   };

@@ -10,6 +10,7 @@ import serve from './yapi/serve';
 import { pluginsPath, SmTmpDir, basePathToFileName, DefaultBasePath } from './init';
 import { operationIdGuard, strictModeGuard } from './guard';
 import { serveDiff } from './diff/serve';
+import pathsFilter from './utils/pathsFilter';
 
 const defaultParseConfig: Partial<SwaggerParser> = {
   '-l': 'typescript-angularjs',
@@ -102,26 +103,9 @@ export default async function gen(
           fs.mkdirSync(servicesPath);
         }
         if (newSwagger) {
-          // 支持过滤掉某些特定的规则
-          const { exclude, include, modifier } = swaggerConfig;
-          if (Array.isArray(exclude) || Array.isArray(include)) {
-            const { paths } = newSwagger;
-            newSwagger.paths = Object.keys(paths).reduce<typeof paths>((newPaths, url) => {
-              const included = include?.find(reg => url.match(reg));
-              const excluded = exclude?.find(reg => url.match(reg));
-              // 未配置 exclude 但是配置配置了 include
-              if (exclude === undefined && include !== undefined) {
-                if (included) {
-                  newPaths[url] = paths[url];
-                }
-              } else {
-                if (included || !excluded) {
-                  newPaths[url] = paths[url];
-                }
-              }
-              return newPaths;
-            }, {});
-          }
+          // TODO: exclude 最终还是决定放到 diff 之后，生成之前
+          // newSwagger = pathsFilter(newSwagger, swaggerConfig);
+          const { modifier } = swaggerConfig;
           if (modifier) {
             newSwagger = modifier(newSwagger, config);
           }
@@ -167,7 +151,8 @@ export default async function gen(
   // IMP: 校正后的文件写入临时文件
   const swaggerFileName = basePathToFileName(`${swaggerData.basePath || DefaultBasePath}.json`);
   const swaggerPath = path.join(SmTmpDir, swaggerFileName);
-  fs.writeFileSync(swaggerPath, JSON.stringify(swaggerData), {
+  // IMP: exclude 在 diff 之后，生成之前
+  fs.writeFileSync(swaggerPath, JSON.stringify(pathsFilter(swaggerData, swaggerConfig)), {
     encoding: 'utf8'
   });
 

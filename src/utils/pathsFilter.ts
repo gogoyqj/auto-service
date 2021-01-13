@@ -6,11 +6,12 @@ export default function pathsFilter(
   swaggerConfig: {
     exclude?: RegExp[];
     include?: RegExp[];
+    autoClearModels?: boolean;
     includeModels?: RegExp[];
   }
 ) {
   // 支持过滤掉某些特定的规则
-  const { exclude, include, includeModels } = swaggerConfig;
+  const { exclude, include, includeModels, autoClearModels = true } = swaggerConfig;
   if (Array.isArray(exclude) || Array.isArray(include)) {
     const { paths, definitions = {} } = newSwagger;
     const newDefinitions: typeof definitions = {};
@@ -56,23 +57,25 @@ export default function pathsFilter(
       }
       return newPaths;
     }, {});
-    // 清理未被依赖的 model，保留被强制包含的 model
-    if (newSwagger.definitions) {
-      const { definitions } = newSwagger;
-      newSwagger.definitions = Object.keys(definitions).reduce<typeof definitions>(
-        (newDefs, model) => {
-          if (includeModels && includeModels.find(reg => !!model.match(reg))) {
-            newDefs[model] = definitions[model];
-            checkModel(definitions[model]);
-          }
-          return newDefs;
-        },
-        newDefinitions
-      );
-    }
-    const filtered = Object.keys(definitions).filter(model => !(model in newDefinitions));
-    if (filtered.length) {
-      console.log(chalk.yellowBright(`[IMP] Auto 将自动清理 ${filtered.join(',')} 等 models！`));
+    if (autoClearModels) {
+      // 清理未被依赖的 model，保留被强制包含的 model
+      if (newSwagger.definitions) {
+        const { definitions } = newSwagger;
+        newSwagger.definitions = Object.keys(definitions).reduce<typeof definitions>(
+          (newDefs, model) => {
+            if (includeModels && includeModels.find(reg => !!model.match(reg))) {
+              newDefs[model] = definitions[model];
+              checkModel(definitions[model]);
+            }
+            return newDefs;
+          },
+          newDefinitions
+        );
+      }
+      const filtered = Object.keys(definitions).filter(model => !(model in newDefinitions));
+      if (filtered.length) {
+        console.log(chalk.yellowBright(`[IMP] Auto 将自动清理 ${filtered.join(',')} 等 models！`));
+      }
     }
   }
   return newSwagger;
