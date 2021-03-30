@@ -1,9 +1,11 @@
 {
   "extends": "./tsconfig.json",
-  "include": ["static/service.ts"],
+  "files": ["static/service.ts", "src/utils/getModelDeps.ts"],
   "compilerOptions": {
     "outDir": "static",
-    "target": "ES3"
+    "module": "UMD",
+    "target": "ES5",
+    "allowUmdGlobalAccess": true
   },
   "exclude": [
     "node_modules",

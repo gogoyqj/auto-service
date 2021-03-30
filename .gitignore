@@ -26,7 +26,6 @@ lerna-debug.log*
 **/umd/*
 **/dist/*
 **/tmp/*
-packages/tkit-cli/src/features*
 **/*cache
 
 .vscode/launch.json
@@ -34,3 +33,5 @@ packages/tkit-cli/src/features*
 static/service.d.ts
 static/service.js
 static/service.js.map
+static/static
+static/src
