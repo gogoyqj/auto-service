@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`validate/utils getParams ok 1`] = `
+Object {
+  "header": Object {},
+  "method": "GET",
+  "path": undefined,
+  "query": Object {
+    "t": "200",
+  },
+  "url": "/sm/api/test",
+}
+`;

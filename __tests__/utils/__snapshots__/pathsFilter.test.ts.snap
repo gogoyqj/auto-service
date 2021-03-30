@@ -1,0 +1,177 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`utils/pathsFilter pathsFilter includeModels ok 1`] = `
+Object {
+  "basePath": "/",
+  "definitions": Object {
+    "E2": Object {
+      "$def": "#/definitions/ED2",
+    },
+    "ED2": Object {},
+    "EI1": Object {
+      "$def": "#/definitions/EI_D1",
+    },
+    "EID1_D1": Object {},
+    "EI_D1": Object {
+      "$def": "#/definitions/EID1_D1",
+    },
+    "I2": Object {
+      "$def": "#/definitions/ID2",
+    },
+    "I3": Object {
+      "$def": "#/definitions/ID3",
+    },
+    "ID2": Object {},
+    "ID3": Object {},
+  },
+  "paths": Object {
+    "/include/1": Object {
+      "get": Object {
+        "responses": Object {
+          "200": Object {
+            "schema": Object {
+              "$ref": "#/definitions/EI1",
+            },
+          },
+        },
+      },
+    },
+    "/include/2": Object {
+      "get": Object {
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "username",
+            "schema": Object {
+              "$ref": "#/definitions/I2",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "schema": Object {
+              "$ref": "#/definitions/I3",
+            },
+          },
+        },
+      },
+    },
+  },
+}
+`;
+
+exports[`utils/pathsFilter pathsFilter keepModels ok 1`] = `
+Object {
+  "basePath": "/",
+  "definitions": Object {
+    "E2": Object {
+      "$def": "#/definitions/ED2",
+    },
+    "ED2": Object {},
+    "EI1": Object {
+      "$def": "#/definitions/EI_D1",
+    },
+    "EID1_D1": Object {},
+    "EI_D1": Object {
+      "$def": "#/definitions/EID1_D1",
+    },
+    "I2": Object {
+      "$def": "#/definitions/ID2",
+    },
+    "I3": Object {
+      "$def": "#/definitions/ID3",
+    },
+    "ID2": Object {},
+    "ID3": Object {},
+  },
+  "paths": Object {
+    "/include/1": Object {
+      "get": Object {
+        "responses": Object {
+          "200": Object {
+            "schema": Object {
+              "$ref": "#/definitions/EI1",
+            },
+          },
+        },
+      },
+    },
+    "/include/2": Object {
+      "get": Object {
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "username",
+            "schema": Object {
+              "$ref": "#/definitions/I2",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "schema": Object {
+              "$ref": "#/definitions/I3",
+            },
+          },
+        },
+      },
+    },
+  },
+}
+`;
+
+exports[`utils/pathsFilter pathsFilter ok 1`] = `
+Object {
+  "basePath": "/",
+  "definitions": Object {
+    "EI1": Object {
+      "$def": "#/definitions/EI_D1",
+    },
+    "EID1_D1": Object {},
+    "EI_D1": Object {
+      "$def": "#/definitions/EID1_D1",
+    },
+    "I2": Object {
+      "$def": "#/definitions/ID2",
+    },
+    "I3": Object {
+      "$def": "#/definitions/ID3",
+    },
+    "ID2": Object {},
+    "ID3": Object {},
+  },
+  "paths": Object {
+    "/include/1": Object {
+      "get": Object {
+        "responses": Object {
+          "200": Object {
+            "schema": Object {
+              "$ref": "#/definitions/EI1",
+            },
+          },
+        },
+      },
+    },
+    "/include/2": Object {
+      "get": Object {
+        "parameters": Array [
+          Object {
+            "in": "path",
+            "name": "username",
+            "schema": Object {
+              "$ref": "#/definitions/I2",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "schema": Object {
+              "$ref": "#/definitions/I3",
+            },
+          },
+        },
+      },
+    },
+  },
+}
+`;

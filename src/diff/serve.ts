@@ -51,8 +51,17 @@ export async function serveDiff<J extends {}>(curVersion: J, newVersion: J) {
       const diffVersion="${diffVersion}";
       const curVersion = ${JSON.stringify(curVersion, null, 2)};
       const delta = ${JSON.stringify(delta, null, 2)};
+      const newVersion = ${JSON.stringify(newVersion, null, 2)};
+      window.require = function (module) {
+        return window.Autos;
+      }
+      window.module = window.Autos = {
+        exports: {}
+      };
+      window.exports = window.Autos.exports;
     </script>
-    <script src="/static/service.js"></script>
+    <script src="/static/src/utils/getModelDeps.js"></script>
+    <script src="/static/static/service.js"></script>
   </body>
 </html>
           `);
@@ -84,7 +93,7 @@ export async function serveDiff<J extends {}>(curVersion: J, newVersion: J) {
             } else {
               // IMP: 截止目前，会认为 swagger 和 service 是一致的，所以选择忽略远端变动的时候，不会重新生成service
               // IMP: 这样似乎会有问题，比如手动修改了本地swagger或merge造成 swagger 和 service 不一致，这时似乎是需要重新生成service的
-              resolve();
+              resolve(undefined);
             }
             close();
           } else {
@@ -101,7 +110,7 @@ export async function serveDiff<J extends {}>(curVersion: J, newVersion: J) {
         });
         process.once('exit', close);
       } else {
-        resolve();
+        resolve(undefined);
       }
     });
   });

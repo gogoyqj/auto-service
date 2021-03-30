@@ -1,0 +1,529 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`service/diff ok array of obj diffs ok: arrObjDecrease 1`] = `
+Object {
+  "p": Object {
+    "0": Object {
+      "id": Array [
+        1,
+        3,
+      ],
+      "name": Array [
+        1,
+        3,
+      ],
+    },
+    "_1": Array [
+      Object {
+        "id": 2,
+        "name": 2,
+      },
+      0,
+      0,
+    ],
+    "_t": "a",
+  },
+}
+`;
+
+exports[`service/diff ok array of obj diffs ok: arrObjDecrease p-_1 1`] = `
+Object {
+  "p": Object {
+    "_1": Array [
+      Object {
+        "id": 2,
+        "name": 2,
+      },
+      0,
+      0,
+    ],
+    "_t": "a",
+  },
+}
+`;
+
+exports[`service/diff ok array of obj diffs ok: arrObjDecrease p-_1 patched 1`] = `
+Object {
+  "p": Array [
+    Object {
+      "id": 1,
+      "name": 1,
+    },
+  ],
+}
+`;
+
+exports[`service/diff ok array of obj diffs ok: arrObjDecrease p-0-name 1`] = `
+Object {
+  "p": Object {
+    "0": Object {
+      "name": Array [
+        1,
+        3,
+      ],
+    },
+    "_t": "a",
+  },
+}
+`;
+
+exports[`service/diff ok array of obj diffs ok: arrObjDecrease p-0-name patched 1`] = `
+Object {
+  "p": Array [
+    Object {
+      "id": 1,
+      "name": 3,
+    },
+    Object {
+      "id": 2,
+      "name": 2,
+    },
+  ],
+}
+`;
+
+exports[`service/diff ok array of obj diffs ok: arrObjDecrease patched 1`] = `
+Object {
+  "p": Array [
+    Object {
+      "id": 3,
+      "name": 3,
+    },
+  ],
+}
+`;
+
+exports[`service/diff ok array of obj diffs ok: arrObjIncrease 1`] = `
+Object {
+  "p": Object {
+    "1": Object {
+      "id": Array [
+        2,
+        3,
+      ],
+      "name": Array [
+        2,
+        3,
+      ],
+    },
+    "2": Array [
+      Object {
+        "id": 2,
+        "name": 2,
+      },
+    ],
+    "_t": "a",
+  },
+}
+`;
+
+exports[`service/diff ok array of obj diffs ok: arrObjIncrease p-1-id patched 1`] = `
+Object {
+  "p": Array [
+    Object {
+      "id": 1,
+      "name": 1,
+    },
+    Object {
+      "id": 3,
+      "name": 2,
+    },
+  ],
+}
+`;
+
+exports[`service/diff ok array of obj diffs ok: arrObjIncrease p-2 patched 1`] = `
+Object {
+  "p": Array [
+    Object {
+      "id": 1,
+      "name": 1,
+    },
+    Object {
+      "id": 2,
+      "name": 2,
+    },
+    Object {
+      "id": 2,
+      "name": 2,
+    },
+  ],
+}
+`;
+
+exports[`service/diff ok array of obj diffs ok: arrObjIncrease patched 1`] = `
+Object {
+  "p": Array [
+    Object {
+      "id": 1,
+      "name": 1,
+    },
+    Object {
+      "id": 3,
+      "name": 3,
+    },
+    Object {
+      "id": 2,
+      "name": 2,
+    },
+  ],
+}
+`;
+
+exports[`service/diff ok array of obj diffs ok: arrStrIncrease p-1-id 1`] = `
+Object {
+  "p": Object {
+    "1": Object {
+      "id": Array [
+        2,
+        3,
+      ],
+    },
+    "_t": "a",
+  },
+}
+`;
+
+exports[`service/diff ok array of obj diffs ok: arrStrIncrease p-2 1`] = `
+Object {
+  "p": Object {
+    "2": Array [
+      Object {
+        "id": 2,
+        "name": 2,
+      },
+    ],
+    "_t": "a",
+  },
+}
+`;
+
+exports[`service/diff ok array of string diffs ok: arrStrDecrease 1`] = `
+Object {
+  "p": Object {
+    "1": Array [
+      "d",
+    ],
+    "_0": Array [
+      "a",
+      0,
+      0,
+    ],
+    "_1": Array [
+      "b",
+      0,
+      0,
+    ],
+    "_t": "a",
+  },
+}
+`;
+
+exports[`service/diff ok array of string diffs ok: arrStrDecrease p-_1&_0 1`] = `
+Object {
+  "p": Object {
+    "_0": Array [
+      "a",
+      0,
+      0,
+    ],
+    "_1": Array [
+      "b",
+      0,
+      0,
+    ],
+    "_t": "a",
+  },
+}
+`;
+
+exports[`service/diff ok array of string diffs ok: arrStrDecrease p-_1&_0 patched 1`] = `
+Object {
+  "p": Array [
+    "c",
+  ],
+}
+`;
+
+exports[`service/diff ok array of string diffs ok: arrStrDecrease p-1 1`] = `
+Object {
+  "p": Object {
+    "1": Array [
+      "d",
+    ],
+    "_t": "a",
+  },
+}
+`;
+
+exports[`service/diff ok array of string diffs ok: arrStrDecrease p-1 patched 1`] = `
+Object {
+  "p": Array [
+    "a",
+    "d",
+    "b",
+    "c",
+  ],
+}
+`;
+
+exports[`service/diff ok array of string diffs ok: arrStrDecrease p-1&_1 1`] = `
+Object {
+  "p": Object {
+    "1": Array [
+      "d",
+    ],
+    "_1": Array [
+      "b",
+      0,
+      0,
+    ],
+    "_t": "a",
+  },
+}
+`;
+
+exports[`service/diff ok array of string diffs ok: arrStrDecrease p-1&_1 patched 1`] = `
+Object {
+  "p": Array [
+    "a",
+    "d",
+    "c",
+  ],
+}
+`;
+
+exports[`service/diff ok array of string diffs ok: arrStrDecrease patched 1`] = `
+Object {
+  "p": Array [
+    "c",
+    "d",
+  ],
+}
+`;
+
+exports[`service/diff ok array of string diffs ok: arrStrIncrease 1`] = `
+Object {
+  "p": Object {
+    "1": Array [
+      "d",
+    ],
+    "4": Array [
+      "e",
+    ],
+    "_t": "a",
+  },
+}
+`;
+
+exports[`service/diff ok array of string diffs ok: arrStrIncrease p-1 1`] = `
+Object {
+  "p": Object {
+    "1": Array [
+      "d",
+    ],
+    "_t": "a",
+  },
+}
+`;
+
+exports[`service/diff ok array of string diffs ok: arrStrIncrease p-1 patched 1`] = `
+Object {
+  "p": Array [
+    "a",
+    "d",
+    "b",
+    "c",
+  ],
+}
+`;
+
+exports[`service/diff ok array of string diffs ok: arrStrIncrease p-4 1`] = `
+Object {
+  "p": Object {
+    "4": Array [
+      "e",
+    ],
+    "_t": "a",
+  },
+}
+`;
+
+exports[`service/diff ok array of string diffs ok: arrStrIncrease p-4 patched 1`] = `
+Object {
+  "p": Array [
+    "a",
+    "b",
+    "c",
+    "e",
+  ],
+}
+`;
+
+exports[`service/diff ok array of string diffs ok: arrStrIncrease patched 1`] = `
+Object {
+  "p": Array [
+    "a",
+    "d",
+    "b",
+    "c",
+    "e",
+  ],
+}
+`;
+
+exports[`service/diff ok object diffs ok: arrStrIncrease p-200 1`] = `
+Object {
+  "200": Object {
+    "id": Array [
+      1,
+      4,
+    ],
+    "name": Array [
+      1,
+      4,
+    ],
+  },
+}
+`;
+
+exports[`service/diff ok object diffs ok: arrStrIncrease p-200 patched 1`] = `
+Object {
+  "200": Object {
+    "id": 4,
+    "name": 4,
+  },
+  "500": Object {
+    "id": 2,
+    "name": 2,
+  },
+}
+`;
+
+exports[`service/diff ok object diffs ok: arrStrIncrease p-200&404 1`] = `
+Object {
+  "200": Object {
+    "id": Array [
+      1,
+      4,
+    ],
+  },
+  "404": Array [
+    Object {
+      "id": 3,
+      "name": 3,
+    },
+  ],
+}
+`;
+
+exports[`service/diff ok object diffs ok: arrStrIncrease p-200&404 patched 1`] = `
+Object {
+  "200": Object {
+    "id": 4,
+    "name": 1,
+  },
+  "404": Object {
+    "id": 3,
+    "name": 3,
+  },
+  "500": Object {
+    "id": 2,
+    "name": 2,
+  },
+}
+`;
+
+exports[`service/diff ok object diffs ok: objDecrease 1`] = `
+Object {
+  "200": Array [
+    Object {
+      "id": 1,
+      "name": 1,
+    },
+    0,
+    0,
+  ],
+  "500": Object {
+    "id": Array [
+      2,
+      3,
+    ],
+    "name": Array [
+      2,
+      3,
+    ],
+  },
+}
+`;
+
+exports[`service/diff ok object diffs ok: objDecrease p-200 1`] = `
+Object {
+  "200": Array [
+    Object {
+      "id": 1,
+      "name": 1,
+    },
+    0,
+    0,
+  ],
+}
+`;
+
+exports[`service/diff ok object diffs ok: objDecrease p-200 patched 1`] = `
+Object {
+  "500": Object {
+    "id": 2,
+    "name": 2,
+  },
+}
+`;
+
+exports[`service/diff ok object diffs ok: objDecrease p-500-name 1`] = `
+Object {
+  "200": Array [
+    Object {
+      "id": 1,
+      "name": 1,
+    },
+    0,
+    0,
+  ],
+  "500": Object {
+    "name": Array [
+      2,
+      3,
+    ],
+  },
+}
+`;
+
+exports[`service/diff ok object diffs ok: objDecrease p-500-name patched 1`] = `
+Object {
+  "500": Object {
+    "id": 2,
+    "name": 3,
+  },
+}
+`;
+
+exports[`service/diff ok object diffs ok: objIncrease 1`] = `
+Object {
+  "200": Object {
+    "id": Array [
+      1,
+      4,
+    ],
+    "name": Array [
+      1,
+      4,
+    ],
+  },
+  "404": Array [
+    Object {
+      "id": 3,
+      "name": 3,
+    },
+  ],
+}
+`;

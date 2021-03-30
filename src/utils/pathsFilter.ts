@@ -1,5 +1,6 @@
 import { SwaggerJson } from 'src/consts';
 import chalk from 'chalk';
+import { getExplicitModelDeps, resolveModelDeps } from './getModelDeps';
 
 export default function pathsFilter(
   newSwagger: SwaggerJson,
@@ -15,29 +16,6 @@ export default function pathsFilter(
   if (Array.isArray(exclude) || Array.isArray(include)) {
     const { paths, definitions = {} } = newSwagger;
     const newDefinitions: typeof definitions = {};
-    const checkModel = (obj: {} | undefined) =>
-      JSON.stringify(obj)
-        ?.match(/['"]#\/definitions\/[^"']+/g)
-        ?.reduce<string[]>((matched, mat) => {
-          const [, , model] = mat.split('/');
-          if (!(model in newDefinitions)) {
-            newDefinitions[model] = definitions[model];
-            matched.push(model);
-          }
-          return matched;
-        }, []);
-    const resolveDeps = (models: string[] = []) =>
-      models.forEach(model => {
-        const def = definitions[model];
-        const subModel = checkModel(def);
-        if (subModel) {
-          while (subModel.length) {
-            const model = subModel.pop();
-            const grandModel = model && definitions[model] && checkModel(definitions[model]);
-            grandModel && subModel.push(...grandModel);
-          }
-        }
-      });
     newSwagger.paths = Object.keys(paths).reduce<typeof paths>((newPaths, url) => {
       const included = include?.find(reg => url.match(reg));
       const excluded = exclude?.find(reg => url.match(reg));
@@ -53,7 +31,7 @@ export default function pathsFilter(
       }
       if (url in newPaths && definitions) {
         // 提取 used model
-        resolveDeps(checkModel(paths[url]));
+        resolveModelDeps(getExplicitModelDeps(paths[url]), definitions, newDefinitions);
       }
       return newPaths;
     }, {});
@@ -65,7 +43,12 @@ export default function pathsFilter(
           (newDefs, model) => {
             if (includeModels && includeModels.find(reg => !!model.match(reg))) {
               newDefs[model] = definitions[model];
-              checkModel(definitions[model]);
+              // 提取强制包含的 model 的依赖
+              getExplicitModelDeps(definitions[model])?.forEach(model => {
+                if (!(model in newDefs)) {
+                  newDefs[model] = definitions[model];
+                }
+              });
             }
             return newDefs;
           },

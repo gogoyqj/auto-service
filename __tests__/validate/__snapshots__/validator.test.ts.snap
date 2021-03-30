@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`validate/validator getParamSchema ok 1`] = `
+Object {
+  "properties": Object {
+    "path": Object {
+      "properties": Object {
+        "id": Object {
+          "description": "id",
+          "format": undefined,
+          "type": "string",
+        },
+      },
+      "required": Array [
+        "id",
+      ],
+      "type": "object",
+    },
+    "query": Object {
+      "properties": Object {
+        "name": Object {
+          "description": "",
+          "format": undefined,
+          "type": "string",
+        },
+      },
+      "required": Array [
+        "name",
+      ],
+      "type": "object",
+    },
+  },
+  "type": "object",
+}
+`;
