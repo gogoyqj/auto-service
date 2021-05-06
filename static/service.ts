@@ -5,7 +5,7 @@
 
 // @ts-ignore service.ts 编译规则和 src 不一致
 // eslint-disable-next-line prettier/prettier
-declare let jsondiffpatch: any;
+declare let  jsondiffpatch: any;
 /** 差异 */
 declare let delta: any;
 /** 当前 swagger 版本 */
@@ -78,7 +78,7 @@ declare const Autos: {
   /** 仅不选择删除 */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function excludeDelete(me: HTMLInputElement) {
-    setTimeout(function () {
+    setTimeout(function() {
       const all = document.getElementById('全选/取消全选') as HTMLInputElement;
       all.checked = true;
       toggleSelectAll(all);
@@ -88,7 +88,7 @@ declare const Autos: {
   /** 仅选择新增 */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function onlyAdd(me: HTMLInputElement) {
-    setTimeout(function () {
+    setTimeout(function() {
       const all = document.getElementById('全选/取消全选') as HTMLInputElement;
       all.checked = true;
       toggleSelectAll(all);
@@ -119,13 +119,13 @@ declare const Autos: {
       modified
         ? 'show-modified-only canvas'
         : addedAndDeleted
-          ? 'show-added-deleted-only canvas'
-          : added
-            ? 'show-added-only canvas'
-            : deleted
-              ? 'show-add-deleted canvas'
-              : 'canvas'
-      }${propertyNameOnly ? ' show-only-property-name' : ''}`;
+        ? 'show-added-deleted-only canvas'
+        : added
+        ? 'show-added-only canvas'
+        : deleted
+        ? 'show-add-deleted canvas'
+        : 'canvas'
+    }${propertyNameOnly ? ' show-only-property-name' : ''}`;
   }
   const help = `<div class="help-info" id="help-info" style="display: none;">
   <b>查看更新信息</b>
@@ -202,8 +202,8 @@ declare const Autos: {
     `
         : `
     <input id="${name}" onClick="${callback}(this)" type="checkbox" name="${name}"><label id="for${name}" for="${name}">${name}${
-        extra !== undefined ? extra : ''
-        }</label>
+            extra !== undefined ? extra : ''
+          }</label>
     `;
       return html;
     }, '') + `<a class="help-icon" onClick="toggleHelp(event)">?</a>${help}`;
@@ -343,7 +343,7 @@ declare const Autos: {
       JSON.stringify({ version: diffVersion, keys: allSelectedIndexes, unkeys: allExcludedIndexes })
     );
 
-    xhr.onreadystatechange = function () {
+    xhr.onreadystatechange = function() {
       if (xhr.readyState === 4) {
         try {
           const res = JSON.parse(xhr.response);
@@ -361,13 +361,13 @@ declare const Autos: {
         }
       }
     };
-    xhr.onload = function () {
+    xhr.onload = function() {
       if (xhr.status !== 200) {
         alert('同步失败');
       }
     };
 
-    xhr.onerror = function (e) {
+    xhr.onerror = function(e) {
       alert('同步失败：' + e && e['message']);
     };
   }

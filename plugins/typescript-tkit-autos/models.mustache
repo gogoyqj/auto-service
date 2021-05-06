@@ -1,0 +1,8 @@
+{{#models}}
+{{#model}}
+export * from './{{{ classFilename }}}';
+{{/model}}
+{{/models}}
+export type ModelInteger = number;
+export type ModelFloat = number;
+export type LocalDate = Date;

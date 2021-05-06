@@ -78,6 +78,12 @@ export default async function gen(
     });
   };
   const swagger2tsConfig = { ...defaultParseConfig, ...swaggerParser };
+  if (
+    swagger2tsConfig['-t'] === 'plugins/types-only' ||
+    swagger2tsConfig['-t'] === 'plugins/typescript-tkit-autos'
+  ) {
+    swagger2tsConfig['-t'] = path.join(pluginsPath, '..', swagger2tsConfig['-t']);
+  }
   const servicesPath = swagger2tsConfig['-o'] || '';
   // IMP: 加载新版
   const code: number = await new Promise(rs => {
@@ -85,12 +91,12 @@ export default async function gen(
       remoteSwaggerUrl
         ? remoteSwaggerUrl.match(RemoteUrlReg)
           ? request.get(
-              {
-                ...requestConfig,
-                url: remoteSwaggerUrl
-              },
-              (err, res) => cb(err, { body: JSON.parse(res.body) })
-            )
+            {
+              ...requestConfig,
+              url: remoteSwaggerUrl
+            },
+            (err, res) => cb(err, { body: JSON.parse(res.body) })
+          )
           : cb(undefined, { body: require(remoteSwaggerUrl) as SwaggerJson })
         : cb(undefined, {});
     };

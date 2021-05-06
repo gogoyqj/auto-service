@@ -32,7 +32,7 @@ $ npx autos --help
 
 ```
   -V, --version                  output the version number
-  -c, --config [path]            config file (default: "json2service.json")
+  -c, --config [path]            config file (default: "json2service.json" or "json2service.js")
   --clear                        rm typescript service before gen
   --quiet                        auto merge without popup
   --apis [boolean]               是否生成 apis，如果未指定 models 且未指定 typeScriptDataFile 则会生成 apis
@@ -284,6 +284,28 @@ export declare class Ajax {
   ): Promise<any>;
   /** 接口传参校验 */
   check<V>(value: V, name: string): void;
+  /** 新 fetch 接口，>= 3.5.4 */
+  public autosFetch<S extends keyof AutosAPIS>(
+    source: S,
+    ...args: AutosAPIS[S][0]
+  ): Promise<AutosAPIS[S][1]> {
+    const { isFile, opt, ...config } = (args[0] || {}) as AutosParams;
+    let { headers = {} } = opt || {};
+    if (isFile) {
+      headers = {
+        ...headers,
+        'Content-Type': 'multipart/form-data'
+      };
+    }
+    const [method, url] = source.split(' ') as [WrappedFetchParams['method'], string];
+    return this.ajax({
+      ...config,
+      ...opt,
+      method,
+      url,
+      headers
+    });
+  }
 }
 declare const _default: Ajax;
 export default _default;

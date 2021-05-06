@@ -1,0 +1,63 @@
+{{>licenseInfo}}
+import { ExtraFetchParams } from '@ajax';
+{{^models.isEmpty}}
+import * as models from '../model/models';
+{{/models.isEmpty}}
+
+/* tslint:disable:no-unused-variable member-ordering object-literal-shorthand */
+
+{{#operations}}
+{{#description}}
+/** @description {{&description}} */
+{{/description}}
+
+declare global {
+  interface AutosAPIS {
+{{#operation}}
+  {{#description}}/** {{&description}} */{{/description}}
+  '{{httpMethod}} {{{contextPath}}}{{{path}}}': [[
+    {
+      opt?: {{^headerParams.0}}ExtraFetchParams{{/headerParams.0}}{{#headerParams.0}}{ headers: ParamsHeader{{nickname}} } & Omit<ExtraFetchParams, 'headers'> {{/headerParams.0}}
+      {{#queryParams.0}}
+      query: {
+      {{#queryParams}}
+        '{{paramName}}'{{^required}}?{{/required}}: {{&dataType}};
+      {{/queryParams}}
+      };
+      {{/queryParams.0}}
+      {{#pathParams.0}}
+      path: {
+      {{#pathParams}}
+        '{{paramName}}'{{^required}}?{{/required}}: {{&dataType}};
+      {{/pathParams}}
+      };
+      {{/pathParams.0}}
+      {{#formParams.0}}
+      {{#isFile}}
+      form: {
+      {{#formParams}}
+        '{{baseName}}'{{^required}}?{{/required}}: {{&dataType}};
+      {{/formParams}}
+      };
+      isFile: true;
+      {{/isFile}}
+      {{^isFile}}
+      form: {
+      {{#formParams}}
+        '{{paramName}}'{{^required}}?{{/required}}: {{&dataType}};
+      {{/formParams}}
+      };
+      {{/isFile}}
+      {{/formParams.0}}
+      {{#bodyParam.0}}
+      data: {
+      {{#bodyParam}}
+        '{{paramName}}'{{^required}}?{{/required}}: {{&dataType}};
+      {{/bodyParam}}
+      };
+      {{/bodyParam.0}}
+    }], {{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}{}{{/returnType}}];
+{{/operation}}
+  }
+}
+{{/operations}}

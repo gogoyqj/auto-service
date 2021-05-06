@@ -180,7 +180,7 @@ export interface Json2Service {
 export interface SwaggerParser {
   /** 输出 typescript 代码目录，默认是当前 src/services */
   '-o'?: string;
-  /** 模板目录，默认是 plugins/typescript-tkit，避免修改；配置成 plugins/types-only 仅输出类型 */
+  /** 模板目录，默认是 plugins/typescript-tkit，避免修改；配置成 plugins/types-only 仅输出类型；配置成 plugins/typescript-tkit-autos 输出新调用方式格式接口 */
   '-t'?: string;
   /** language，默认是 typescript-angularjs，避免修改  */
   '-l'?: string;
@@ -191,5 +191,7 @@ export interface SwaggerParser {
 /** 项目目录 */
 export const ProjectDir = process.cwd();
 export const RemoteUrlReg = /^http/;
+/** 模块目录 */
+export const ModuleDir = path.join(__dirname, '..');
 /** 放置依赖 web 静态文件目录 */
-export const StaticDir = path.join(__dirname, '..', 'static');
+export const StaticDir = path.join(ModuleDir, 'static');

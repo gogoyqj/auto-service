@@ -1,0 +1,85 @@
+{{#operations}}
+{{#operation}}
+{{#allParams.0}}
+{{^hasOnlyBodyParams}}
+{{#headerParams.0}}
+/**{{#headerParams}}
+  * @description {{nickname}} headers 参数
+  * @property `{{^required}}[{{/required}}{{baseName}}{{^required}}]{{/required}}` {{&description}}
+  {{/headerParams}}*/
+export interface ParamsHeader{{nickname}} {
+  {{#headerParams}}
+  {{#description}}
+  /** {{&description}} */
+  {{/description}}
+  '{{baseName}}'{{^required}}?{{/required}}: {{&dataType}};
+  {{/headerParams}}
+}
+{{/headerParams.0}}
+/**
+  {{#description}}
+  * @description {{nickname}}参数
+  {{/description}}
+{{#pathParams.0}}
+  {{#pathParams}}
+  * @property `{{^required}}[{{/required}}{{paramName}}{{^required}}]{{/required}}` {{&description}}
+  {{/pathParams}}
+{{/pathParams.0}}
+{{#queryParams.0}}
+  {{#queryParams}}
+  * @property `{{^required}}[{{/required}}{{paramName}}{{^required}}]{{/required}}` {{&description}}
+  {{/queryParams}}
+{{/queryParams.0}}
+{{#formParams.0}}
+  {{#formParams}}
+  * @property `{{^required}}[{{/required}}{{paramName}}{{^required}}]{{/required}}` {{&description}}
+  {{/formParams}}
+{{/formParams.0}}
+  */
+export interface Params{{nickname}} {
+{{#pathParams.0}}
+  // pathParams
+  {{#pathParams}}
+  {{#description}}
+  /**
+   * {{&description}}
+   */
+  {{/description}}
+  {{paramName}}{{^required}}?{{/required}}: {{&dataType}};
+  {{/pathParams}}
+{{/pathParams.0}}
+{{#queryParams.0}}
+  // queryParams
+  {{#queryParams}}
+  {{#description}}
+  /**
+   * {{&description}}
+   */
+  {{/description}}
+  {{paramName}}{{^required}}?{{/required}}: {{{dataType}}};
+  {{/queryParams}}
+{{/queryParams.0}}
+{{#formParams.0}}
+  // formParams
+  {{#formParams}}
+  {{#description}}
+  /**
+   * {{&description}}
+   */
+  {{/description}}
+  {{paramName}}{{^required}}?{{/required}}: {{&dataType}};
+  {{/formParams}}
+{{/formParams.0}}
+}
+{{/hasOnlyBodyParams}}
+{{#bodyParam}}
+/**
+  {{#description}}
+  * {{&description}}
+  {{/description}}
+  */
+export type ParamsBody{{nickname}} = {{&dataType}};
+{{/bodyParam}}
+{{/allParams.0}}
+{{/operation}}
+{{/operations}}

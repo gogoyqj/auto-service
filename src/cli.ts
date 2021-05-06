@@ -3,14 +3,14 @@ import * as fs from 'fs';
 import * as path from 'path';
 import commander from 'commander'; // @fix no import * https://github.com/microsoft/tslib/issues/58
 import chalk from 'chalk';
-import { Json2Service } from './consts';
+import { Json2Service, ProjectDir } from './consts';
 import gen from './index';
 
-const CD = process.cwd();
+const defaultConfig = 'json2service.json';
 
 commander
   .version(require('../package.json').version)
-  .option('-c, --config [path]', 'config file', 'json2service.json')
+  .option('-c, --config [path]', 'config file', defaultConfig)
   .option('--clear', 'rm typescript service before gen', false)
   .option('--quiet', 'auto merge without popup', false)
   .option(
@@ -31,10 +31,16 @@ commander
   .parse(process.argv);
 
 const Config = commander.config as string;
-const ConfigFile = path.join(CD, Config);
-
+let ConfigFile = path.join(ProjectDir, Config);
 if (!fs.existsSync(ConfigFile)) {
-  console.log(chalk.red(`[ERROR]: ${Config} not found in ${CD}`));
+  ConfigFile = ConfigFile.replace(/\.json/g, '.js');
+}
+if (!fs.existsSync(ConfigFile)) {
+  console.log(
+    chalk.red(
+      `[ERROR]: ${Config} or ${Config.replace(/\.json/g, '.js')} not found in ${ProjectDir}`
+    )
+  );
 } else {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const config: Json2Service = require(ConfigFile);

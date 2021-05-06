@@ -16,6 +16,10 @@
 .select-count {
   float: left;
   padding: 0 5px;
+  position: fixed;
+  right: 0;
+  top: 0;
+  background: lightgreen;
 }
 
 .select-change {
