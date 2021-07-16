@@ -330,7 +330,70 @@ Autos 支持交互勾选界面、增量同步远程增、删、改差异到本�
     - 直接进入下一步
 - Autos 调用 Swagger Codegen 生成目标代码
 
-## 5. CHANGELOG
+## 5. 简洁模式
+
+从 3.5.4 版本起，当配置 `swaggerParser['-t']` 参数为 `'plugins/typescript-tkit-autos'` 时，Autos 会生成通过 url 调用的类型安全的 service 代码，如以下示例所示：
+
+```ts
+import { ExtraFetchParams } from '@ajax';
+import * as models from '../model/models';
+
+declare global {
+  interface AutosAPIS {
+    'GET /ts-boilerplate/api/user/info': [
+      (
+        | []
+        | [
+            {
+              opt?: ExtraFetchParams;
+            }
+          ]
+      ),
+      models.UserInfo
+    ];
+  }
+}
+```
+
+此时，我们需要使用新版的框架配套的 ajax 或者自行实现 `autosFetch`，如以下示例所示：
+
+```ts
+declare global {
+  interface AutosAPIS {
+    /** 测试接口 */
+    'DEMO /ajax/test': [[{}], {}];
+  }
+}
+// ...
+function autosFetch<S extends keyof AutosAPIS>(
+  source: S,
+  ...args: AutosAPIS[S][0]
+): Promise<AutosAPIS[S][1]> {
+  const { isFile, opt, ...config } = (args[0] || {}) as AutosParams;
+  let { headers = {} } = opt || {};
+  if (isFile) {
+    headers = {
+      ...headers,
+      'Content-Type': 'multipart/form-data'
+    };
+  }
+  // ...
+}
+```
+
+如此，我们就可以直接通过 url 调用 service 代码，如以下示例所示（tCall 需要更新 redux-model 到最新的版本）：
+
+```ts
+function* test() {
+  const data = autosFetch('POST /ts-boilerplate/api/download');
+  const res: AutosAPIS['POST /ts-boilerplate/api/download'][1] = yield tCall(
+    autosFetch,
+    'POST /ts-boilerplate/api/download'
+  );
+}
+```
+
+## 6. CHANGELOG
 
 import CHANGELOG from './CHANGELOG.md';
 

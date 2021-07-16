@@ -1,0 +1,8 @@
+{{#apiInfo}}
+{{#apis}}
+{{#operations}}
+export * from './{{ classFilename }}';
+{{/operations}}
+{{/apis}}
+{{/apiInfo}}
+throw Error('禁止运行时引入 apis.ts ！！！');
