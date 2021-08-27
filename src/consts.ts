@@ -44,7 +44,7 @@ export interface SwaggerJson {
       [method: string]: PathJson;
     };
   };
-  definitions?: SMSchema;
+  definitions?: Record<string, SMSchema>;
   basePath: string;
   [extra: string]: any;
 }
@@ -167,6 +167,8 @@ export interface Json2Service {
     includeModels?: RegExp[];
     /** 变更swagger */
     modifier?: <S extends SwaggerJson>(swagger: S, config: Json2Service) => S;
+    /** 格式化代码的命令，比如： 'prettier {path}/**\/**.ts  --write --loglevel error --with-node-modules'，注意使用 prettier 一定要配置 '--loglevel error --with-node-modules'，否则会出错 */
+    formater?: string;
   };
   /** 生成自动校验逻辑 */
   validateResponse?: boolean;

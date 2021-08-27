@@ -36,7 +36,7 @@ export const getAJV = (() => {
 export function getSwagger(basePath: string) {
   const swaggerPath = path.join(
     SmTmpDir,
-    basePathToFileName(`${basePath || DefaultBasePath}.json`)
+    `${basePathToFileName(`${basePath || DefaultBasePath}`)}.json`
   );
   if (fs.existsSync(swaggerPath)) {
     let swagger = require(swaggerPath) as SwaggerJson;

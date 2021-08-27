@@ -23,13 +23,16 @@ export default async function gen(
   options: {
     // 自动全量使用远程文档，不显示 diff & merge 页面
     quiet?: boolean;
-    /** 是否清空上次生成目录 */
+    /**
+     * @deprecated
+     * 是否清空上次生成目录
+     **/
     clear?: boolean;
-    /** 指定是否生成 models，false表示不生成，true表示一定生成，默认受 apis 的值影响 */
+    /** 指定是否生成 Models，false 表示不生成，true 表示一定生成，默认受 APIS 的值影响 */
     models?: boolean;
-    /** 指定是否生成 apis，false表示不生成，true表示一定生成，默认受 models 的值影响 */
+    /** 指定是否生成 APIS，false 表示不生成，true 表示一定生成，默认受 Models 的值影响 */
     apis?: boolean;
-    /** 生成typeScriptDataFile，可以指定文件名 */
+    /** 生成 TypeScript Data File，可以指定文件名 */
     typeScriptDataFile?: string | boolean;
   }
 ): Promise<number> {
@@ -91,12 +94,12 @@ export default async function gen(
       remoteSwaggerUrl
         ? remoteSwaggerUrl.match(RemoteUrlReg)
           ? request.get(
-            {
-              ...requestConfig,
-              url: remoteSwaggerUrl
-            },
-            (err, res) => cb(err, { body: JSON.parse(res.body) })
-          )
+              {
+                ...requestConfig,
+                url: remoteSwaggerUrl
+              },
+              (err, res) => cb(err, { body: JSON.parse(res.body) })
+            )
           : cb(undefined, { body: require(remoteSwaggerUrl) as SwaggerJson })
         : cb(undefined, {});
     };
@@ -155,7 +158,9 @@ export default async function gen(
   }
 
   // IMP: 校正后的文件写入临时文件
-  const swaggerFileName = basePathToFileName(`${swaggerData.basePath || DefaultBasePath}.json`);
+  const swaggerFileName = `${basePathToFileName(
+    `${swaggerData.basePath || DefaultBasePath}`
+  )}.json`;
   const swaggerPath = path.join(SmTmpDir, swaggerFileName);
   // IMP: exclude 在 diff 之后，生成之前
   fs.writeFileSync(swaggerPath, JSON.stringify(pathsFilter(swaggerData, swaggerConfig)), {
@@ -174,7 +179,7 @@ export default async function gen(
   }
 
   const envs: string[] = [];
-  const { apis, models, clear, typeScriptDataFile } = options;
+  const { apis, models, typeScriptDataFile } = options;
   if (typeScriptDataFile !== undefined && typeScriptDataFile !== false) {
     envs.push(
       typeScriptDataFile === true
@@ -192,7 +197,7 @@ export default async function gen(
     }
   }
 
-  const res = await swagger2ts({ ...swagger2tsConfig, '-i': swaggerPath }, clear, envs);
+  const res = await swagger2ts({ ...swagger2tsConfig, '-i': swaggerPath }, envs, swaggerConfig);
   if (res.code) {
     throw `[ERROR]: gen failed with: ${res.message}`;
   } else {

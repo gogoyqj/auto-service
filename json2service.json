@@ -1,9 +1,0 @@
-{
-  "remoteUrl": "./remote.json",
-  "url": "./swagger.json",
-  "swaggerParser": {
-    "-o": "tmp",
-    "-t": "plugins/typescript-tkit/",
-    "-l": "typescript-angularjs"
-  }
-}

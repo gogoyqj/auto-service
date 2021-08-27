@@ -8,6 +8,7 @@
 
 import * as path from 'path';
 import * as fs from 'fs';
+import * as crypto from 'crypto';
 
 export const pluginsPath = path.join(__dirname, '..', 'plugins');
 export const generatorPath = path.join(pluginsPath, 'swagger-codegen-cli.jar');
@@ -17,8 +18,11 @@ export const DefaultBasePath = '@empty@';
 export const SmTmpDir = path.join(__dirname, '..', 'tmp');
 export * from './consts';
 /** 生成唯一 & 无冗余的临时文件名 */
-export const basePathToFileName = (path?: string) =>
-  encodeURIComponent(`${process.cwd()}_${path || DefaultBasePath}`);
+export const basePathToFileName = (path?: string) => {
+  const md5sum = crypto.createHash('md5');
+  md5sum.update(`${process.cwd()}_${path || DefaultBasePath}`);
+  return md5sum.digest('hex');
+};
 
 if (!fs.existsSync(SmTmpDir)) {
   fs.mkdirSync(SmTmpDir);

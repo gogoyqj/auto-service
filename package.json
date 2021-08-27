@@ -1,6 +1,6 @@
 {
   "name": "auto-service",
-  "version": "3.5.4",
+  "version": "3.6.0",
   "description": "auto generate swagger or yapi mock to typescript services and models",
   "repository": "git@github.com:gogoyqj/auto-service.git",
   "author": "杨乾军 <yang@yang>",
@@ -42,6 +42,7 @@
     "jsondiffpatch": "^0.4.1",
     "lodash": "^4.17.11",
     "open": "^7.0.0",
+    "recursive-readdir": "^2.2.2",
     "request": "^2.88.0",
     "tslib": "^1.9.3"
   },
@@ -60,6 +61,7 @@
     "@types/node": "8.9.3",
     "@types/qs": "^6.5.3",
     "@types/react": "^16.9.17",
+    "@types/recursive-readdir": "^2.2.0",
     "@types/request": "^2.48.1",
     "@typescript-eslint/eslint-plugin": "^1.13.0",
     "@typescript-eslint/parser": "^1.13.0",
