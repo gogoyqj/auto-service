@@ -32,7 +32,7 @@ Autos 内置了对接口调用前端传参、后端数据返回是否符合接�
 
 ```tsx
 const { createProxyMiddleware } = require('http-proxy-middleware');
-const { proxyHandle } = require('@tkit/service/lib/validate');
+const { proxyHandle } = require('auto-service/lib/validate');
 
 proxyHandle(proxies: proxyConfig || proxyConfig[], config: IProxyHandleConfig)
 ```
@@ -70,9 +70,9 @@ IProxyHandleConfig 用以配置校验中间件的相关行为。
 ```js
 const { createProxyMiddleware } = require('http-proxy-middleware');
 /**
- * @typedef { import('@tkit/service/lib/consts').ProxyHandleConfig } ProxyHandleConfig
+ * @typedef { import('auto-service/lib/consts').ProxyHandleConfig } ProxyHandleConfig
  */
-const { proxyHandle } = require('@tkit/service/lib/validate');
+const { proxyHandle } = require('auto-service/lib/validate');
 
 module.exports = function (app) {
   app.use(

@@ -211,37 +211,7 @@ Autos 生成的 Service 代码内包含以下和后端进行通信的固定代�
 import ajax, { AjaxPromise, ExtraFetchParams } from '@ajax';
 ```
 
-你可以直接使用与 Auto 配套的 `@ajax` 模块实现，tkit-ajax ([文档](<](https://www.npmjs.com/package/tkit-ajax)>))。
-
-通过 npm 安装 tkit-ajax：
-
-```
-npm i tkit-ajax -S
-```
-
-配置 tsconfig.json:
-
-```json
-{
-  "compilerOptions": {
-    "paths": {
-      "@ajax": ["node_modules/@tkit/ajax"]
-    }
-  }
-}
-```
-
-如直接使用 tkit-ajax, 后端返回数据格式必须满足：
-
-```ts
-{
-    code?: number;
-    message?: string;
-    result: R;
-}
-```
-
-你也可以按照以下接口定义，实现自定义的 `@ajax` 模块：
+你可以参考 [@ekit/ajax](https://github.com/e-kit/ekit/blob/master/packages/ajax/src/new-ajax.ts) 代码实现自定义的 `@ajax` 模块，或者按照以下接口定义，实现自定义的 `@ajax` 模块：
 
 ```ts
 /** 不再兼容非标准的数据结构 */
