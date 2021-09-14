@@ -59,7 +59,12 @@ export class {{classname}} {
     {{/required}}
 {{/pathParams}}
 {{#formParams.0}}
+    {{#isFile}}
+    p.form = new FormData();
+    {{/isFile}}
+    {{^isFile}}
     p.form = {};
+    {{/isFile}}
 {{#formParams}}
     {{#isFile}}
     // 上传文件
@@ -70,7 +75,7 @@ export class {{classname}} {
         'Content-Type': 'multipart/form-data'
       }
     };
-    p.form = new FormData();
+    // p.form = new FormData();
     if ('{{paramName}}' in params) p.form.append('{{baseName}}', params.{{paramName}});
     {{/isFile}}
     {{^isFile}}
