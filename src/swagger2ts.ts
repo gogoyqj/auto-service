@@ -44,6 +44,10 @@ async function parseSwagger(
   const { '-i': input, '-o': output } = config;
   const { formater } = swaggerConfig;
   const tmpServicePath = path.join(SmTmpDir, path.basename(input).replace(/[/\\.]/g, '_'));
+  // must generate models.ts
+  if (envs.indexOf('models') !== -1 && envs.indexOf('supportingFiles') === -1) {
+    envs.push('supportingFiles');
+  }
   return await new Promise(async (rs, rj) => {
     try {
       fs.existsSync(tmpServicePath) && fs.removeSync(tmpServicePath);
@@ -59,7 +63,7 @@ async function parseSwagger(
       () =>
         asyncExec(
           `java${
-            envs.length ? ` ${envs.map(v => `-D${v}`).join(' ')}` : ''
+          envs.length ? ` ${envs.map(v => `-D${v}`).join(' ')}` : ''
           } -jar ${generatorPath} generate ${Object.keys(config)
             .map(opt => `${opt} ${opt === '-o' ? tmpServicePath : config[opt]}`)
             .join(' ')}`
@@ -70,6 +74,15 @@ async function parseSwagger(
       if (res.code) {
         fs.existsSync(tmpServicePath) && fs.removeSync(tmpServicePath);
         return Promise.reject(res);
+      }
+      // rm useless supportingFiles
+      if (envs.indexOf('models') !== -1 && envs.indexOf('apis') === -1) {
+        ['index.ts', path.join('api', 'api.ts')].forEach(file => {
+          const p = path.join(tmpServicePath, file);
+          if (fs.existsSync(p)) {
+            fs.unlinkSync(p);
+          }
+        });
       }
       // format
       if (formater) {
