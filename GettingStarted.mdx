@@ -272,7 +272,12 @@ export declare class Ajax {
       ...config,
       ...opt,
       method,
-      url,
+      url: config.path
+        ? url.replace(
+            /(({[^}]+})|(:[^/:]+$)|(:[^:/]+))/g,
+            all => config.path![all.replace(/[:{}]/g, '')] || ''
+          )
+        : url,
       headers
     });
   }

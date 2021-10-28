@@ -64,7 +64,10 @@ export function operationIdGuard(swagger: SwaggerJson, config: GuardConfig = {})
               `【错误】接口 "${method} ${url}" "${pType}" 参数 "${name}" "${description}" 无效的 schema（缺少 "$ref" 或 "$$ref" 或 "properties" 字段），请联系接口方修改`
             );
           }
-          if (pType === 'path' && url.indexOf(`{${name}}`) === -1) {
+          if (
+            pType === 'path' &&
+            !url.match(new RegExp(`({${name}})|(:${name}[/])|(:${name}$)`, 'g'))
+          ) {
             // 校验 path参数是否存在url
             errors.push(
               `【错误】接口 "${method} ${url}" "${pType}" 参数 "${name}" "${description}" 可能编写错误或废弃，请联系接口方修改`
@@ -218,17 +221,17 @@ export function operationIdGuard(swagger: SwaggerJson, config: GuardConfig = {})
       warnings,
       suggestions: Object.keys(suggestions).length
         ? [
-            '旧 => 新 方法替换映射关系，请按建议顺序降序逐一替换',
-            Object.keys(suggestions)
-              .sort((a, b) => {
-                return -(parseInt(a.split('_')[1]) || 0) + (parseInt(b.split('_')[1]) || 0);
-              })
-              .reduce<String2StringMap>((s, id) => {
-                s[id] = suggestions[id];
-                s[`Params${id}`] = `Params${s[id]}`;
-                return s;
-              }, {})
-          ]
+          '旧 => 新 方法替换映射关系，请按建议顺序降序逐一替换',
+          Object.keys(suggestions)
+            .sort((a, b) => {
+              return -(parseInt(a.split('_')[1]) || 0) + (parseInt(b.split('_')[1]) || 0);
+            })
+            .reduce<String2StringMap>((s, id) => {
+              s[id] = suggestions[id];
+              s[`Params${id}`] = `Params${s[id]}`;
+              return s;
+            }, {})
+        ]
         : []
     };
   }
@@ -237,13 +240,13 @@ export function operationIdGuard(swagger: SwaggerJson, config: GuardConfig = {})
     warnings,
     suggestions: Object.keys(suggestions).length
       ? [
-          '锁定映射建议，添加到 service 配置',
-          {
-            guardConfig: {
-              methodUrl2OperationIdMap: suggestions
-            }
+        '锁定映射建议，添加到 service 配置',
+        {
+          guardConfig: {
+            methodUrl2OperationIdMap: suggestions
           }
-        ]
+        }
+      ]
       : []
   };
 }
