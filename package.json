@@ -1,6 +1,6 @@
 {
   "name": "auto-service",
-  "version": "3.6.3",
+  "version": "4.0.0",
   "description": "auto generate swagger or yapi mock to typescript services and models",
   "repository": "git@github.com:gogoyqj/auto-service.git",
   "author": "杨乾军 <yang@yang>",
@@ -44,7 +44,7 @@
     "open": "^7.0.0",
     "recursive-readdir": "^2.2.2",
     "request": "^2.88.0",
-    "tslib": "^1.9.3"
+    "tslib": "^2.3.1"
   },
   "devDependencies": {
     "@types/body-parser": "^1.17.1",
@@ -63,20 +63,23 @@
     "@types/react": "^16.9.17",
     "@types/recursive-readdir": "^2.2.0",
     "@types/request": "^2.48.1",
-    "@typescript-eslint/eslint-plugin": "^1.13.0",
-    "@typescript-eslint/parser": "^1.13.0",
+    "@typescript-eslint/eslint-plugin": "2",
+    "@typescript-eslint/parser": "2",
     "babel-jest": "^24.7.1",
     "docz": "^1.2.0",
     "docz-theme-default": "^1.2.0",
     "eslint": "^5.16.0",
-    "eslint-config-prettier": "^4.3.0",
-    "eslint-plugin-prettier": "^3.0.1",
+    "eslint-config-prettier": "^5.1.0",
+    "eslint-plugin-prettier": "^3.1.2",
     "husky": "^1.3.1",
     "jest": "^24.9.0",
     "lint-staged": "^8.1.5",
     "prettier": "^1.19.1",
     "ts-jest": "^24.0.2",
-    "typescript": "^3.7.4",
+    "typescript": "^4",
     "validate-commit-msg": "^2.14.0"
+  },
+  "peerDependencies": {
+    "typescript": "*"
   }
 }

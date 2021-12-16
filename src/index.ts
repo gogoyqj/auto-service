@@ -34,6 +34,8 @@ export default async function gen(
     apis?: boolean;
     /** 生成 TypeScript Data File，可以指定文件名 */
     typeScriptDataFile?: string | boolean;
+    /** 打印调试信息 */
+    debug?: boolean;
   }
 ): Promise<number> {
   const {
@@ -44,6 +46,9 @@ export default async function gen(
     requestConfig = {},
     swaggerConfig = {}
   } = config;
+  if (options.debug) {
+    process.env.__AUTOS__DEBUG__ = 'true';
+  }
   if (!url || url.match(RemoteUrlReg)) {
     console.log(chalk.red(`[ERROR]: 自 @3.1.* url 必须是本地地址`));
     throw 1;
@@ -81,12 +86,6 @@ export default async function gen(
     });
   };
   const swagger2tsConfig = { ...defaultParseConfig, ...swaggerParser };
-  if (
-    swagger2tsConfig['-t'] === 'plugins/types-only' ||
-    swagger2tsConfig['-t'] === 'plugins/typescript-tkit-autos'
-  ) {
-    swagger2tsConfig['-t'] = path.join(pluginsPath, '..', swagger2tsConfig['-t']);
-  }
   const servicesPath = swagger2tsConfig['-o'] || '';
   // IMP: 加载新版
   const code: number = await new Promise(rs => {
@@ -150,6 +149,23 @@ export default async function gen(
     }
   }
 
+  let useV3 = !!swaggerData.openapi?.match(/^3./);
+
+  // OpenAPI Version unmatch Generator Version
+  if (useV3 && !swagger2tsConfig['-t']?.match(/^v3/)) {
+    throw `[ERROR] 当前Swagger 版本是 OpenAPI ${swaggerData.openapi}，请将 "-t" 配置为 "v3/plugins/typescript-tkit" 或者 "v3/plugins/typescript-tkit-autos" 或者 "v3/plugins/types-only"`;
+  }
+
+  if (swagger2tsConfig['-t'] && !path.isAbsolute(swagger2tsConfig['-t']!)) {
+    if (!useV3) useV3 = !!swagger2tsConfig['-t']?.match(/^v3/);
+    swagger2tsConfig['-t'] = path.join(
+      pluginsPath,
+      '..',
+      useV3 ? 'plugins' : '',
+      swagger2tsConfig['-t']
+    );
+  }
+
   // IMP: 风险校验
   const { errors, warnings: w, suggestions } = await operationIdGuard(swaggerData, guardConfig);
   warnings.push(...w);
@@ -197,7 +213,12 @@ export default async function gen(
     }
   }
 
-  const res = await swagger2ts({ ...swagger2tsConfig, '-i': swaggerPath }, envs, swaggerConfig);
+  const res = await swagger2ts(
+    { ...swagger2tsConfig, '-i': swaggerPath },
+    envs,
+    swaggerConfig,
+    useV3
+  );
   if (res.code) {
     throw `[ERROR]: gen failed with: ${res.message}`;
   } else {

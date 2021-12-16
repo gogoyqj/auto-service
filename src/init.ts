@@ -9,6 +9,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import * as crypto from 'crypto';
+import chalk from 'chalk';
 
 export const pluginsPath = path.join(__dirname, '..', 'plugins');
 export const generatorPath = path.join(pluginsPath, 'swagger-codegen-cli.jar');
@@ -27,3 +28,9 @@ export const basePathToFileName = (path?: string) => {
 if (!fs.existsSync(SmTmpDir)) {
   fs.mkdirSync(SmTmpDir);
 }
+
+export const DebugLog = (message: string) => {
+  if (process.env.__AUTOS__DEBUG__) {
+    console.log(chalk.yellow(`[Debug]: ${message}`));
+  }
+};

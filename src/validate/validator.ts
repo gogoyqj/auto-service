@@ -108,7 +108,7 @@ export function getParamSchema(parameters: PathJson['parameters'] = []) {
         // object 通过 required 字段来约束必选字段
         if (required) {
           cur.required = cur.required || [];
-          cur.required.push(name);
+          (cur.required as string[]).push(name);
         }
       }
     }

@@ -1,45 +1,50 @@
 import { exec } from 'child_process';
 import * as path from 'path';
 import * as fs from 'fs-extra';
-import { promisify } from 'es6-promisify';
 import chalk from 'chalk';
 import recursive from 'recursive-readdir';
 import { SwaggerParser, Json2Service } from './consts';
-import { generatorPath, SmTmpDir } from './init';
+import { generatorPath, SmTmpDir, pluginsPath, DebugLog } from './init';
 
-// IMP: fix max stdout buffer, about 9G
-const wrappedExec = (url: string, cb?: () => any) => exec(url, { maxBuffer: 10000000000 }, cb);
-wrappedExec[promisify.argumentNames] = ['error', 'stdout', 'stderr'];
 const asyncExec = (cmd: string) =>
   // promisify类型编写错误
-  promisify(wrappedExec as (cmd: string) => any)(cmd).then(
+  new Promise((rs, rj) => {
+    exec(cmd, { maxBuffer: 10000000000 }, (error, stdout, stderr) => {
+      DebugLog(`exec ${cmd}`);
+      DebugLog(`exec with + ${error}`);
+      DebugLog(`exec stdout ${stdout}`);
+      DebugLog(`exec stderr ${stderr}`);
+      if (error) {
+        rj(error);
+      } else {
+        rs({
+          error,
+          stdout,
+          stderr
+        });
+      }
+    });
+  }).then(
     (res: { error: string; stdout: string; stderr: string }) =>
       res.error ? { code: 1, message: res.stderr || res.error } : { code: 0, message: res.stdout },
     err => ({ code: 1, message: err.message })
   );
 
-/** 调用 jar，swagger => ts */
-export default async function swagger2ts(
-  swaggerParser: SwaggerParser,
-  envs: string[] = [],
-  swaggerConfig: Json2Service['swaggerConfig'] = {}
-): Promise<{ code: number; message?: string }> {
-  const java = await checkJava();
-  if (java.code) {
-    console.log(chalk.red(`[ERROR]: check java failed with ${java.message}`));
-    return java;
-  }
-  return await parseSwagger(swaggerParser, envs, swaggerConfig);
-}
-
 async function checkJava() {
   return await asyncExec('java -version');
 }
 
+const cmdV3 = `-cp ${pluginsPath}/v3/myClientCodegen-swagger-codegen-1.0.0.jar${
+  process.platform === 'darwin' ? ':' : ';'
+}${pluginsPath}/v3/swagger-codegen-cli.jar io.swagger.codegen.v3.cli.SwaggerCodegen`;
+const cmdV2 = `-jar ${generatorPath}`;
+
+/** OpenAPI 2 */
 async function parseSwagger(
   config: SwaggerParser,
   envs: string[] = [],
-  swaggerConfig: Json2Service['swaggerConfig'] = {}
+  swaggerConfig: Json2Service['swaggerConfig'] = {},
+  cmd = cmdV2
 ) {
   const { '-i': input, '-o': output } = config;
   const { formater } = swaggerConfig;
@@ -63,10 +68,10 @@ async function parseSwagger(
       () =>
         asyncExec(
           `java${
-          envs.length ? ` ${envs.map(v => `-D${v}`).join(' ')}` : ''
-          } -jar ${generatorPath} generate ${Object.keys(config)
+            envs.length ? ` ${envs.map(v => `-D${v}`).join(' ')}` : ''
+          } ${cmd} generate ${Object.keys(config)
             .map(opt => `${opt} ${opt === '-o' ? tmpServicePath : config[opt]}`)
-            .join(' ')}`
+            .join(' ')} `
         ),
       e => e
     )
@@ -100,7 +105,7 @@ async function parseSwagger(
             (err, files) => {
               if (err) {
                 rj({
-                  message: `访问输出目录 ${output} 失败\n错误信息：${err}`
+                  message: `访问输出目录 ${output} 失败\n错误信息：${err} `
                 });
               } else {
                 files.forEach(file => {
@@ -119,7 +124,7 @@ async function parseSwagger(
           (err, files) => {
             if (err) {
               rj({
-                message: `访问临时目录 ${tmpServicePath} 失败\n错误信息：${err}`
+                message: `访问临时目录 ${tmpServicePath} 失败\n错误信息：${err} `
               });
             } else {
               files.forEach(tmpFile => {
@@ -131,18 +136,18 @@ async function parseSwagger(
                 if (fs.existsSync(outputFile)) {
                   const content = fs.readFileSync(tmpFile, { encoding: 'utf-8' });
                   if (fs.readFileSync(outputFile, { encoding: 'utf-8' }) !== content) {
-                    console.log(chalk.white(`[LOG]: 更新 ${outputFile}`));
+                    console.log(chalk.white(`[LOG]: 更新 ${outputFile} `));
                     fs.writeFileSync(outputFile, content, { encoding: 'utf-8', flag: 'w' });
                   }
                 } else {
-                  console.log(chalk.white(`[LOG]: 拷贝 ${outputFile}`));
+                  console.log(chalk.white(`[LOG]: 拷贝 ${outputFile} `));
                   fs.ensureDirSync(path.dirname(outputFile));
                   fs.copySync(tmpFile, outputFile);
                 }
               });
               Object.keys(oldFilesSet).forEach(file => {
                 const oldFile = path.join(output!, file);
-                console.log(chalk.white(`[LOG]: 删除 ${oldFile}`));
+                console.log(chalk.white(`[LOG]: 删除 ${oldFile} `));
                 fs.existsSync(oldFile) && fs.unlinkSync(oldFile);
               });
               fs.existsSync(tmpServicePath) && fs.removeSync(tmpServicePath);
@@ -154,6 +159,26 @@ async function parseSwagger(
     })
     .catch(e => ({
       code: 6,
-      message: `[ERROR]: gen failed from\n ${config['-i']} with\n ${e.message}`
+      message: `[ERROR]: gen failed from\n ${config['-i']} with\n ${e.message} `
     }));
+}
+
+/** OpenAPI 3 */
+export const parserOpenAPI3: typeof parseSwagger = async (config, envs, swaggerConfig) => {
+  return parseSwagger({ ...config, ['-l']: 'myClientCodegen' }, envs, swaggerConfig, cmdV3);
+};
+
+/** 调用 jar，swagger => ts */
+export default async function swagger2ts(
+  swaggerParser: SwaggerParser,
+  envs: string[] = [],
+  swaggerConfig: Json2Service['swaggerConfig'] = {},
+  useV3 = false
+): Promise<{ code: number; message?: string }> {
+  const java = await checkJava();
+  if (java.code) {
+    console.log(chalk.red(`[ERROR]: check java failed with ${java.message}`));
+    return java;
+  }
+  return await (useV3 ? parserOpenAPI3 : parseSwagger)(swaggerParser, envs, swaggerConfig);
 }

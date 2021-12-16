@@ -1,4 +1,5 @@
 import * as _ from 'lodash';
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import ejs from 'easy-json-schema'; // @fix module.exports = ejs;
 import { JSONSchema6 } from 'json-schema';

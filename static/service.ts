@@ -1,11 +1,9 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /**
  * @description 增量更新操作界面逻辑
  */
 
-// @ts-ignore service.ts 编译规则和 src 不一致
 // eslint-disable-next-line prettier/prettier
-declare let  jsondiffpatch: any;
+declare let jsondiffpatch: any;
 /** 差异 */
 declare let delta: any;
 /** 当前 swagger 版本 */

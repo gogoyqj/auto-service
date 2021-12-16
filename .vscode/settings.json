@@ -1,5 +1,19 @@
 {
   "editor.formatOnSave": true,
   "editor.tabSize": 2,
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "[javascript]": {
+    "editor.formatOnSave": false
+  },
+  "[javascriptreact]": {
+    "editor.formatOnSave": false
+  },
+  "[typescript]": {
+    "editor.formatOnSave": false
+  },
+  "[typescriptreact]": {
+    "editor.formatOnSave": false
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  }
 }

@@ -28,6 +28,7 @@ commander
     '是否仅生成 TypeScript Type Data，可用于完全自定义生成逻辑',
     undefined
   )
+  .option('--debug [boolean]', '是否打印调试信息', undefined)
   .parse(process.argv);
 
 const Config = commander.config as string;
@@ -44,8 +45,8 @@ if (!fs.existsSync(ConfigFile)) {
 } else {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const config: Json2Service = require(ConfigFile);
-  const { clear, quiet, typeScriptDataFile, apis, models } = commander;
-  gen(config, { clear, quiet, typeScriptDataFile, apis, models })
+  const { clear, quiet, typeScriptDataFile, apis, models, debug } = commander;
+  gen(config, { clear, quiet, typeScriptDataFile, apis, models, debug })
     .then(() => {
       process.exit(0);
     })

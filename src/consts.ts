@@ -5,6 +5,21 @@ import { CoreOptions } from 'request';
 import { YApiCategory } from './yapi/yapiJSon2swagger';
 
 export type SMSchema = JSONSchema4 | JSONSchema6;
+export type RequestBodyType = (
+  | 'application/json'
+  | 'application/xml'
+  | 'text/plain'
+  | 'application/x-www-form-urlencoded'
+) & {};
+export type RequestBody = {
+  required?: boolean;
+  description?: string;
+  content: {
+    [type in RequestBodyType]: {
+      schema: SMSchema;
+    };
+  };
+};
 
 /** swagger path item 数据结构定义 */
 export interface PathJson {
@@ -22,6 +37,8 @@ export interface PathJson {
     schema?: SMSchema;
     format?: any;
   }[];
+  /** OpenAPI v3 */
+  requestBody?: RequestBody;
   responses: {
     [status: number]: {
       description?: string;
@@ -34,6 +51,7 @@ export interface PathJson {
 export interface SwaggerJson {
   __mtime?: any;
   swagger?: string;
+  openapi?: string;
   info?: any;
   tags?: {
     name?: string;
