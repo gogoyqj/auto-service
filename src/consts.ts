@@ -200,7 +200,21 @@ export interface Json2Service {
 export interface SwaggerParser {
   /** 输出 typescript 代码目录，默认是当前 src/services */
   '-o'?: string;
-  /** 模板目录，默认是 plugins/typescript-tkit，避免修改；配置成 plugins/types-only 仅输出类型；配置成 plugins/typescript-tkit-autos 输出新调用方式格式接口 */
+  /**
+   * 模板目录
+   * ========== 以下适用于 OpenAPI 2 ==========
+   * 默认是 plugins/typescript-tkit 输出类型和 Service 代码；
+   * 可配置成 plugins/types-only 仅输出类型；
+   * 可配置成 plugins/typescript-tkit-autos 输出新调用方式格式接口；
+   *
+   * ========== 以下适用于 OpenAPI 3 ==========
+   * 可配置成 v3/plugins/typescript-tkit 输出类型和 Service 代码；
+   * 可配置成 v3/plugins/types-only 仅输出类型；
+   * 可配置成 v3/plugins/typescript-tkit-autos 输出新调用方式格式接口；
+   *
+   * @type 'plugins/typescript-tkit' | 'plugins/types-only' | 'plugins/typescript-tkit-autos' | 'v3/plugins/typescript-tkit' | 'v3/plugins/types-only' | 'v3/plugins/typescript-tkit-autos'
+   *
+   * */
   '-t'?: string;
   /** language，默认是 typescript-angularjs，避免修改  */
   '-l'?: string;

@@ -178,6 +178,15 @@ export default async function gen(
     `${swaggerData.basePath || DefaultBasePath}`
   )}.json`;
   const swaggerPath = path.join(SmTmpDir, swaggerFileName);
+
+  // 更友好的支持 path params
+  if (!swagger2tsConfig['-t']?.match(/typescript-tkit-autos/)) {
+    swaggerData.paths = Object.keys(swaggerData.paths).reduce((paths, p) => {
+      paths[p.replace(/{[^}]+}/g, all => `$${all}`)] = swaggerData?.paths[p]!;
+      return paths;
+    }, {} as typeof swaggerData.paths);
+  }
+
   // IMP: exclude 在 diff 之后，生成之前
   fs.writeFileSync(swaggerPath, JSON.stringify(pathsFilter(swaggerData, swaggerConfig)), {
     encoding: 'utf8'

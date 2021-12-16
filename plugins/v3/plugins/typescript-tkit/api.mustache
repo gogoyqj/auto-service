@@ -42,11 +42,11 @@ export class {{classname}} {
 {{#hasPathParams}}
     const {
 {{#pathParams}}
-    {{paramName}},
+    {{paramName}}{{^@last}},{{/@last}}
 {{/pathParams}}
 } = params;
 {{/hasPathParams}}
-    const url = `{{{path}}}`;
+    const url = this.$basePath + `{{{path}}}`;;
     const p: any = {};
 {{#hasQueryParams}}
     p.query = {};

@@ -40,9 +40,14 @@ export class {{classname}} {
     {{#allParams.0}}{{^hasOnlyBodyParams}}params: Params{{nickname}},{{/hasOnlyBodyParams}}{{/allParams.0}}
     {{#bodyParam}}data: ParamsBody{{nickname}},{{/bodyParam}}opt?: {{^headerParams.0}}ExtraFetchParams{{/headerParams.0}}{{#headerParams.0}}{ headers: ParamsHeader{{nickname}} } & Omit<ExtraFetchParams, 'headers'> {{/headerParams.0}}
   ) : AjaxPromise<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}{}{{/returnType}}>  => {
-    const path = '{{{path}}}';
-    const url = this.$basePath + path{{#pathParams.0}}
-      .replace(/(({[^}]+})|(:[^/:]+$)|(:[^:/]+))/g, all => (params[all.replace(/[:{}]/g, '')] || '')){{/pathParams.0}};
+{{#hasPathParams}}
+    const {
+{{#pathParams}}
+    {{paramName}}{{^@last}},{{/@last}}
+{{/pathParams}}
+} = params;
+{{/hasPathParams}}
+    const url = this.$basePath + `{{{path}}}`;
     const p: any = {};
 {{#queryParams.0}}
     p.query = {};
