@@ -5,6 +5,21 @@ import { CoreOptions } from 'request';
 import { YApiCategory } from './yapi/yapiJSon2swagger';
 
 export type SMSchema = JSONSchema4 | JSONSchema6;
+export type RequestBodyType = (
+  | 'application/json'
+  | 'application/xml'
+  | 'text/plain'
+  | 'application/x-www-form-urlencoded'
+) & {};
+export type RequestBody = {
+  required?: boolean;
+  description?: string;
+  content: {
+    [type in RequestBodyType]: {
+      schema: SMSchema;
+    };
+  };
+};
 
 /** swagger path item 数据结构定义 */
 export interface PathJson {
@@ -22,6 +37,8 @@ export interface PathJson {
     schema?: SMSchema;
     format?: any;
   }[];
+  /** OpenAPI v3 */
+  requestBody?: RequestBody;
   responses: {
     [status: number]: {
       description?: string;
@@ -34,6 +51,7 @@ export interface PathJson {
 export interface SwaggerJson {
   __mtime?: any;
   swagger?: string;
+  openapi?: string;
   info?: any;
   tags?: {
     name?: string;
@@ -182,7 +200,21 @@ export interface Json2Service {
 export interface SwaggerParser {
   /** 输出 typescript 代码目录，默认是当前 src/services */
   '-o'?: string;
-  /** 模板目录，默认是 plugins/typescript-tkit，避免修改；配置成 plugins/types-only 仅输出类型；配置成 plugins/typescript-tkit-autos 输出新调用方式格式接口 */
+  /**
+   * 模板目录
+   * ========== 以下适用于 OpenAPI 2 ==========
+   * 默认是 plugins/typescript-tkit 输出类型和 Service 代码；
+   * 可配置成 plugins/types-only 仅输出类型；
+   * 可配置成 plugins/typescript-tkit-autos 输出新调用方式格式接口；
+   *
+   * ========== 以下适用于 OpenAPI 3 ==========
+   * 可配置成 v3/plugins/typescript-tkit 输出类型和 Service 代码；
+   * 可配置成 v3/plugins/types-only 仅输出类型；
+   * 可配置成 v3/plugins/typescript-tkit-autos 输出新调用方式格式接口；
+   *
+   * @type 'plugins/typescript-tkit' | 'plugins/types-only' | 'plugins/typescript-tkit-autos' | 'v3/plugins/typescript-tkit' | 'v3/plugins/types-only' | 'v3/plugins/typescript-tkit-autos'
+   *
+   * */
   '-t'?: string;
   /** language，默认是 typescript-angularjs，避免修改  */
   '-l'?: string;

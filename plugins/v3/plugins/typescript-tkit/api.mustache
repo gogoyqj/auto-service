@@ -1,0 +1,109 @@
+{{>licenseInfo}}
+import ajax, { AjaxPromise, ExtraFetchParams } from '@ajax';
+{{#imports}}
+import { {{import}} } from '../{{modelPackage}}/{{import}}';
+{{/imports}}
+/* tslint:disable:no-unused-variable member-ordering object-literal-shorthand */
+
+{{#operations}}
+{{>params}}
+{{#description}}
+/**
+ * @description {{&description}}
+ */
+{{/description}}
+export class {{classname}} {
+  protected $basePath = '{{{contextPath}}}'.replace(/\/$/, '');
+
+  public constructor(basePath?: string) {
+    if (basePath !== undefined) {
+      this.$basePath = basePath.replace(/\/$/, '');
+    }
+  }
+
+{{#operation}}
+  /**
+   * {{&notes}}
+   {{#summary}}
+   * @summary {{&summary}}
+   {{/summary}}
+   {{#description}}
+   * @description {{&description}}
+   {{/description}}
+   {{#hasParams}}{{^hasOnlyBodyParams}}* @param params Params{{nickname}}{{/hasOnlyBodyParams}}{{/hasParams}}
+   {{#bodyParam}}* @param data: ParamsBody{{nickname}}{{#description}}// {{&description}}{{/description}}{{/bodyParam}}
+   * @param opt ajax config
+   * @returns {{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}{}{{/returnType}}
+   */
+  public {{nickname}} = (
+    {{#hasParams}}{{^hasOnlyBodyParams}}params: Params{{nickname}},{{/hasOnlyBodyParams}}{{/hasParams}}{{#bodyParam}}data: ParamsBody{{nickname}},{{/bodyParam}}
+    opt?: {{^hasHeaderParams}}ExtraFetchParams{{/hasHeaderParams}}{{#headerParams.0}}{ headers: ParamsHeader{{nickname}} } & Omit<ExtraFetchParams, 'headers'>{{/headerParams.0}}
+  ): AjaxPromise<{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}{}{{/returnType}}> => {
+{{#hasPathParams}}
+    const {
+{{#pathParams}}
+    {{paramName}}{{^@last}},{{/@last}}
+{{/pathParams}}
+} = params;
+{{/hasPathParams}}
+    const url = this.$basePath + `{{{path}}}`;;
+    const p: any = {};
+{{#hasQueryParams}}
+    p.query = {};
+{{#queryParams}}
+    if ('{{paramName}}' in params) p.query.{{paramName}} = params.{{paramName}};
+    {{#required}}
+    ajax.check(params.{{paramName}}, '{{paramName}}');
+    {{/required}}
+{{/queryParams}}
+{{/hasQueryParams}}
+{{#pathParams}}
+    {{#required}}
+    ajax.check(params.{{paramName}}, '{{paramName}}');
+    {{/required}}
+{{/pathParams}}
+{{#hasFormParams}}
+    {{#isFile}}
+    p.form = new FormData();
+    {{/isFile}}
+    {{^isFile}}
+    p.form = {};
+    {{/isFile}}
+{{#formParams}}
+    {{#isFile}}
+    // 上传文件
+    opt = {
+      ...opt,
+      headers: {
+        ...(opt && opt.headers),
+        'Content-Type': 'multipart/form-data'
+      }
+    };
+    // p.form = new FormData();
+    if ('{{paramName}}' in params) p.form.append('{{baseName}}', params.{{paramName}});
+    {{/isFile}}
+    {{^isFile}}
+    if ('{{paramName}}' in params) p.form.{{paramName}} = params.{{paramName}};
+    {{/isFile}}
+    {{#required}}
+    ajax.check(params.{{paramName}}, '{{paramName}}');
+    {{/required}}
+{{/formParams}}
+{{/hasFormParams}}
+{{#bodyParam}}
+    p.data = data;
+    {{#required}}
+    ajax.check(data, 'body.{{paramName}}');
+    {{/required}}
+{{/bodyParam}}
+    return ajax.ajax({
+      ...opt,
+      method: '{{httpMethod}}',
+      url,
+      ...p
+    });
+  }{{/operation}}
+}
+{{/operations}}
+
+export default new {{classname}}();

@@ -72,7 +72,7 @@ export async function serveDiff<J extends {}>(curVersion: J, newVersion: J) {
             result: delta
           });
         });
-        app.post('/patch', bodyParser.json(), (req, res) => {
+        app.post('/patch', bodyParser.json({ limit: '800MB' }), (req, res) => {
           const { keys, version, unkeys } = req.body as {
             keys: string[][];
             unkeys: string[][];
