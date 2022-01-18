@@ -15,7 +15,11 @@ import chalk from 'chalk';
 import { StaticDir } from '../consts';
 import { diffAndPatch } from './diff';
 
-export async function serveDiff<J extends {}>(curVersion: J, newVersion: J) {
+export async function serveDiff<J extends {}>(
+  curVersion: J,
+  newVersion: J,
+  hostname = '127.0.0.1'
+) {
   return await detect(3007).then(port => {
     return new Promise<typeof curVersion | undefined>(resolve => {
       const { selectDelta, patch, delta } = diffAndPatch(curVersion, newVersion);
@@ -104,7 +108,7 @@ export async function serveDiff<J extends {}>(curVersion: J, newVersion: J) {
           }
         });
         server = app.listen(port, () => {
-          const url = `http://127.0.0.1:${port}/`;
+          const url = `http://${hostname}:${port}/`;
           console.log(chalk.green(`[INFO]: 打开链接 ${url} 编辑`));
           open(url);
         });

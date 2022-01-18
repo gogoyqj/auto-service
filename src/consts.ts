@@ -173,6 +173,8 @@ export interface Json2Service {
   yapiConfig?: YAPIConfig;
   /** Swagger生成TS代码相关配置 */
   swaggerParser?: SwaggerParser;
+  /** 本地临时服务 hostname，默认 127.0.0.1，可指定为其他 ip 或者 hostname */
+  hostname?: string;
   /** Swagger 配置 */
   swaggerConfig?: {
     /** 排除指定的 path，当 exclude 和 include 冲突时，include 生效，3.5.0 版本会自动清理不再需要的 models 也清理掉 */
