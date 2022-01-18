@@ -70,7 +70,7 @@ export default async function gen(
 
   // IMP: yapi => swagger
   if (type === 'yapi') {
-    const yapiTMP = await serve(remoteSwaggerUrl, config.yapiConfig);
+    const yapiTMP = await serve(remoteSwaggerUrl, config.yapiConfig, config.hostname);
     if ('result' in yapiTMP && yapiTMP.result && !yapiTMP.code) {
       remoteSwaggerUrl = yapiTMP.result;
     } else {
@@ -120,7 +120,7 @@ export default async function gen(
           if (fs.existsSync(localSwaggerUrl) && !options.quiet) {
             // diff and patch
             const localSwagger: SwaggerJson = require(localSwaggerUrl);
-            const merged = await serveDiff<SwaggerJson>(localSwagger, newSwagger);
+            const merged = await serveDiff<SwaggerJson>(localSwagger, newSwagger, config.hostname);
             merged && updateLocalSwagger(merged);
           } else {
             updateLocalSwagger(newSwagger);

@@ -31,7 +31,8 @@ async function download(url: string) {
 
 export default async function serve(
   url: string,
-  yapiConfig: Json2Service['yapiConfig']
+  yapiConfig: Json2Service['yapiConfig'],
+  hostname = '127.0.0.1'
 ): Promise<{ code: number; message?: string; result?: string }> {
   const yapiJSON = url.match(/^http/g) ? await download(url) : { code: 0, result: require(url) };
   let swagger: {};
@@ -52,7 +53,7 @@ export default async function serve(
   if (yapiJSON.code) {
     return Promise.resolve({ code: yapiJSON.code, message: yapiJSON.message });
   }
-  let tmpServeUrl = 'http://127.0.0.1';
+  let tmpServeUrl = `http://${hostname}`;
   return await detectPort(3721).then(
     port => {
       tmpServeUrl = `${tmpServeUrl}:${port}`;
