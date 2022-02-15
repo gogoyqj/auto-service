@@ -8,7 +8,7 @@
 
 export default {
   title: 'Autos',
-  base: '/auto-service/',
+  base: '/',
   files: '**/*.{md,mdx}',
   typescript: true,
   dest: 'docs',
