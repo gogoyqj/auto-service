@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import * as path from 'path';
 import * as fs from 'fs';
+import * as fsX from 'fs-extra';
 import * as request from 'request';
 import chalk from 'chalk';
 
@@ -50,7 +51,7 @@ export default async function gen(
     process.env.__AUTOS__DEBUG__ = 'true';
   }
   if (!url || url.match(RemoteUrlReg)) {
-    console.log(chalk.red(`[ERROR]: 自 @3.1.* url 必须是本地地址`));
+    console.log(chalk.red(`[ERROR]: 配置文件内 url 属性指向的 swagger 地址必须是本地文件路径`));
     throw 1;
   }
   /** 当前版本 */
@@ -97,7 +98,10 @@ export default async function gen(
                 ...requestConfig,
                 url: remoteSwaggerUrl
               },
-              (err, res) => cb(err, { body: JSON.parse(res.body) })
+              (err, res) =>
+                cb(!res ? `从 ${remoteSwaggerUrl} 获取接口文档失败，请检查配置文件` : err, {
+                  body: res && JSON.parse(res.body)
+                })
             )
           : cb(undefined, { body: require(remoteSwaggerUrl) as SwaggerJson })
         : cb(undefined, {});
@@ -108,7 +112,7 @@ export default async function gen(
         rs(1);
       } else {
         if (!fs.existsSync(servicesPath)) {
-          fs.mkdirSync(servicesPath);
+          fsX.ensureDirSync(servicesPath);
         }
         if (newSwagger) {
           // TODO: exclude 最终还是决定放到 diff 之后，生成之前

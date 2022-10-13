@@ -177,7 +177,11 @@ export default async function swagger2ts(
 ): Promise<{ code: number; message?: string }> {
   const java = await checkJava();
   if (java.code) {
-    console.log(chalk.red(`[ERROR]: check java failed with ${java.message}`));
+    console.log(
+      chalk.red(
+        `[ERROR]: 未检测到 Java ${java.message}，请从 https://www.java.com/en/download/manual.jsp 下载并安装`
+      )
+    );
     return java;
   }
   return await (useV3 ? parserOpenAPI3 : parseSwagger)(swaggerParser, envs, swaggerConfig);

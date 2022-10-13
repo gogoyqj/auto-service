@@ -5,13 +5,14 @@ import commander from 'commander'; // @fix no import * https://github.com/micros
 import chalk from 'chalk';
 import { Json2Service, ProjectDir } from './consts';
 import gen from './index';
+import initConfig from './initConfig';
 
 const defaultConfig = 'json2service.json';
 
 commander
+  .name(require('../package.json').name)
   .version(require('../package.json').version)
   .option('-c, --config [path]', '配置文件', defaultConfig)
-  .option('--clear', '【废弃】删除之前生成的 Service 代码 ', false)
   .option('--quiet', '自动合并（全量覆盖），不弹窗提示冲突', false)
   .option(
     '--apis [boolean]',
@@ -29,29 +30,39 @@ commander
     undefined
   )
   .option('--debug [boolean]', '是否打印调试信息', undefined)
+  .option('--init [string]', '在当前目录下创建配置文件，默认是 json2service.js', undefined)
+  .option('--clear', '【废弃】删除之前生成的 Service 代码 ', false)
   .parse(process.argv);
 
 const Config = commander.config as string;
 let ConfigFile = path.join(ProjectDir, Config);
+const { clear, quiet, typeScriptDataFile, apis, models, debug, init } = commander;
+
 if (!fs.existsSync(ConfigFile)) {
   ConfigFile = ConfigFile.replace(/\.json/g, '.js');
 }
-if (!fs.existsSync(ConfigFile)) {
+if (!init && !fs.existsSync(ConfigFile)) {
   console.log(
     chalk.red(
-      `[ERROR]: ${Config} or ${Config.replace(/\.json/g, '.js')} not found in ${ProjectDir}`
+      `[ERROR]: 在 ${ProjectDir} 目录下，未发现配置文件 ${Config} or ${Config.replace(
+        /\.json/g,
+        '.js'
+      )}`
     )
   );
 } else {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const config: Json2Service = require(ConfigFile);
-  const { clear, quiet, typeScriptDataFile, apis, models, debug } = commander;
-  gen(config, { clear, quiet, typeScriptDataFile, apis, models, debug })
-    .then(() => {
-      process.exit(0);
-    })
-    .catch(e => {
-      console.log(chalk.red(e));
-      process.exit(1);
-    });
+  if (init) {
+    initConfig(init === true ? 'json2service.js' : init);
+  } else {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const config: Json2Service = require(ConfigFile);
+    gen(config, { clear, quiet, typeScriptDataFile, apis, models, debug })
+      .then(() => {
+        process.exit(0);
+      })
+      .catch(e => {
+        console.log(chalk.red(e));
+        process.exit(1);
+      });
+  }
 }
