@@ -1,7 +1,9 @@
-import { SwaggerJson } from 'src/consts';
+/* eslint-disable no-console */
 import chalk from 'chalk';
 import { getExplicitModelDeps, resolveModelDeps } from './getModelDeps';
+import { SwaggerJson } from '../consts';
 
+/** filter paths and clear models by the way */
 export default function pathsFilter(
   newSwagger: SwaggerJson,
   swaggerConfig: {
@@ -11,7 +13,6 @@ export default function pathsFilter(
     includeModels?: RegExp[];
   }
 ) {
-  // 支持过滤掉某些特定的规则
   const { exclude, include, includeModels, autoClearModels = true } = swaggerConfig;
   if (Array.isArray(exclude) || Array.isArray(include)) {
     const { paths, definitions = {} } = newSwagger;
@@ -19,7 +20,7 @@ export default function pathsFilter(
     newSwagger.paths = Object.keys(paths).reduce<typeof paths>((newPaths, url) => {
       const included = include?.find(reg => url.match(reg));
       const excluded = exclude?.find(reg => url.match(reg));
-      // 未配置 exclude 但是配置配置了 include
+      // no exclude, include
       if (exclude === undefined && include !== undefined) {
         if (included) {
           newPaths[url] = paths[url];
@@ -30,20 +31,20 @@ export default function pathsFilter(
         }
       }
       if (url in newPaths && definitions) {
-        // 提取 used model
+        // obtain model in need
         resolveModelDeps(getExplicitModelDeps(paths[url]), definitions, newDefinitions);
       }
       return newPaths;
     }, {});
     if (autoClearModels) {
-      // 清理未被依赖的 model，保留被强制包含的 model
+      // exclude unused models, remain models which explicitly included
       if (newSwagger.definitions) {
         const { definitions } = newSwagger;
         newSwagger.definitions = Object.keys(definitions).reduce<typeof definitions>(
           (newDefs, model) => {
             if (includeModels && includeModels.find(reg => !!model.match(reg))) {
               newDefs[model] = definitions[model];
-              // 提取强制包含的 model 的依赖
+              // obtain deps of models which explicitly included
               getExplicitModelDeps(definitions[model])?.forEach(model => {
                 if (!(model in newDefs)) {
                   newDefs[model] = definitions[model];

@@ -1,6 +1,6 @@
 import { SwaggerJson } from 'src/consts';
 
-/** 从对象里提取所有显式的 model 依赖 */
+/** obtain the dependencies of models rely on #definitions */
 export function getExplicitModelDeps(obj: {} | undefined) {
   return JSON.stringify(obj)
     ?.match(/['"]#\/definitions\/[^"']+/g)
@@ -13,7 +13,7 @@ export function getExplicitModelDeps(obj: {} | undefined) {
     }, []);
 }
 
-/** 提取嵌套依赖 */
+/** obtain dependencies graph */
 export function resolveModelDeps(
   models: string[] = [],
   definitions: SwaggerJson['definitions'] = {},
