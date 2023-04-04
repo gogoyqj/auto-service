@@ -8,10 +8,9 @@
 
 import { IncomingMessage } from 'http';
 import * as React from 'react';
-import { ProxyHandleConfig, SMValidateInfo, SMAjaxConfig, SMAbstractResponse } from '../src/consts';
 
-export class IProxyHandleConfig extends React.Component<ProxyHandleConfig> { }
-export class ISMValidateInfo extends React.Component<SMValidateInfo> { }
-export class ISMAjaxConfig extends React.Component<SMAjaxConfig> { }
-export class ISMAbstractResponse extends React.Component<SMAbstractResponse> { }
-export class IIncomingMessage extends React.Component<IncomingMessage> { }
+export class IProxyHandleConfig extends React.Component<Autos.ProxyHandleConfig> {}
+export class ISMValidateInfo extends React.Component<Autos.SMValidateInfo> {}
+export class ISMAjaxConfig extends React.Component<Autos.SMAjaxConfig> {}
+export class ISMAbstractResponse extends React.Component<Autos.SMAbstractResponse> {}
+export class IIncomingMessage extends React.Component<IncomingMessage> {}

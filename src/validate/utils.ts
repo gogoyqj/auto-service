@@ -1,5 +1,4 @@
 import * as qs from 'qs';
-import { SMAbstractRequest, SMAjaxConfig, SMAbstractResponse, SMValidateInfo } from '../consts';
 
 /** convert a path to RegExp */
 export const pathToReg = (path: string) => {
@@ -42,11 +41,11 @@ export const getPathParams = (pathTpl: string, path: string) => {
 };
 
 /** obtain data from request */
-export const getParams = (req: SMAbstractRequest, pathTpl: string) => {
+export const getParams = (req: Autos.SMAbstractRequest, pathTpl: string) => {
   const { headers, method = '', url: u = '' } = req;
   const [url, search] = u.split('?');
-  const p: SMValidateInfo['send'] = {
-    method: method.toUpperCase() as SMAjaxConfig['method'],
+  const p: Autos.SMValidateInfo['send'] = {
+    method: method.toUpperCase() as Autos.SMAjaxConfig['method'],
     url,
     path: getPathParams(pathTpl, url),
     query: search ? qs.parse(search) : undefined,
@@ -57,7 +56,7 @@ export const getParams = (req: SMAbstractRequest, pathTpl: string) => {
 
 /** obtain a readable data */
 export const getReadableDataAsync = (
-  readble: SMAbstractResponse | SMAbstractRequest
+  readble: Autos.SMAbstractResponse | Autos.SMAbstractRequest
 ): Promise<string> =>
   new Promise((rs, rj) => {
     // TODO:  Buffer() is deprecated

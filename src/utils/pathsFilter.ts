@@ -1,11 +1,10 @@
 /* eslint-disable no-console */
 import chalk from 'chalk';
 import { getExplicitModelDeps, resolveModelDeps } from './getModelDeps';
-import { SwaggerJson } from '../consts';
 
 /** filter paths and clear models by the way */
 export default function pathsFilter(
-  newSwagger: SwaggerJson,
+  newSwagger: Autos.SwaggerJson,
   swaggerConfig: {
     exclude?: RegExp[];
     include?: RegExp[];

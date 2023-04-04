@@ -5,7 +5,7 @@ import * as fsX from 'fs-extra';
 import * as request from 'request';
 import chalk from 'chalk';
 
-import { JSON2Service, SwaggerParser, RemoteUrlReg, ProjectDir, SwaggerJson } from './consts';
+import { RemoteUrlReg, ProjectDir } from './consts';
 import swagger2ts from './swagger2ts';
 import serve from './yapi/serve';
 import { pluginsPath, SmTmpDir, basePathToFileName, DefaultBasePath } from './init';
@@ -13,14 +13,14 @@ import { operationIdGuard, strictModeGuard } from './guard';
 import { serveDiff } from './diff/serve';
 import pathsFilter from './utils/pathsFilter';
 
-const defaultParseConfig: Partial<SwaggerParser> = {
+const defaultParseConfig: Partial<Autos.SwaggerParser> = {
   '-l': 'typescript-angularjs',
   '-t': path.join(pluginsPath, 'typescript-tkit'),
   '-o': path.join(process.cwd(), 'src', 'services')
 };
 /** CLI入口函数 */
 export default async function gen(
-  config: JSON2Service,
+  config: Autos.JSON2Service,
   options: {
     // 自动全量使用远程文档，不显示 diff & merge 页面
     quiet?: boolean;
@@ -81,7 +81,7 @@ export default async function gen(
   }
 
   /** 写入本地版本 */
-  const updateLocalSwagger = (data: SwaggerJson) => {
+  const updateLocalSwagger = (data: Autos.SwaggerJson) => {
     fs.writeFileSync(localSwaggerUrl, data ? JSON.stringify(data, null, 2) : data, {
       encoding: 'utf8'
     });
@@ -90,7 +90,7 @@ export default async function gen(
   const servicesPath = swagger2tsConfig['-o'] || '';
   // IMP: 加载新版
   const code: number = await new Promise(rs => {
-    const loader = (cb: (err: any, res: { body?: SwaggerJson }) => any) => {
+    const loader = (cb: (err: any, res: { body?: Autos.SwaggerJson }) => any) => {
       remoteSwaggerUrl
         ? remoteSwaggerUrl.match(RemoteUrlReg)
           ? request.get(
@@ -103,7 +103,7 @@ export default async function gen(
                   body: res && JSON.parse(res.body)
                 })
             )
-          : cb(undefined, { body: require(remoteSwaggerUrl) as SwaggerJson })
+          : cb(undefined, { body: require(remoteSwaggerUrl) as Autos.SwaggerJson })
         : cb(undefined, {});
     };
     loader(async (err, { body: newSwagger }) => {
@@ -123,8 +123,12 @@ export default async function gen(
           }
           if (fs.existsSync(localSwaggerUrl) && !options.quiet) {
             // diff and patch
-            const localSwagger: SwaggerJson = require(localSwaggerUrl);
-            const merged = await serveDiff<SwaggerJson>(localSwagger, newSwagger, config.hostname);
+            const localSwagger: Autos.SwaggerJson = require(localSwaggerUrl);
+            const merged = await serveDiff<Autos.SwaggerJson>(
+              localSwagger,
+              newSwagger,
+              config.hostname
+            );
             merged && updateLocalSwagger(merged);
           } else {
             updateLocalSwagger(newSwagger);
@@ -140,7 +144,7 @@ export default async function gen(
   // 删除缓存
   delete require.cache[require.resolve(localSwaggerUrl)];
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const swaggerData: SwaggerJson = require(localSwaggerUrl);
+  const swaggerData: Autos.SwaggerJson = require(localSwaggerUrl);
   const guardConfig = config.guardConfig || {};
 
   // IMP: tags 校验

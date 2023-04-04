@@ -1,5 +1,3 @@
-import { SwaggerJson } from 'src/consts';
-
 /** obtain the dependencies of models rely on #definitions */
 export function getExplicitModelDeps(obj: {} | undefined) {
   return JSON.stringify(obj)
@@ -16,8 +14,8 @@ export function getExplicitModelDeps(obj: {} | undefined) {
 /** obtain dependencies graph */
 export function resolveModelDeps(
   models: string[] = [],
-  definitions: SwaggerJson['definitions'] = {},
-  resolvedDeps: SwaggerJson['definitions'] = {}
+  definitions: Autos.SwaggerJson['definitions'] = {},
+  resolvedDeps: Autos.SwaggerJson['definitions'] = {}
 ) {
   models.forEach(model => {
     if (!(model in resolvedDeps)) {

@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as fs from 'fs-extra';
 import Ajv from 'ajv';
-import { SwaggerJson, SMValidator, SMSchema, PathJson, ValidateErrorCode } from '../consts';
+import { ValidateErrorCode } from '../consts';
 import { SmTmpDir, DefaultBasePath, basePathToFileName } from '../init';
 import { pathToReg } from './utils';
 
@@ -11,8 +11,8 @@ const formatSchema = <S extends {}>(schema: S) =>
 /** conctruct ajv by swagger */
 export const getAJV = (() => {
   let inst: Ajv.Ajv;
-  let lastSwagger: SwaggerJson;
-  return (swagger: SwaggerJson) => {
+  let lastSwagger: Autos.SwaggerJson;
+  return (swagger: Autos.SwaggerJson) => {
     if (lastSwagger === swagger && inst) {
       return inst;
     }
@@ -39,11 +39,11 @@ export function getSwagger(basePath: string) {
     `${basePathToFileName(`${basePath || DefaultBasePath}`)}.json`
   );
   if (fs.existsSync(swaggerPath)) {
-    let swagger = require(swaggerPath) as SwaggerJson;
+    let swagger = require(swaggerPath) as Autos.SwaggerJson;
     const state = fs.statSync(swaggerPath);
     if (swagger.__mtime && swagger.__mtime !== state.mtime) {
       delete require.cache[require.resolve(swaggerPath)];
-      swagger = require(swaggerPath) as SwaggerJson;
+      swagger = require(swaggerPath) as Autos.SwaggerJson;
     }
     swagger.__mtime = state.mtime;
     return swagger;
@@ -53,13 +53,13 @@ export function getSwagger(basePath: string) {
 }
 
 /** obtain swagger definitions */
-export function getDefinitions(swagger: SwaggerJson) {
+export function getDefinitions(swagger: Autos.SwaggerJson) {
   const { definitions } = swagger;
   return definitions;
 }
 
 /** obtain api definition by url */
-export function getPath(swagger: SwaggerJson, path: string) {
+export function getPath(swagger: Autos.SwaggerJson, path: string) {
   const { paths } = swagger;
   let matched = paths[path];
   if (!matched) {
@@ -79,15 +79,15 @@ export function getPath(swagger: SwaggerJson, path: string) {
 }
 
 /** convert swagger parameters into schema */
-export function getParamSchema(parameters: PathJson['parameters'] = []) {
-  const paramsSchema: SMSchema = {
+export function getParamSchema(parameters: Autos.PathJson['parameters'] = []) {
+  const paramsSchema: Autos.SMSchema = {
     type: 'object',
     properties: {}
   };
   return parameters.reduce((parentSchema, param) => {
     const { in: paramType = '', schema, name = '', type, required, description, format } = param;
     if (parentSchema.properties) {
-      let cur = parentSchema.properties[paramType] as SMSchema;
+      let cur = parentSchema.properties[paramType] as Autos.SMSchema;
       if (schema) {
         parentSchema.properties[paramType] = formatSchema(schema);
       } else {
@@ -116,12 +116,15 @@ export function getParamSchema(parameters: PathJson['parameters'] = []) {
   }, paramsSchema);
 }
 
-export const validatorFactory = (ajv: Ajv.Ajv) => <D extends {}>(shema: SMSchema, data: D) => {
+export const validatorFactory = (ajv: Ajv.Ajv) => <D extends {}>(
+  shema: Autos.SMSchema,
+  data: D
+) => {
   return ajv.validate(shema, data) ? '' : ajv.errorsText(ajv.errors);
 };
 
 /** built-in validator for input and output of an API specified by swagger */
-export const defaultValidator: SMValidator = async (
+export const defaultValidator: Autos.SMValidator = async (
   { code, message, result },
   { loadSwagger, onValidate, formatBodyBeforeValidate }
 ) => {

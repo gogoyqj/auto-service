@@ -2,32 +2,24 @@
 import * as proxy from 'http-proxy-middleware';
 import * as qs from 'qs';
 import chalk from 'chalk';
-import {
-  SMAbstractRequest,
-  SMAbstractResponse,
-  SMAbstractNext,
-  SMValidateInfo,
-  SMValidator,
-  ProxyHandleConfig
-} from '../consts';
 import { X_SM_PARAMS, X_SM_ERROR } from '../init';
 import { getReadableDataAsync, getParams } from './utils';
 import { defaultValidator } from './validator';
 
 /** inject data for validation */
 export interface CustomIncomingMessage {
-  [X_SM_PARAMS]?: SMValidateInfo['send'];
+  [X_SM_PARAMS]?: Autos.SMValidateInfo['send'];
   [X_SM_ERROR]?: string[] | null;
 }
 
 /**
  * @description validates input data from client to server and output data from server to client through a dev-server middleware
  */
-export function createValidateMiddle(hooks?: SMAbstractNext) {
+export function createValidateMiddle(hooks?: Autos.SMAbstractNext) {
   return async <
-    Req extends SMAbstractRequest,
-    Res extends SMAbstractResponse,
-    Next extends SMAbstractNext
+    Req extends Autos.SMAbstractRequest,
+    Res extends Autos.SMAbstractResponse,
+    Next extends Autos.SMAbstractNext
   >(
     req: Req,
     res: Res,
@@ -44,10 +36,13 @@ export function createValidateMiddle(hooks?: SMAbstractNext) {
 
 /** inject extra data into response */
 export const responseHooksFactory = (
-  cb: (res: Parameters<SMValidator>[0]) => ReturnType<SMValidator>
-) => async (req: SMAbstractRequest & CustomIncomingMessage, res: SMAbstractResponse) => {
+  cb: (res: Parameters<Autos.SMValidator>[0]) => ReturnType<Autos.SMValidator>
+) => async (
+  req: Autos.SMAbstractRequest & CustomIncomingMessage,
+  res: Autos.SMAbstractResponse
+) => {
   const error: string[] = req[X_SM_ERROR] || [];
-  const result: SMValidateInfo = {
+  const result: Autos.SMValidateInfo = {
     req,
     res,
     send: req[X_SM_PARAMS],
@@ -89,11 +84,14 @@ export function proxyHandle(
   /** single or serveral proxy config */
   proxies: proxy.Config[] | proxy.Config,
   /** proxy handle config */
-  config: ProxyHandleConfig
+  config: Autos.ProxyHandleConfig
 ) {
   const { loadSwagger } = config;
   const requestMiddleware = createValidateMiddle(
-    async (req: SMAbstractRequest & CustomIncomingMessage, _res: SMAbstractResponse) => {
+    async (
+      req: Autos.SMAbstractRequest & CustomIncomingMessage,
+      _res: Autos.SMAbstractResponse
+    ) => {
       try {
         const { url: u = '' } = req;
         const [url] = u.split('?');

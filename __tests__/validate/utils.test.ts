@@ -6,7 +6,6 @@ import {
   getParams,
   getReadableDataAsync
 } from 'src/validate/utils';
-import { SMAbstractRequest } from 'src/consts';
 import { Request, mockRequest, testJSON } from '../consts';
 
 describe('validate/utils', () => {
@@ -26,7 +25,7 @@ describe('validate/utils', () => {
   });
 
   it('getParams ok', () => {
-    expect(getParams(Request as SMAbstractRequest, '')).toMatchSnapshot();
+    expect(getParams(Request as Autos.SMAbstractRequest, '')).toMatchSnapshot();
   });
 
   it('getReadableDataAsync ok', async () => {

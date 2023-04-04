@@ -1,14 +1,13 @@
 import * as stream from 'stream';
 import * as qs from 'qs';
-import { SMAbstractRequest, SMAbstractResponse } from 'src/consts';
 
-export const Request: Partial<SMAbstractRequest> = {
+export const Request: Partial<Autos.SMAbstractRequest> = {
   headers: {},
   method: 'get',
   url: '/sm/api/test?t=200'
 };
 
-export const Response: Partial<SMAbstractResponse> = {};
+export const Response: Partial<Autos.SMAbstractResponse> = {};
 
 export const mockReadable = () => {
   const e = new stream.Writable({
@@ -22,9 +21,9 @@ export const mockReadable = () => {
 // @cc: no number in form
 export const testJSON = { id: '2', name: 'yqj' };
 
-export const mockRequest = <H extends {}>(headers: H) => {
+export const mockRequest = <H extends Record<string, any>>(headers: H) => {
   const steam = mockReadable();
-  const req: SMAbstractRequest = steam as any;
+  const req: Autos.SMAbstractRequest = steam as any;
   req.headers = { ...req.headers, ...Request.headers, ...headers };
   setTimeout(() => {
     req.emit(

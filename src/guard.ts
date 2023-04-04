@@ -5,20 +5,18 @@
  *  - 后端变更 http method、url 必须周知前端
  */
 
-import { SwaggerJson, GuardConfig, String2StringMap } from './consts';
-
-type API = SwaggerJson['paths']['a']['get'];
+type API = Autos.SwaggerJson['paths']['a']['get'];
 
 /** Name_1 格式的 operationId */
 export const dangerousOperationIdReg = /_[0-9]{1,}$/g;
-export const defaultPrefixReg: Required<GuardConfig>['prefixReg'] = /^(\/)?api\//g;
-export const defaultBadParamsReg: Required<GuardConfig>['badParamsReg'] = /[^a-z0-9_.[]$]/gi;
+export const defaultPrefixReg: Required<Autos.GuardConfig>['prefixReg'] = /^(\/)?api\//g;
+export const defaultBadParamsReg: Required<Autos.GuardConfig>['badParamsReg'] = /[^a-z0-9_.[]$]/gi;
 
 export interface HttpMethodUrl2APIMap {
   [url: string]: API;
 }
 /** 构建 http method + url : oldOperationId 安全映射，用以校正风险 swagger */
-export function operationIdGuard(swagger: SwaggerJson, config: GuardConfig = {}) {
+export function operationIdGuard(swagger: Autos.SwaggerJson, config: Autos.GuardConfig = {}) {
   const {
     methodUrl2OperationIdMap: savedMethodUrl2OperationIdMap = {},
     mode,
@@ -40,7 +38,7 @@ export function operationIdGuard(swagger: SwaggerJson, config: GuardConfig = {})
   /** 警告日志：根据锁定关系自动校正日志 */
   const warnings: string[] = [];
   /** 自动推断出来的锁定映射关系 */
-  const suggestions: String2StringMap = {};
+  const suggestions: Autos.String2StringMap = {};
   const isSafe = mode === 'safe';
   const isStrict = mode === 'strict';
 
@@ -50,7 +48,7 @@ export function operationIdGuard(swagger: SwaggerJson, config: GuardConfig = {})
       const apiItem = paths[url];
       Object.keys(apiItem).forEach(method => {
         const api = apiItem[method];
-        const { operationId, parameters = [], responses } = api;
+        const { operationId, parameters = [], responses: _res } = api;
         // 参数格式校验
         parameters.forEach(({ name = '', in: pType, description = '', schema }) => {
           if (name.match(badParamsReg)) {
@@ -226,7 +224,7 @@ export function operationIdGuard(swagger: SwaggerJson, config: GuardConfig = {})
               .sort((a, b) => {
                 return -(parseInt(a.split('_')[1]) || 0) + (parseInt(b.split('_')[1]) || 0);
               })
-              .reduce<String2StringMap>((s, id) => {
+              .reduce<Autos.String2StringMap>((s, id) => {
                 s[id] = suggestions[id];
                 s[`Params${id}`] = `Params${s[id]}`;
                 return s;
@@ -252,16 +250,16 @@ export function operationIdGuard(swagger: SwaggerJson, config: GuardConfig = {})
 }
 
 export const DefaultUnstableTagsReg: Required<
-  GuardConfig
+  Autos.GuardConfig
 >['unstableTagsReg'] = /^[a-z-0-9_$A-Z]+-controller$/g;
-export const DefaultValidTagsReg: Required<GuardConfig>['validTagsReg'] = /^[a-z-0-9_$]+$/gi;
+export const DefaultValidTagsReg: Required<Autos.GuardConfig>['validTagsReg'] = /^[a-z-0-9_$]+$/gi;
 export const DefaultValidDefinitionReg: Required<
-  GuardConfig
+  Autos.GuardConfig
 >['validDefinitionReg'] = /^[a-z-0-9_$«»,]+$/gi;
-export const DefaultValidUrlReg: Required<GuardConfig>['validUrlReg'] = /api/g;
+export const DefaultValidUrlReg: Required<Autos.GuardConfig>['validUrlReg'] = /api/g;
 
 /** 严格模式特有校验逻辑 */
-export function strictModeGuard(swagger: SwaggerJson, config: GuardConfig) {
+export function strictModeGuard(swagger: Autos.SwaggerJson, config: Autos.GuardConfig) {
   const { tags = [], definitions = {}, paths, basePath } = swagger;
   const {
     mode,

@@ -3,7 +3,6 @@ import * as path from 'path';
 import * as fs from 'fs-extra';
 import chalk from 'chalk';
 import recursive from 'recursive-readdir';
-import { SwaggerParser, JSON2Service } from './consts';
 import { generatorPath, SmTmpDir, pluginsPath, DebugLog } from './init';
 
 const asyncExec = (cmd: string) =>
@@ -41,9 +40,9 @@ const cmdV2 = `-jar ${generatorPath}`;
 
 /** OpenAPI 2 */
 async function parseSwagger(
-  config: SwaggerParser,
+  config: Autos.SwaggerParser,
   envs: string[] = [],
-  swaggerConfig: JSON2Service['swaggerConfig'] = {},
+  swaggerConfig: Autos.JSON2Service['swaggerConfig'] = {},
   cmd = cmdV2
 ) {
   const { '-i': input, '-o': output } = config;
@@ -172,9 +171,9 @@ export const parserOpenAPI3: typeof parseSwagger = async (config, envs, swaggerC
 
 /** 调用 jar，swagger => ts */
 export default async function swagger2ts(
-  swaggerParser: SwaggerParser,
+  swaggerParser: Autos.SwaggerParser,
   envs: string[] = [],
-  swaggerConfig: JSON2Service['swaggerConfig'] = {},
+  swaggerConfig: Autos.JSON2Service['swaggerConfig'] = {},
   useV3 = false
 ): Promise<{ code: number; message?: string }> {
   const java = await checkJava();

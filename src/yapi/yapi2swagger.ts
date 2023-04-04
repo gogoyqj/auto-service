@@ -2,60 +2,10 @@ import * as _ from 'lodash';
 import ejs from 'easy-json-schema'; // @fix module.exports = ejs;
 import { JSONSchema6 } from 'json-schema';
 import * as JSON5 from 'json5';
-import { PathJson, SwaggerJson, JSON2Service } from '../consts';
-
-export interface YApiCategory {
-  name: string;
-  desc: string;
-  add_time: number;
-  up_time: number;
-  index: number;
-  proBasepath?: string;
-  proName?: string;
-  proDescription?: string;
-  list: YApiItem[];
-}
-
-export interface YApiItem {
-  tag: any[];
-  method: string;
-  title: string;
-  path: string;
-  req_body_other: string;
-  req_body_type: string;
-  res_body_type: string;
-  add_time: number;
-  up_time: number;
-  markdown: string;
-  desc: string;
-  res_body: string;
-  res_schema_body?: string; // 兼容内部定制版本
-  index: number;
-  api_opened: boolean;
-  res_body_is_json_schema: boolean;
-  req_body_form: any[];
-  req_body_is_json_schema: boolean;
-  req_params: any[];
-  req_headers: any[];
-  req_query: any[];
-  query_path: QueryPath;
-  type: string;
-  status: string;
-}
-
-export interface QueryPath {
-  path: string;
-  params: any[];
-}
-
-export interface STag {
-  name?: string;
-  description?: string;
-}
 
 export default function yapiJSON2swagger(
-  yapiList: YApiCategory[],
-  yapiConfig: JSON2Service['yapiConfig'] = {}
+  yapiList: Autos.YApiCategory[],
+  yapiConfig: Autos.JSON2Service['yapiConfig'] = {}
 ) {
   let basePath = '';
   const info = {
@@ -63,7 +13,7 @@ export default function yapiJSON2swagger(
     version: 'last',
     description: 'unknown'
   };
-  const tags: STag[] = [];
+  const tags: Autos.STag[] = [];
   const {
     categoryMap = <T>(s: T) => s,
     bodyJsonRequired,
@@ -87,7 +37,7 @@ export default function yapiJSON2swagger(
     t.name = name;
   });
   const reg = basePath ? new RegExp(`^${basePath}`) : undefined;
-  const swaggerObj: SwaggerJson = {
+  const swaggerObj: Autos.SwaggerJson = {
     swagger: '2.0',
     info,
     basePath,
@@ -96,7 +46,7 @@ export default function yapiJSON2swagger(
       'http' // Only http
     ],
     paths: (() => {
-      const apisObj: SwaggerJson['paths'] = {};
+      const apisObj: Autos.SwaggerJson['paths'] = {};
       for (const category of list) {
         // list of category
         for (const api of category.list) {
@@ -108,7 +58,7 @@ export default function yapiJSON2swagger(
           const method = api.method.toLowerCase();
           apisObj[url][method] = (() => {
             // eslint-disable-next-line @typescript-eslint/no-object-literal-type-assertion
-            const apiItem = {} as PathJson;
+            const apiItem = {} as Autos.PathJson;
             apiItem['tags'] = [category.name];
             apiItem['summary'] = api.title;
             apiItem['description'] = api.markdown;
@@ -241,7 +191,7 @@ export default function yapiJSON2swagger(
                     break;
                 }
               }
-              return paramArray as PathJson['parameters'];
+              return paramArray as Autos.PathJson['parameters'];
             })();
             apiItem['responses'] = {
               '200': {

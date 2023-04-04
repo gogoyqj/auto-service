@@ -1,5 +1,4 @@
 import { createValidateMiddle, responseHooksFactory } from 'src/validate/middleware';
-import { X_SM_PARAMS, SMAbstractRequest, SMAbstractResponse, SMValidateInfo } from 'src/consts';
 import { Request, Response, testJSON, mockRequest } from '../consts';
 
 describe('validate/middleware', () => {
@@ -7,7 +6,11 @@ describe('validate/middleware', () => {
     const hooks = jest.fn();
     const next = jest.fn();
     const middleware = createValidateMiddle(hooks);
-    await middleware(Request as SMAbstractRequest, Response as SMAbstractResponse, next);
+    await middleware(
+      Request as Autos.SMAbstractRequest,
+      Response as Autos.SMAbstractResponse,
+      next
+    );
     expect(hooks).toBeCalledWith(Request, Response);
     expect(next).toBeCalled();
   });
@@ -34,8 +37,8 @@ describe('validate/middleware', () => {
       basePath: '/test/api',
       path: 'test'
     };
-    await middleware(Request as SMAbstractRequest, res as any);
-    const data: { code: number; message: string; result: SMValidateInfo } = {
+    await middleware(Request as Autos.SMAbstractRequest, res as any);
+    const data: { code: number; message: string; result: Autos.SMValidateInfo } = {
       code: 0,
       message: '',
       result: {

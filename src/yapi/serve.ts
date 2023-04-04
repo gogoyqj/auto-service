@@ -3,7 +3,6 @@ import * as http from 'http';
 import * as request from 'request';
 import detectPort from 'detect-port';
 import chalk from 'chalk';
-import { JSON2Service } from '../consts';
 import yapi2swagger from './yapi2swagger';
 
 async function download(url: string) {
@@ -29,12 +28,15 @@ async function download(url: string) {
   });
 }
 
+/** create a tmp server to obtain yapi document and convert it to swagger, then autos cli can download swagger document from the tmp server */
 export default async function serve(
   url: string,
-  yapiConfig: JSON2Service['yapiConfig'],
+  yapiConfig: Autos.JSON2Service['yapiConfig'],
   hostname = '127.0.0.1'
 ): Promise<{ code: number; message?: string; result?: string }> {
+  // obtain yapi document
   const yapiJSON = url.match(/^http/g) ? await download(url) : { code: 0, result: require(url) };
+
   let swagger: {};
   try {
     if (yapiJSON.result.errcode) {
@@ -43,6 +45,7 @@ export default async function serve(
         message: yapiJSON.result.errmsg
       };
     }
+    // convert yapi document to swagger document
     swagger = yapi2swagger(yapiJSON.result, yapiConfig);
   } catch (e) {
     return {
@@ -53,12 +56,14 @@ export default async function serve(
   if (yapiJSON.code) {
     return Promise.resolve({ code: yapiJSON.code, message: yapiJSON.message });
   }
+
+  // serve swagger document from a tmp server
   let tmpServeUrl = `http://${hostname}`;
   return await detectPort(3721).then(
     port => {
       tmpServeUrl = `${tmpServeUrl}:${port}`;
       const server = http
-        .createServer((req, res) => {
+        .createServer((_req, res) => {
           res.end(JSON.stringify(swagger), () => server.close());
         })
         .listen(port);
