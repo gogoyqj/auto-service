@@ -1,5 +1,3 @@
-declare const jsondiffpatch;
-
 declare const Autos: {
   exports: {
     getExplicitModelDeps(obj: {} | undefined): string[] | undefined;

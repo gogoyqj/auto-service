@@ -53,7 +53,7 @@ export interface STag {
   description?: string;
 }
 
-export default function yapiJSon2swagger(
+export default function yapiJSON2swagger(
   yapiList: YApiCategory[],
   yapiConfig: JSON2Service['yapiConfig'] = {}
 ) {
@@ -307,4 +307,7 @@ export default function yapiJSon2swagger(
   return afterTransform ? afterTransform(swaggerObj) : swaggerObj;
 }
 
-export type SwaggerLikeJson = ReturnType<typeof yapiJSon2swagger>;
+/** downward compatible */
+export const yapiJSon2swagger = yapiJSON2swagger;
+
+export type SwaggerLikeJson = ReturnType<typeof yapiJSON2swagger>;

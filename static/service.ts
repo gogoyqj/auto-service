@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /**
- * @description 增量更新操作界面逻辑
+ * @description UI for changes select in the browser side
  */
 {
   /* eslint-disable no-undef */
-  document.title = 'swagger 增量同步工具';
+  document.title = 'Autos Swagger 增量同步工具';
   const ChangedClassName = 'select-change';
   const keySeparator = '@@__S__@@';
 
@@ -12,17 +14,17 @@
 
   canvas.innerHTML = jsondiffpatch.formatters.html.format(SwaggerChanges, CurSwagger);
 
-  /** 隐藏未修改 */
+  /** hide unchanged swagger json nodes */
   function hide() {
     jsondiffpatch.formatters.html.hideUnchanged();
   }
 
-  /** 显示未修改 */
+  /** show unchanged swagger json nodes */
   function show() {
-    jsondiffpatch.formatters.html.showUnchanged();
+    jsondiffpatch.formatters.html.showUnchanged(true);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  /** toggle visibility of unchanged swagger json nodes */
   function toggleUnchanged(me: HTMLInputElement) {
     const checked = me.checked;
     if (checked) {
@@ -31,6 +33,8 @@
       hide();
     }
   }
+
+  /** toggle select state of changed swagger json nodes */
   function toggleSelectAll(me: HTMLInputElement) {
     const checked = me.checked;
     const allChangedInput = document.querySelectorAll<HTMLInputElement>(`.${ChangedClassName}`);
@@ -53,9 +57,8 @@
     setCount();
   }
 
-  /** 仅不选择删除 */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  function excludeDelete(me: HTMLInputElement) {
+  /** show delete nodes only */
+  function excludeDelete(_me: HTMLInputElement) {
     setTimeout(function() {
       const all = document.getElementById('全选/取消全选') as HTMLInputElement;
       all.checked = true;
@@ -63,9 +66,8 @@
     });
   }
 
-  /** 仅选择新增 */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  function onlyAdd(me: HTMLInputElement) {
+  /** show new nodes only */
+  function onlyAdd(_me: HTMLInputElement) {
     setTimeout(function() {
       const all = document.getElementById('全选/取消全选') as HTMLInputElement;
       all.checked = true;
@@ -74,7 +76,6 @@
   }
 
   /** 显示选中修改状态 */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function showStatus(me: HTMLInputElement) {
     const addedEle = document.getElementById('仅显示新增') as HTMLInputElement;
     const deletedEle = document.getElementById('仅显示删除') as HTMLInputElement;
@@ -123,7 +124,6 @@
   <p>wx+: skipper_yqj</p>
   </div>`;
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function toggleHelp(e: MouseEvent) {
     e.stopImmediatePropagation();
     const helpInfo = document.getElementById('help-info');
@@ -135,6 +135,7 @@
     }
   }
 
+  /** show help */
   document.body.onclick = () => {
     const helpInfo = document.getElementById('help-info');
     if (helpInfo) {
@@ -142,6 +143,7 @@
     }
   };
 
+  /** render menu */
   menu.innerHTML =
     [
       [
@@ -194,6 +196,7 @@
   }
   hide();
 
+  /** get keys of all nodes */
   function getKeys(node: HTMLElement) {
     let par = node.parentNode;
     let key = node.getAttribute('data-key');
@@ -218,10 +221,13 @@
     return keys;
   }
 
-  /** 所有选中的 key */
+  /** all selected keys */
   let allSelectedIndexes: string[][] = [];
-  /** 所有被排除的 key */
+
+  /** all excluded keys */
   let allExcludedIndexes: string[][] = [];
+
+  /** get keys of selected nodes */
   function getAllSelect() {
     allSelectedIndexes = [];
     allExcludedIndexes = [];
@@ -238,6 +244,7 @@
     );
   }
 
+  /** get keys of changed nodes */
   function getAllChanged() {
     return (
       document.querySelectorAll(
@@ -246,6 +253,7 @@
     );
   }
 
+  /** handle select */
   function onAddChecked(value: string) {
     const [type, key] = value.split(keySeparator);
     const definitions = NewSwagger[type][key];
@@ -265,6 +273,7 @@
     }
   }
 
+  /** add checkbox to all changed nodes */
   const allChanged = getAllChanged();
   [].forEach.call(allChanged, (node: HTMLElement) => {
     const input = document.createElement('input');
@@ -305,8 +314,7 @@
 
   setCount();
 
-  /** 让 server 端应用被选中的更新 */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  /** send selected changes nodes info to server and patch a new swagger */
   function patch() {
     if (!allSelectedIndexes.length) {
       if (!confirm('忽略所有远程变动？')) {
@@ -319,7 +327,7 @@
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(
       JSON.stringify({
-        version: NewSwagger,
+        version: DiffVersion,
         keys: allSelectedIndexes,
         unkeys: allExcludedIndexes
       })
@@ -333,7 +341,7 @@
             throw res.message;
           } else {
             if (confirm('同步成功，可以重新生成 service 了——关闭当前窗口？')) {
-              // @IMP: f**k 2 ok
+              /** invoke close twice */
               window.close();
               window.close();
             }

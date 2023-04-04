@@ -26,5 +26,13 @@
     "skipLibCheck": true,
     "declaration": true
   },
-  "exclude": ["node_modules", "lib", "es", "dist", "src/services", "static/static/*"]
+  "exclude": [
+    "node_modules",
+    "lib",
+    "es",
+    "dist",
+    "src/services",
+    "static/static/*",
+    "static/types"
+  ]
 }
