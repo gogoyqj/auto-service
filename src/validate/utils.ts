@@ -1,6 +1,7 @@
 import * as qs from 'qs';
 import { SMAbstractRequest, SMAjaxConfig, SMAbstractResponse, SMValidateInfo } from '../consts';
 
+/** convert a path to RegExp */
 export const pathToReg = (path: string) => {
   return new RegExp(
     `^${path.replace(/{([^}]+)}/g, () => {
@@ -10,7 +11,7 @@ export const pathToReg = (path: string) => {
   );
 };
 
-/** 提取 path 参数名 */
+/** obtain parameter names from path */
 export const getPathParamsNames = (path: string) => {
   const params: string[] = [];
   path.replace(/{([^}]+)}/g, (all, param) => {
@@ -27,7 +28,7 @@ export const concatPath = (...args: (string | string[] | undefined)[]) => {
     .replace(/[/]{2,}/g, '/');
 };
 
-/** 提取 path 参数 */
+/** obtain parameter names from path and construct a record with names */
 export const getPathParams = (pathTpl: string, path: string) => {
   const pathParamsNames = getPathParamsNames(pathTpl);
   if (pathParamsNames.length) {
@@ -40,7 +41,7 @@ export const getPathParams = (pathTpl: string, path: string) => {
   return undefined;
 };
 
-/** 从请求内提取各参数 */
+/** obtain data from request */
 export const getParams = (req: SMAbstractRequest, pathTpl: string) => {
   const { headers, method = '', url: u = '' } = req;
   const [url, search] = u.split('?');
@@ -54,7 +55,7 @@ export const getParams = (req: SMAbstractRequest, pathTpl: string) => {
   return p;
 };
 
-/** 读取流数据 */
+/** obtain a readable data */
 export const getReadableDataAsync = (
   readble: SMAbstractResponse | SMAbstractRequest
 ): Promise<string> =>

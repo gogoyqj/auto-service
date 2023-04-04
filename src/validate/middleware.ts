@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import * as proxy from 'http-proxy-middleware';
 import * as qs from 'qs';
 import chalk from 'chalk';
@@ -13,13 +14,14 @@ import { X_SM_PARAMS, X_SM_ERROR } from '../init';
 import { getReadableDataAsync, getParams } from './utils';
 import { defaultValidator } from './validator';
 
+/** inject data for validation */
 export interface CustomIncomingMessage {
   [X_SM_PARAMS]?: SMValidateInfo['send'];
   [X_SM_ERROR]?: string[] | null;
 }
 
 /**
- * @description 双向校验
+ * @description validates input data from client to server and output data from server to client through a dev-server middleware
  */
 export function createValidateMiddle(hooks?: SMAbstractNext) {
   return async <
@@ -31,7 +33,6 @@ export function createValidateMiddle(hooks?: SMAbstractNext) {
     res: Res,
     next?: Next
   ) => {
-    // 不再强依赖 smPath & smBasePath，使用体验太差
     if (hooks) {
       await hooks(req, res);
     }
@@ -41,6 +42,7 @@ export function createValidateMiddle(hooks?: SMAbstractNext) {
   };
 }
 
+/** inject extra data into response */
 export const responseHooksFactory = (
   cb: (res: Parameters<SMValidator>[0]) => ReturnType<SMValidator>
 ) => async (req: SMAbstractRequest & CustomIncomingMessage, res: SMAbstractResponse) => {
@@ -56,7 +58,6 @@ export const responseHooksFactory = (
   try {
     const bodyType = 'headers' in res ? res.headers['content-type'] : res.getHeader('content-type');
     if (typeof bodyType === 'string') {
-      // @cc: json only
       if (bodyType.match(/json/g)) {
         result.receive = {
           ...result.receive,
@@ -74,19 +75,20 @@ export const responseHooksFactory = (
       result
     });
   }
+  // reset injected data
   delete req[X_SM_ERROR];
   delete req[X_SM_PARAMS];
 };
 
 /**
- * @description 劫持 webpackDevServer proxy 配置，以获取参数及相应
+ * @description trap webpackDevServer proxy
  * @param proxies
  * @param config
  */
 export function proxyHandle(
-  /** 单个或多个代理 */
+  /** single or serveral proxy config */
   proxies: proxy.Config[] | proxy.Config,
-  /** 配置信息 */
+  /** proxy handle config */
   config: ProxyHandleConfig
 ) {
   const { loadSwagger } = config;
@@ -107,7 +109,6 @@ export function proxyHandle(
           case 'javascript/json':
             smConfig.data = smConfig.body = JSON.parse(body);
             break;
-          // @cc: file
           case 'multipart/form-data':
           case 'application/x-www-form-urlencoded':
             smConfig.form = smConfig.body = qs.parse(body);
@@ -121,6 +122,7 @@ export function proxyHandle(
     }
   );
 
+  // create validation middleware
   const responseMiddleware = createValidateMiddle(
     responseHooksFactory(info => {
       return defaultValidator(info, {
@@ -136,6 +138,8 @@ export function proxyHandle(
       });
     })
   );
+
+  // add validation middleware to proxy
   return (Array.isArray(proxies) ? proxies : [proxies]).map(
     (proxy): proxy.Config => {
       const { onProxyReq, onProxyRes } = proxy;

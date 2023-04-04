@@ -8,7 +8,7 @@ import { pathToReg } from './utils';
 const formatSchema = <S extends {}>(schema: S) =>
   JSON.parse(JSON.stringify(schema).replace(/"#\/definitions/g, '"definitions#/definitions'));
 
-/** 将 swagger 转成 ajv */
+/** conctruct ajv by swagger */
 export const getAJV = (() => {
   let inst: Ajv.Ajv;
   let lastSwagger: SwaggerJson;
@@ -32,7 +32,7 @@ export const getAJV = (() => {
   };
 })();
 
-/** 根据 base path 获取 swagger 文件 */
+/** obtain swagger */
 export function getSwagger(basePath: string) {
   const swaggerPath = path.join(
     SmTmpDir,
@@ -52,13 +52,13 @@ export function getSwagger(basePath: string) {
   }
 }
 
-/** 获取 swagger definitions 字段 */
+/** obtain swagger definitions */
 export function getDefinitions(swagger: SwaggerJson) {
   const { definitions } = swagger;
   return definitions;
 }
 
-/** 根据 path 从 swagger paths 内获取接口定义 */
+/** obtain api definition by url */
 export function getPath(swagger: SwaggerJson, path: string) {
   const { paths } = swagger;
   let matched = paths[path];
@@ -78,7 +78,7 @@ export function getPath(swagger: SwaggerJson, path: string) {
   return matched;
 }
 
-/** 将 swagger parameters 转换成 schema */
+/** convert swagger parameters into schema */
 export function getParamSchema(parameters: PathJson['parameters'] = []) {
   const paramsSchema: SMSchema = {
     type: 'object',
@@ -120,7 +120,7 @@ export const validatorFactory = (ajv: Ajv.Ajv) => <D extends {}>(shema: SMSchema
   return ajv.validate(shema, data) ? '' : ajv.errorsText(ajv.errors);
 };
 
-/** @tkit/ajax 规范的数据响应的校验 */
+/** built-in validator for input and output of an API specified by swagger */
 export const defaultValidator: SMValidator = async (
   { code, message, result },
   { loadSwagger, onValidate, formatBodyBeforeValidate }
