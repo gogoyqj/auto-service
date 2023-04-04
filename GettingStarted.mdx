@@ -22,6 +22,7 @@ import {
 ```
 $ npm i -D auto-service
 $ npx autos --help
+$ npx autos --init # 快速的创建`json2service.js`配置文件：
 ```
 
 ## 2. 参数配置
@@ -45,6 +46,16 @@ $ npx autos --help
 ## 2.2 主配置文件
 
 Autos 默认从当前目录下的 json2service.json 文件读取主配置，我们也可以通过命令行参数 `-c, --config` 指定任意格式为 JSON 或者 JavaScript 的配置文件。
+
+我们可以使用`npx autos --init`命令快速的创建一个`json2service.js`配置文件：
+
+```shell
+  npx autos --init
+  prompt: 请选择接口文档类型 type，yapi 或者 swagger:
+  prompt: 请输入接口文档源地址 remoteUrl，例如 https://yapi.com/api.json:
+  prompt: 请输入接口文档本地存储地址 url，例如：./swagger.json:
+  prompt: 请输入 service 代码输出目录 -o，例如: src/services:
+```
 
 配置文件必须导出一个对象，包含以下可配置属性：
 

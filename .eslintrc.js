@@ -25,7 +25,9 @@ module.exports = {
     describe: 'readonly',
     it: 'readonly',
     jest: 'readonly',
-    expect: 'readonly'
+    expect: 'readonly',
+    afterAll: 'readonly',
+    beforeAll: 'readonly',
     // ts
   },
   rules: {

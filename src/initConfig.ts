@@ -49,10 +49,10 @@ export default function initConfig(ConfigFile: string) {
     fs.writeFileSync(
       ConfigFile,
       `/**
-   * @typedef { import("auto-service/lib/consts").JSON2Service } JSON2Service
-   * @type {JSON2Service} 配置
-  */
-  module.exports = ${JSON.stringify(defaultConfigJSON, null, 2)}`,
+  * @typedef { import("auto-service/lib/consts").JSON2Service } JSON2Service
+  * @type {JSON2Service} 配置
+*/
+module.exports = ${JSON.stringify(defaultConfigJSON, null, 2)}`,
       {
         encoding: 'utf8'
       }
