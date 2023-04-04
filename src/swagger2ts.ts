@@ -70,7 +70,9 @@ async function parseSwagger(
           `java${
             envs.length ? ` ${envs.map(v => `-D${v}`).join(' ')}` : ''
           } ${cmd} generate ${Object.keys(config)
-            .map(opt => `${opt} ${opt === '-o' ? tmpServicePath : config[opt]}`)
+            .map(
+              (opt: keyof typeof config) => `${opt} ${opt === '-o' ? tmpServicePath : config[opt]}`
+            )
             .join(' ')} `
         ),
       e => e

@@ -32,7 +32,7 @@ export const getPathParams = (pathTpl: string, path: string) => {
   const pathParamsNames = getPathParamsNames(pathTpl);
   if (pathParamsNames.length) {
     const pathParamsValues = (pathToReg(pathTpl).exec(path) || []).slice(1);
-    return pathParamsNames.reduce((pre, cur, index) => {
+    return pathParamsNames.reduce<Record<string, any>>((pre, cur, index) => {
       pre[cur] = pathParamsValues[index];
       return pre;
     }, {});

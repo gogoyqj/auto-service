@@ -4,7 +4,9 @@ import { JSONSchema4, JSONSchema6 } from 'json-schema';
 import { CoreOptions } from 'request';
 import { YApiCategory } from './yapi/yapi2swagger';
 
-export type SMSchema = JSONSchema4 | JSONSchema6;
+export type SMSchema = (JSONSchema4 | JSONSchema6) & {
+  $$ref?: any;
+};
 export type RequestBodyType = (
   | 'application/json'
   | 'application/xml'
@@ -79,7 +81,7 @@ export interface SMAjaxConfig {
 }
 
 export interface SMValidateInfo {
-  send: SMAjaxConfig;
+  send?: SMAjaxConfig;
   receive: {
     body?: any;
     status: number;

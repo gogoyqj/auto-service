@@ -13,6 +13,11 @@ import { X_SM_PARAMS, X_SM_ERROR } from '../init';
 import { getReadableDataAsync, getParams } from './utils';
 import { defaultValidator } from './validator';
 
+export interface CustomIncomingMessage {
+  [X_SM_PARAMS]?: SMValidateInfo['send'];
+  [X_SM_ERROR]?: string[] | null;
+}
+
 /**
  * @description 双向校验
  */
@@ -38,7 +43,7 @@ export function createValidateMiddle(hooks?: SMAbstractNext) {
 
 export const responseHooksFactory = (
   cb: (res: Parameters<SMValidator>[0]) => ReturnType<SMValidator>
-) => async (req: SMAbstractRequest, res: SMAbstractResponse) => {
+) => async (req: SMAbstractRequest & CustomIncomingMessage, res: SMAbstractResponse) => {
   const error: string[] = req[X_SM_ERROR] || [];
   const result: SMValidateInfo = {
     req,
@@ -86,7 +91,7 @@ export function proxyHandle(
 ) {
   const { loadSwagger } = config;
   const requestMiddleware = createValidateMiddle(
-    async (req: SMAbstractRequest, res: SMAbstractResponse) => {
+    async (req: SMAbstractRequest & CustomIncomingMessage, _res: SMAbstractResponse) => {
       try {
         const { url: u = '' } = req;
         const [url] = u.split('?');
@@ -111,7 +116,7 @@ export function proxyHandle(
         req[X_SM_PARAMS] = smConfig;
       } catch (e) {
         req[X_SM_ERROR] = req[X_SM_ERROR] || [];
-        req[X_SM_ERROR].push(`提取请求参数错误: ${e.message || e}`);
+        req[X_SM_ERROR]?.push(`提取请求参数错误: ${e.message || e}`);
       }
     }
   );

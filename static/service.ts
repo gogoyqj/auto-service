@@ -366,7 +366,7 @@ declare const Autos: {
     };
 
     xhr.onerror = function(e) {
-      alert('同步失败：' + e && e['message']);
+      alert('同步失败：' + e && e.type);
     };
   }
 }

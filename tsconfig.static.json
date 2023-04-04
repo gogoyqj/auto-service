@@ -1,5 +1,6 @@
 {
   "extends": "./tsconfig.json",
+  "include": ["types/*.d.ts"],
   "files": ["static/service.ts", "src/utils/getModelDeps.ts"],
   "compilerOptions": {
     "outDir": "static",

@@ -69,6 +69,7 @@ export default async function serve(
       };
     },
     e => {
+      // eslint-disable-next-line no-console
       console.log(chalk.red(`[ERROR]: create tmp server faild with: ${e}`));
       return {
         code: 4,
