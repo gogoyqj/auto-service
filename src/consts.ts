@@ -2,7 +2,7 @@ import { IncomingMessage, ServerResponse } from 'http';
 import * as path from 'path';
 import { JSONSchema4, JSONSchema6 } from 'json-schema';
 import { CoreOptions } from 'request';
-import { YApiCategory } from './yapi/yapiJSon2swagger';
+import { YApiCategory } from './yapi/yapi2swagger';
 
 export type SMSchema = JSONSchema4 | JSONSchema6;
 export type RequestBodyType = (
