@@ -39,6 +39,7 @@ export declare global {
         type?: string;
         schema?: SMSchema;
         format?: any;
+        default?: any;
       }[];
       /** OpenAPI v3 */
       requestBody?: RequestBody;
