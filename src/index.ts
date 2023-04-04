@@ -5,7 +5,7 @@ import * as fsX from 'fs-extra';
 import * as request from 'request';
 import chalk from 'chalk';
 
-import { Json2Service, SwaggerParser, RemoteUrlReg, ProjectDir, SwaggerJson } from './consts';
+import { JSON2Service, SwaggerParser, RemoteUrlReg, ProjectDir, SwaggerJson } from './consts';
 import swagger2ts from './swagger2ts';
 import serve from './yapi/serve';
 import { pluginsPath, SmTmpDir, basePathToFileName, DefaultBasePath } from './init';
@@ -20,7 +20,7 @@ const defaultParseConfig: Partial<SwaggerParser> = {
 };
 /** CLI入口函数 */
 export default async function gen(
-  config: Json2Service,
+  config: JSON2Service,
   options: {
     // 自动全量使用远程文档，不显示 diff & merge 页面
     quiet?: boolean;

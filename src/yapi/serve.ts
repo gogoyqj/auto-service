@@ -3,8 +3,8 @@ import * as http from 'http';
 import * as request from 'request';
 import detectPort from 'detect-port';
 import chalk from 'chalk';
-import { Json2Service } from '../consts';
-import yapiJSon2swagger from './yapiJSon2swagger';
+import { JSON2Service } from '../consts';
+import yapi2swagger from './yapi2swagger';
 
 async function download(url: string) {
   return new Promise<{ code: number; message?: string; result?: any }>(rs => {
@@ -31,7 +31,7 @@ async function download(url: string) {
 
 export default async function serve(
   url: string,
-  yapiConfig: Json2Service['yapiConfig'],
+  yapiConfig: JSON2Service['yapiConfig'],
   hostname = '127.0.0.1'
 ): Promise<{ code: number; message?: string; result?: string }> {
   const yapiJSON = url.match(/^http/g) ? await download(url) : { code: 0, result: require(url) };
@@ -43,7 +43,7 @@ export default async function serve(
         message: yapiJSON.result.errmsg
       };
     }
-    swagger = yapiJSon2swagger(yapiJSON.result, yapiConfig);
+    swagger = yapi2swagger(yapiJSON.result, yapiConfig);
   } catch (e) {
     return {
       code: 3,

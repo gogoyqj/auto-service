@@ -1,10 +1,8 @@
 import * as _ from 'lodash';
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore
 import ejs from 'easy-json-schema'; // @fix module.exports = ejs;
 import { JSONSchema6 } from 'json-schema';
 import * as JSON5 from 'json5';
-import { PathJson, SwaggerJson, Json2Service } from '../consts';
+import { PathJson, SwaggerJson, JSON2Service } from '../consts';
 
 export interface YApiCategory {
   name: string;
@@ -57,7 +55,7 @@ export interface STag {
 
 export default function yapiJSon2swagger(
   yapiList: YApiCategory[],
-  yapiConfig: Json2Service['yapiConfig'] = {}
+  yapiConfig: JSON2Service['yapiConfig'] = {}
 ) {
   let basePath = '';
   const info = {

@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import commander from 'commander'; // @fix no import * https://github.com/microsoft/tslib/issues/58
 import chalk from 'chalk';
-import { Json2Service, ProjectDir } from './consts';
+import { JSON2Service, ProjectDir } from './consts';
 import gen from './index';
 import initConfig from './initConfig';
 
@@ -55,7 +55,7 @@ if (!init && !fs.existsSync(ConfigFile)) {
     initConfig(init === true ? 'json2service.js' : init);
   } else {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const config: Json2Service = require(ConfigFile);
+    const config: JSON2Service = require(ConfigFile);
     gen(config, { clear, quiet, typeScriptDataFile, apis, models, debug })
       .then(() => {
         process.exit(0);

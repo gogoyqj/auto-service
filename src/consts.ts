@@ -162,7 +162,7 @@ export interface YAPIConfig {
 }
 
 /** CLI配置 */
-export interface Json2Service {
+export interface JSON2Service {
   /** Swagger或者Mock JSON文档地址，自 3.1.* 起，请配置成本地文件 */
   url: string;
   /** 远程 url，配置成远程地址，用于增量更新使用；自 @3.1.* 支持 */
@@ -186,7 +186,7 @@ export interface Json2Service {
     /** 强制保留指定的 models */
     includeModels?: RegExp[];
     /** 在 diff & merge 之前，修改远程 swagger */
-    modifier?: <S extends SwaggerJson>(swagger: S, config: Json2Service) => S;
+    modifier?: <S extends SwaggerJson>(swagger: S, config: JSON2Service) => S;
     /** 格式化代码的命令，比如： 'prettier {path}/**\/**.ts  --write --loglevel error --with-node-modules'，注意使用 prettier 一定要配置 '--loglevel error --with-node-modules'，否则会出错 */
     formater?: string;
   };
@@ -197,6 +197,9 @@ export interface Json2Service {
   /** 拉取JSON文档请求相关设置 */
   requestConfig?: { url?: string } & CoreOptions;
 }
+
+/** downward compatable */
+export type Json2Service = JSON2Service;
 
 /** Swagger Codegen配置 */
 export interface SwaggerParser {
