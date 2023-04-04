@@ -1,16 +1,7 @@
-/**
- * @file: diff and patch
- * @author: yangqianjun
- * @Date: 2019-12-31 13:48:32
- * @LastEditors: yangqianjun
- * @LastEditTime: 2020-02-06 11:57:31
- */
-
-// @IMP: f*ck
 import * as jsondiffpatch from 'jsondiffpatch';
 import lodash from 'lodash';
 
-// @IMP: 确保浏览器和node使用相同的版本
+/** ensure node.js and browser side using jsondiffpatch with the same version */
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const realDiff: typeof jsondiffpatch = require('../../static/jsondiffpatch.umd');
 const splitor = '__@__@__';
@@ -18,8 +9,9 @@ const splitor = '__@__@__';
 export function diffAndPatch(curVersion: {}, newVersion: {}) {
   const delta = realDiff.diff(curVersion, newVersion);
   return {
+    /** all changes from curVersion to newVersion evaluated by jsondiffpatch */
     delta,
-    /** 按需更新 */
+    /** selected changes by keys */
     selectDelta: (keys: string[][]) => {
       const initialMap: { [key: string]: any } = {};
       const setKeyMap: { [key: string]: any } = {};
@@ -56,10 +48,10 @@ export function diffAndPatch(curVersion: {}, newVersion: {}) {
       }, {});
       return newDelta;
     },
-    /** 更新 */
-    patch: (d: typeof delta) => {
-      if (d) {
-        realDiff.patch(curVersion, d);
+    /** patch with selected changes to newVersion */
+    patch: (changes: typeof delta) => {
+      if (changes) {
+        realDiff.patch(curVersion, changes);
         return curVersion;
       }
       return void 0;
