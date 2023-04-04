@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /**
  * @file: 环境初始化
  * @author: yangqianjun

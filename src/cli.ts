@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable no-console */
 import * as fs from 'fs';
 import * as path from 'path';
 import commander from 'commander'; // @fix no import * https://github.com/microsoft/tslib/issues/58
