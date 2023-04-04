@@ -1,12 +1,3 @@
-/**
- * @file: serve a page for diff, select and patch
- * @author: yangqianjun
- * @Date: 2019-12-17 20:16:34
- * @LastEditors: yangqianjun
- * @LastEditTime: 2020-01-03 10:23:25
- */
-/* eslint-disable @typescript-eslint/no-var-requires */
-
 import detect from 'detect-port';
 import express from 'express';
 import bodyParser from 'body-parser';
@@ -23,7 +14,8 @@ export async function serveDiff<J extends {}>(
   return await detect(3007).then(port => {
     return new Promise<typeof curVersion | undefined>(resolve => {
       const { selectDelta, patch, delta } = diffAndPatch(curVersion, newVersion);
-      const diffVersion = `${Math.random()}`;
+      // diff gid
+      const DiffVersion = `${Math.random()}-${Date.now()}-${process.pid}`;
       if (delta) {
         const app = express();
         let server: ReturnType<typeof app.listen> | undefined = undefined;
@@ -52,10 +44,10 @@ export async function serveDiff<J extends {}>(
     <div id="menu" class="menu"></div>
     <div id="canvas" class="canvas"></div>
     <script>
-      const diffVersion="${diffVersion}";
-      const curVersion = ${JSON.stringify(curVersion, null, 2)};
-      const delta = ${JSON.stringify(delta, null, 2)};
-      const newVersion = ${JSON.stringify(newVersion, null, 2)};
+      const DiffVersion="${DiffVersion}";
+      const CurSwagger = ${JSON.stringify(curVersion, null, 2)};
+      const SwaggerChanges = ${JSON.stringify(delta, null, 2)};
+      const NewSwagger = ${JSON.stringify(newVersion, null, 2)};
       window.require = function (module) {
         return window.Autos;
       }
@@ -82,7 +74,7 @@ export async function serveDiff<J extends {}>(
             unkeys: string[][];
             version: string;
           };
-          if (version === diffVersion) {
+          if (version === DiffVersion) {
             res.json({
               code: 0
             });

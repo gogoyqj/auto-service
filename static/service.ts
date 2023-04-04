@@ -1,36 +1,16 @@
 /**
  * @description 增量更新操作界面逻辑
  */
-
-// eslint-disable-next-line prettier/prettier
-declare let jsondiffpatch: any;
-/** 差异 */
-declare let delta: any;
-/** 当前 swagger 版本 */
-declare let curVersion: any;
-/** 新 swagger 版本 */
-declare let diffVersion: any;
-
-/** 新 swagger 版本 */
-declare let newVersion: any;
-
-declare const Autos: {
-  exports: {
-    getExplicitModelDeps(obj: {} | undefined): string[] | undefined;
-    resolveModelDeps(models?: string[], definitions?: any, resolvedDeps?: any): void;
-  };
-};
-
 {
   /* eslint-disable no-undef */
-  const title = (document.title = 'swagger 增量同步工具');
+  document.title = 'swagger 增量同步工具';
   const ChangedClassName = 'select-change';
   const keySeparator = '@@__S__@@';
 
   const canvas = document.querySelector<HTMLDivElement>('#canvas') as HTMLDivElement;
   const menu = document.querySelector<HTMLDivElement>('#menu') as HTMLDivElement;
 
-  canvas.innerHTML = jsondiffpatch.formatters.html.format(delta, curVersion);
+  canvas.innerHTML = jsondiffpatch.formatters.html.format(SwaggerChanges, CurSwagger);
 
   /** 隐藏未修改 */
   function hide() {
@@ -268,7 +248,7 @@ declare const Autos: {
 
   function onAddChecked(value: string) {
     const [type, key] = value.split(keySeparator);
-    const definitions = newVersion[type][key];
+    const definitions = NewSwagger[type][key];
     const deps = Autos.exports.getExplicitModelDeps(definitions);
     if (deps) {
       const resolvedDeps: any = {};
@@ -338,7 +318,11 @@ declare const Autos: {
     xhr.open('POST', '/patch');
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(
-      JSON.stringify({ version: diffVersion, keys: allSelectedIndexes, unkeys: allExcludedIndexes })
+      JSON.stringify({
+        version: NewSwagger,
+        keys: allSelectedIndexes,
+        unkeys: allExcludedIndexes
+      })
     );
 
     xhr.onreadystatechange = function() {

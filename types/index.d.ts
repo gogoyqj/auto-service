@@ -1,3 +1,3 @@
 declare module 'easy-json-schema' {
-  export default function Ejs(json: JSON): any;
+  export default function Ejs(json: {}): any;
 }
