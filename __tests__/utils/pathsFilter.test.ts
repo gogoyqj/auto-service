@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-object-literal-type-assertion */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import pathsFilter from 'src/utils/pathsFilter';
-import { SwaggerJson } from 'src/init';
 
 describe('utils/pathsFilter', () => {
   const getSwagger = () =>
@@ -83,7 +82,7 @@ describe('utils/pathsFilter', () => {
         ID3: {},
         EID1_D1: {}
       }
-    } as SwaggerJson);
+    } as Autos.SwaggerJson);
   it('pathsFilter ok', () => {
     const swagger = pathsFilter(getSwagger(), {
       exclude: [/\/exclude\//]

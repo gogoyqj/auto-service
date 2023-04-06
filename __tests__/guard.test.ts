@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import { operationIdGuard, strictModeGuard } from 'src/guard';
-import { SwaggerJson, GuardConfig } from 'src/consts';
 
 const url = '/api/v1/persons';
 const url1 = '/api/v1/interviewer/persons';
 const url2 = '/api/v1/interviewer/{user-name}';
-function getSwagger(): SwaggerJson {
+function getSwagger(): Autos.SwaggerJson {
   return {
     basePath: '/',
     paths: {
@@ -49,13 +48,13 @@ function getSwagger(): SwaggerJson {
   };
 }
 
-const optionIdMethodUrlIncrementMap: GuardConfig = {
+const optionIdMethodUrlIncrementMap: Autos.GuardConfig = {
   methodUrl2OperationIdMap: {
     'get /api/v1/persons': 'personsUsingGET',
     'get /api/v1/interviewer/persons': 'personsUsingGET_1'
   }
 };
-const optionIdMethodUrlSafeModeDuplicateMap: GuardConfig = {
+const optionIdMethodUrlSafeModeDuplicateMap: Autos.GuardConfig = {
   mode: 'safe',
   methodUrl2OperationIdMap: {
     'get /api/v1/persons': 'personsUsingGET',
@@ -64,7 +63,7 @@ const optionIdMethodUrlSafeModeDuplicateMap: GuardConfig = {
   }
 };
 
-const optionIdMethodUrlMap: GuardConfig = {
+const optionIdMethodUrlMap: Autos.GuardConfig = {
   methodUrl2OperationIdMap: {
     'get /api/v1/persons': 'personsUsingGET',
     'get /api/v1/interviewer/persons': 'personsUsingGET_1',
@@ -72,7 +71,7 @@ const optionIdMethodUrlMap: GuardConfig = {
   }
 };
 
-const optionIdMethodUrlMap2: GuardConfig = {
+const optionIdMethodUrlMap2: Autos.GuardConfig = {
   methodUrl2OperationIdMap: {
     'get /api/v1/interviewer/persons': 'personsUsingGET',
     'get /api/v1/persons': 'personsUsingGET_1',
