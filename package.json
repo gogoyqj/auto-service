@@ -33,6 +33,8 @@
     "body-parser": "^1.19.0",
     "chalk": "^2.4.2",
     "commander": "^2.19.0",
+    "cosmiconfig": "^8.2.0",
+    "cosmiconfig-typescript-loader": "^4.3.0",
     "detect-port": "^1.3.0",
     "easy-json-schema": "^0.0.2-beta",
     "es6-promisify": "^6.0.1",
