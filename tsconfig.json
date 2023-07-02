@@ -21,7 +21,7 @@
     "importHelpers": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "typeRoots": ["node_modules/@types", "types"],
+    "typeRoots": ["node_modules/@types", "src/types"],
     "traceResolution": false,
     "skipLibCheck": true,
     "declaration": true
