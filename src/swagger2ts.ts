@@ -35,7 +35,7 @@ async function checkJava() {
 }
 
 const cmdV3 = `-cp ${pluginsPath}/v3/myClientCodegen-swagger-codegen-1.0.0.jar${
-  process.platform === 'darwin' ? ':' : ';'
+  path.delimiter
 }${pluginsPath}/v3/swagger-codegen-cli.jar io.swagger.codegen.v3.cli.SwaggerCodegen`;
 const cmdV2 = `-jar ${generatorPath}`;
 
