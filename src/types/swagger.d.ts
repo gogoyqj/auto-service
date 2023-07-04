@@ -164,7 +164,7 @@ export declare global {
       /** 如果是 yapi，配置 */
       yapiConfig?: YAPIConfig;
       /** Swagger生成TS代码相关配置 */
-      swaggerParser?: SwaggerParser;
+      swaggerParser?: Partial<SwaggerParser>;
       /** 本地临时服务 hostname，默认 127.0.0.1，可指定为其他 ip 或者 hostname */
       hostname?: string;
       /** Swagger 配置 */
