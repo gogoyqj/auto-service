@@ -251,7 +251,8 @@ export function convertResponse(api: SyntheticAPI, yapiConfig: Autos.YAPIConfig)
           schemaObj = ejs(resBody);
         }
         if (schemaObj.properties && schemaObj.properties.code) {
-          if (typeof schemaObj.properties.code === 'object') {
+          // internal compatible
+          if (typeof schemaObj.properties.code === 'object' && !schemaObj.properties.type) {
             schemaObj.properties.code.type = 'number';
           }
         }
