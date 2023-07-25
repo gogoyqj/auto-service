@@ -1,5 +1,266 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`yapi2swagger custom should work ok convertCosumes should work: yapiJSON2swagger convertCosumes 1`] = `
+Array [
+  "application/json",
+]
+`;
+
+exports[`yapi2swagger custom should work ok convertParams should work: yapiJSON2swagger convertParams 1`] = `
+Array [
+  Object {
+    "description": undefined,
+    "in": "body",
+    "name": "TestBody",
+    "schema": Object {
+      "properties": Object {
+        "id": Object {
+          "type": "number",
+        },
+        "name": Object {
+          "type": "string",
+        },
+      },
+      "required": Array [],
+      "type": "object",
+    },
+  },
+]
+`;
+
+exports[`yapi2swagger custom should work ok convertResponse should work: yapiJSON2swagger convertResponse 1`] = `
+Object {
+  "200": Object {
+    "description": "successful operation",
+    "schema": Object {
+      "properties": Object {
+        "code": Object {
+          "type": "number",
+        },
+        "result": Object {
+          "properties": Object {
+            "id": Object {
+              "type": "number",
+            },
+            "name": Object {
+              "type": "string",
+            },
+          },
+          "required": Array [],
+          "type": "object",
+        },
+      },
+      "required": Array [],
+      "title": "Test",
+      "type": "object",
+    },
+  },
+}
+`;
+
+exports[`yapi2swagger custom should work ok obtainMeta should work: yapiJSON2swagger obtainMeta 1`] = `
+Object {
+  "basePath": "",
+  "info": Object {
+    "description": "unknown",
+    "title": "test",
+    "version": "last",
+  },
+  "schemes": Array [
+    "http",
+  ],
+  "tags": Array [
+    Object {
+      "description": "公共分类",
+      "name": "common",
+    },
+    Object {
+      "description": "数据",
+      "name": "data",
+    },
+  ],
+}
+`;
+
+exports[`yapi2swagger custom should work ok yapiJSON2swagger should work: yapiJSON2swagger yapiJSON2swagger 1`] = `
+Object {
+  "basePath": "",
+  "info": Object {
+    "description": "unknown",
+    "title": "test",
+    "version": "last",
+  },
+  "paths": Object {
+    "/api/test": Object {
+      "get": Object {
+        "consumes": undefined,
+        "description": "",
+        "operationId": "apiTestGet",
+        "parameters": Array [
+          Object {
+            "description": "user id",
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "type": "string",
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "description": "successful operation",
+            "schema": Object {
+              "$schema": "http://json-schema.org/draft-04/schema#",
+              "properties": Object {
+                "code": Object {
+                  "type": "number",
+                },
+                "result": Object {
+                  "properties": Object {
+                    "id": Object {
+                      "type": "number",
+                    },
+                    "name": Object {
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+              },
+              "title": "ApiTest",
+              "type": "object",
+            },
+          },
+        },
+        "summary": "test",
+        "tags": Array [
+          "common",
+        ],
+      },
+    },
+    "/list": Object {
+      "get": Object {
+        "consumes": undefined,
+        "description": "",
+        "operationId": "listGet",
+        "parameters": Array [
+          Object {
+            "description": "页码",
+            "in": "query",
+            "name": "page",
+            "required": true,
+            "type": "string",
+          },
+          Object {
+            "description": "每页条数",
+            "in": "query",
+            "name": "pageSize",
+            "required": false,
+            "type": "string",
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "description": "successful operation",
+            "schema": Object {
+              "properties": Object {
+                "code": Object {
+                  "type": "number",
+                },
+                "data": Object {
+                  "properties": Object {},
+                  "required": Array [],
+                  "type": "object",
+                },
+              },
+              "required": Array [],
+              "title": "List",
+              "type": "object",
+            },
+          },
+        },
+        "summary": "获取用户列表",
+        "tags": Array [
+          "data",
+        ],
+      },
+    },
+    "/userinfo": Object {
+      "post": Object {
+        "consumes": Array [
+          "application/json",
+        ],
+        "description": "",
+        "operationId": "userinfoPost",
+        "parameters": Array [
+          Object {
+            "description": undefined,
+            "in": "body",
+            "name": "UserinfoBody",
+            "schema": Object {
+              "properties": Object {
+                "id": Object {
+                  "type": "number",
+                },
+                "name": Object {
+                  "type": "string",
+                },
+              },
+              "required": Array [],
+              "type": "object",
+            },
+          },
+        ],
+        "responses": Object {
+          "200": Object {
+            "description": "successful operation",
+            "schema": Object {
+              "properties": Object {
+                "code": Object {
+                  "type": "number",
+                },
+                "result": Object {
+                  "properties": Object {
+                    "id": Object {
+                      "type": "number",
+                    },
+                    "name": Object {
+                      "type": "string",
+                    },
+                  },
+                  "required": Array [],
+                  "type": "object",
+                },
+              },
+              "required": Array [],
+              "title": "Userinfo",
+              "type": "object",
+            },
+          },
+        },
+        "summary": "用户信息",
+        "tags": Array [
+          "common",
+        ],
+      },
+    },
+  },
+  "schemes": Array [
+    "http",
+  ],
+  "swagger": "2.0",
+  "tags": Array [
+    Object {
+      "description": "公共分类",
+      "name": "common",
+    },
+    Object {
+      "description": "data",
+      "name": "data",
+    },
+  ],
+}
+`;
+
 exports[`yapi2swagger should work ok convertCosumes should work: yapiJSON2swagger convertCosumes 1`] = `
 Array [
   "application/json",
