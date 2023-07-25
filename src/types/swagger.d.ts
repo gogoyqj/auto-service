@@ -151,6 +151,11 @@ export declare global {
       beforeTransform?: (yapiJSON: YApiCategory[]) => YApiCategory[];
       /** yapi json 转换成 swagger json 后的钩子 */
       afterTransform?: (swaggerJSON: SwaggerJson) => SwaggerJson;
+      /**
+       * 配置为 true，向下兼容，YAPI 转 Swagger 时不生成 operationId，并在生成方法名，采用旧格式，即：url + Method 驼峰格式
+       * 否则生成 operationId，并在生成方法名，采用新格式，即: url + Using + Method 驼峰格式，且会通过 guardconfig.prefixReg 等配置对方法名进行进一步处理
+       * */
+      _capatibleYAPI?: boolean;
     }
 
     /** CLI配置 */

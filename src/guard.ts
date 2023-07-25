@@ -87,7 +87,7 @@ export function operationIdGuard(swagger: Autos.SwaggerJson, config: Autos.Guard
             url
               .replace(prefixReg, '')
               .replace(/(^\/|})/g, '')
-              .replace(/[/{_-]{1,}([^/])/g, (mat, u: string) => u.toUpperCase()) +
+              .replace(/[/{_-]{1,}([^/])/g, (_mat, u: string) => u.toUpperCase()) +
             methodPrefix +
             method[0].toUpperCase() +
             method.substring(1);

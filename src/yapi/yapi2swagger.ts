@@ -7,7 +7,7 @@ export default function yapiJSON2swagger(
   yapiList: Autos.YApiCategory[],
   yapiConfig: Autos.JSON2Service['yapiConfig'] = {}
 ) {
-  const { beforeTransform, afterTransform } = yapiConfig;
+  const { beforeTransform, afterTransform, _capatibleYAPI = false } = yapiConfig;
 
   // modify before transform yapi document to swagger document
   const list = beforeTransform ? beforeTransform(yapiList) : yapiList;
@@ -28,14 +28,21 @@ export default function yapiJSON2swagger(
         ...api,
         url
       };
-      paths[url][method] = {
+      const swaggerItem: Autos.PathJson = (paths[url][method] = {
         tags: [category.name],
         summary: api.title,
         description: api.markdown,
         consumes: convertCosumes(syntheticAPI, yapiConfig),
         parameters: convertParams(syntheticAPI, yapiConfig),
         responses: convertResponse(syntheticAPI, yapiConfig)
-      };
+      });
+      if (_capatibleYAPI !== true) {
+        swaggerItem.operationId = `${url
+          .replace(/(^\/|})/g, '')
+          .replace(/[/{_-]{1,}([^/])/g, (_mat, u: string) =>
+            u.toUpperCase()
+          )}${method.replace(/^[a-z]/g, c => c.toUpperCase())}`;
+      }
     }
   }
 
