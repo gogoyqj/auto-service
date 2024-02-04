@@ -153,7 +153,7 @@ export function convertParams(api: SyntheticAPI, yapiConfig: Autos.YAPIConfig) {
             in: 'formData',
             required: Number(p.required) === 1,
             description: p.desc,
-            type: p.type === 'text' ? 'string' : 'file' // in this time .formData type have only text or file
+            type: p.type !== 'file' ? 'string' : 'file' // in this time .formData type have only text or file
           });
         }
         break;
