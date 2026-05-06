@@ -5,6 +5,9 @@
   "repository": "git@github.com:gogoyqj/auto-service.git",
   "author": "yangqianjun <yang@yang>",
   "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
   "main": "lib/index.js",
   "bin": {
     "autos": "./lib/cli.js",
