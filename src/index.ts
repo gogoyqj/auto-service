@@ -39,6 +39,11 @@ export default async function gen(
     debug?: boolean;
   }
 ): Promise<number> {
+  if (!config) {
+    throw new Error(
+      `[ERROR]: gen 参数校验失败: config 不能为空，请检查配置文件是否正确`
+    );
+  }
   const {
     url,
     remoteUrl,
