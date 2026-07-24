@@ -76,6 +76,7 @@ async function main() {
     console.log(
       chalk.red(`[ERROR]: 在 ${ProjectDir} 目录下，配置文件 ${loadedConfig.filepath} 为空`)
     );
+    process.exit(1);
   }
 
   const config: JSON2Service = loadedConfig.config;
